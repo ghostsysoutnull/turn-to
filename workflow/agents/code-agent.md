@@ -44,8 +44,12 @@ The failing tests are your contract. The design docs provide the interface signa
 - Write only what is needed to make the tests pass.
 - Do not add error handling for scenarios that cannot happen at runtime.
 - Do not add comments unless the logic is genuinely non-obvious.
-- Do not add JavaDoc to methods whose name and signature are self-explanatory.
 - Prefer the simplest correct implementation over a clever one.
+- JavaDoc rule — three tiers, no exceptions:
+  - **Nothing** — name + signature + parameter types tell the full story.
+  - **One line** — non-obvious return value, side effect, or constraint not in the name. Format: `/** Single sentence. */` No `@param`, no `@return`.
+  - **Block** — complex invariant, non-obvious precondition, or a surprising design choice that must be understood to use the class correctly. Max 3 lines body + only the `@param`/`@return` tags that add information not already in the signature.
+  - Test: would a competent Java developer reading the signature and tests need this comment? If no, omit.
 
 ---
 
