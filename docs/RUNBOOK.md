@@ -51,7 +51,7 @@ both compile and pass.
 | Step type | Done when |
 |-----------|-----------|
 | Test Agent | Agent reports completion; test files exist at the correct paths |
-| Code Agent | `mvn test` exits 0; no test failures or errors |
+| Code Agent | `mvn -q test` exits 0; no test failures or errors |
 
 ### Parallel steps (Phase 3)
 
@@ -82,6 +82,9 @@ Every agent invoked from this runbook must honour the following rules.
 - **Maven Surefire must be configured** in `pom.xml` per
   `docs/design/06-testability.md` before any tests are written (done once in
   Step 1.2, stays in place for all later steps).
+- **Always run `mvn -q test`** (not `mvn test`) when verifying a phase. The `-q`
+  flag suppresses Maven's own INFO build chatter. On success the only output is
+  the final aggregate summary line.
 
 If a Code Agent output introduces terminal-touching code in tests or produces
 console noise on success, treat it as a defect — invoke the Code Agent again to
@@ -186,7 +189,7 @@ Do not implement any class outside the domain and mechanics.DiceFormula.
 Do not touch src/test/.
 ```
 
-**Acceptance:** `mvn test` exits 0 with all domain tests passing.
+**Acceptance:** `mvn -q test` exits 0 with all domain tests passing.
 
 ---
 
@@ -241,7 +244,7 @@ writing anything. Do not rewrite it if it is already correct.
 Do not touch src/test/.
 ```
 
-**Acceptance:** `mvn test` exits 0 with all mechanics tests (and all Phase 1 tests) passing.
+**Acceptance:** `mvn -q test` exits 0 with all mechanics tests (and all Phase 1 tests) passing.
 
 ---
 
@@ -358,7 +361,7 @@ operating in onChoices mode, and for addChoice/hideChoice when outside onChoices
 Do not touch src/test/.
 ```
 
-**Acceptance:** `mvn test` exits 0 with all scripting tests (and all prior tests) passing.
+**Acceptance:** `mvn -q test` exits 0 with all scripting tests (and all prior tests) passing.
 
 ---
 
@@ -397,7 +400,7 @@ java.util.Random seeded at construction.
 Do not touch src/test/.
 ```
 
-**Acceptance:** `mvn test` exits 0 with all I/O tests (and all prior tests) passing.
+**Acceptance:** `mvn -q test` exits 0 with all I/O tests (and all prior tests) passing.
 
 ---
 
@@ -459,7 +462,7 @@ PersonalCombatSystem is always registered.
 Do not touch src/test/.
 ```
 
-**Acceptance:** `mvn test` exits 0 with all combat tests (and all prior tests) passing.
+**Acceptance:** `mvn -q test` exits 0 with all combat tests (and all prior tests) passing.
 
 ---
 
@@ -523,7 +526,7 @@ InMemoryAdventureLoader is already in src/test/ — do not rewrite it.
 Do not touch src/test/.
 ```
 
-**Acceptance:** `mvn test` exits 0 with all loader tests (and all prior tests) passing.
+**Acceptance:** `mvn -q test` exits 0 with all loader tests (and all prior tests) passing.
 
 ---
 
@@ -617,7 +620,7 @@ Game constructor:
 Do not touch src/test/.
 ```
 
-**Acceptance:** `mvn test` exits 0 with the full test suite (all phases) passing.
+**Acceptance:** `mvn -q test` exits 0 with the full test suite (all phases) passing.
 
 ---
 
@@ -641,14 +644,14 @@ Package: com.tas.neo (Main.java at the package root)
 Write Main exactly as specified in the wiring section. Do not add any logic beyond
 what is shown there.
 
-After writing Main.java, confirm the project compiles cleanly (mvn compile) and run
-mvn test one final time to confirm the full suite still passes.
+After writing Main.java, run mvn -q test to confirm the full suite still passes and
+the project compiles cleanly (compile is implicit in the test lifecycle).
 
 If any wiring issue surfaces a design gap (missing constructor, wrong type, etc.),
 report it as a blocker — do not invent a resolution.
 ```
 
-**Acceptance:** `mvn compile` exits 0; `mvn test` exits 0; no design gaps surfaced.
+**Acceptance:** `mvn -q test` exits 0; no design gaps surfaced.
 
 ---
 

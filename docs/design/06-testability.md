@@ -235,24 +235,27 @@ If a new feature adds state that a test needs to assert on, the public read API 
 
 ## Maven Surefire Configuration
 
-Configure `maven-surefire-plugin` so the test suite produces no output on success and only failure details on failure. Agents read `mvn test` stdout to assess results.
+Configure `maven-surefire-plugin` so the test suite produces no output on success and only failure details on failure. Agents verify results by running `mvn -q test` — the `-q` flag suppresses all Maven INFO build chatter, leaving only Surefire output and the final result line.
 
 ```xml
 <plugin>
   <groupId>org.apache.maven.plugins</groupId>
   <artifactId>maven-surefire-plugin</artifactId>
   <configuration>
-    <reportFormat>plain</reportFormat>
+    <reportFormat>brief</reportFormat>
     <useFile>false</useFile>
     <trimStackTrace>false</trimStackTrace>
-    <redirectTestOutputToFile>false</redirectTestOutputToFile>
+    <redirectTestOutputToFile>true</redirectTestOutputToFile>
   </configuration>
 </plugin>
 ```
 
 With this configuration:
-- Passing tests produce no per-test output.
-- Failures show the test name, assertion message, and stack trace.
-- The final line is the summary: `Tests run: N, Failures: M, Errors: K`.
+- Passing tests produce **no output at all** — not even a per-class summary line.
+- Failures print the test name, assertion message, and full stack trace to the console.
+- The final line is always the aggregate summary: `Tests run: N, Failures: M, Errors: K, Skipped: S`.
+- `redirectTestOutputToFile>true` silently captures any accidental `System.out.println` in test code to a file instead of polluting the console.
 
 Test code must not call `System.out.println` or configure any logger that writes to stdout. If a test needs to capture and inspect output, it uses `RecordingOutput` — it does not print to the console.
+
+**Command for agents:** always run `mvn -q test` (not `mvn test`) when verifying a phase is complete.
