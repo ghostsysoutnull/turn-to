@@ -25,6 +25,12 @@ Each stage is a deliberate checkpoint. The user reviews the output of each agent
 
 ---
 
+## Adventure Authoring Pipeline
+
+Creating a new adventure uses a separate pipeline. See `workflow/ADVENTURE-AUTHORING-PIPELINE.md`.
+
+---
+
 ## How to Invoke an Agent
 
 Each agent is invoked by spawning a subagent with:

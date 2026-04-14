@@ -306,3 +306,5 @@ Entry gates typically use `in`, `normalize`, and `branches`. Exit gates typicall
 - **Spec: Adventure Structure** — the full adventure and section model that chapters describe
 - **Spec: Items** — item definitions referenced in gate contracts and the adventure manifest
 - **Spec: Scripting** — lifecycle hooks used in gate normalization entry sections
+- **Adventure Authoring Pipeline** (`workflow/ADVENTURE-AUTHORING-PIPELINE.md`) — the full end-to-end process: architect → authors → consistency check → assembly
+- **Adventure Architect Agent** (`workflow/agents/adventure-architect-agent.md`) — the agent that produces chapter briefs, gate contracts, and the adventure scaffold before any chapter is authored
