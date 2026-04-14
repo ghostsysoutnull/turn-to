@@ -12,12 +12,12 @@ reports. No manual copying or agent selection required.
 ## Current Position
 
 ```
-Phase : 1 — Domain
-Step  : 1.1 — Test Agent
+Phase : 0 — Scaffolding
+Step  : 0.1 — Code Agent
 Status: TODO
 ```
 
-**Next action:** Invoke Test Agent with the prompt in § Phase 1 › Step 1.1.
+**Next action:** Invoke Code Agent with the prompt in § Phase 0 › Step 0.1.
 
 ---
 
@@ -25,6 +25,7 @@ Status: TODO
 
 | Phase | Description | Steps | Done |
 |-------|-------------|-------|------|
+| 0 | Scaffolding | 0.1 Code | ⬜ |
 | 1 | Domain | 1.1 Test · 1.2 Code | ⬜ ⬜ |
 | 2 | Mechanics | 2.1 Test · 2.2 Code | ⬜ ⬜ |
 | 3 | Scripting + I/O (parallel) | 3.1 Test-S · 3.2 Test-IO · 3.3 Code-S · 3.4 Code-IO | ⬜ ⬜ ⬜ ⬜ |
@@ -101,9 +102,57 @@ fix it before advancing.
 
 ---
 
+## Phase 0 — Scaffolding
+
+No Test Agent step. Creates the Maven project skeleton before any code is written.
+All subsequent phases depend on this being in place.
+
+### Step 0.1 — Code Agent: Scaffolding
+
+```
+You are the Code Agent for TAS Neo. Read workflow/agents/code-agent.md first.
+
+Task: Create the Maven project skeleton. No production classes, no test classes.
+
+Produce exactly:
+
+1. pom.xml at the project root with:
+   - groupId: com.tas.neo, artifactId: tas-neo, version: 1.0-SNAPSHOT
+   - Java 21 (maven-compiler-plugin source/target 21)
+   - Dependencies:
+       org.junit.jupiter:junit-jupiter:5.11.0 (test scope)
+       org.assertj:assertj-core:3.26.3 (test scope)
+       org.luaj:luaj-jse:3.0.1
+       com.fasterxml.jackson.core:jackson-databind:2.17.2
+   - maven-surefire-plugin configured exactly as specified in
+     docs/design/06-testability.md
+   - maven-jar-plugin with mainClass: com.tas.neo.Main
+
+2. Empty package directories (create a .gitkeep in each):
+   - src/main/java/com/tas/neo/
+   - src/test/java/com/tas/neo/
+   - src/test/resources/adventures/
+   - adventures/
+
+3. .gitignore at the project root covering: target/, *.class, *.iml,
+   .idea/, .vscode/, sessions/
+
+4. sessions/ directory entry in .gitignore (do not create the directory —
+   it is created at runtime by FileGameLogger).
+
+Run mvn -q test after creating pom.xml to confirm the build lifecycle
+works with zero tests. Expected output: BUILD SUCCESS.
+
+Do not create any Java source files. Do not touch docs/ or workflow/.
+```
+
+**Acceptance:** `mvn -q test` exits 0; directory structure exists; `.gitignore` present.
+
+---
+
 ## Phase 1 — Domain
 
-Depends on: nothing. All other phases depend on this one.
+Depends on: Phase 0. All other phases depend on this one.
 
 ### Step 1.1 — Test Agent: Domain
 
@@ -189,10 +238,6 @@ Package root: com.tas.neo. Domain classes under com.tas.neo.domain.
 DiceFormula lives in com.tas.neo.mechanics — write it there. The domain layer does not
 import it directly. ConditionEvaluator is a service class; it lives in the domain
 package alongside the Condition types it evaluates.
-
-Before writing any production class, configure maven-surefire-plugin in pom.xml exactly
-as specified in docs/design/06-testability.md. This must be in place before the test
-suite is run for the first time.
 
 Do not implement any class outside the domain and mechanics.DiceFormula.
 Do not touch src/test/.
