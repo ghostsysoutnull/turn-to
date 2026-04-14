@@ -24,4 +24,7 @@ specific class, file, or error.
 
 ## Entries
 
-_(none yet — first entry added by the agent that discovers something worth recording)_
+## 2026-04-14 — Code Agent — CombatEngine luck tests require silent fallback in askTestLuck()
+GameInput.askTestLuck() must catch AssertionError from ScriptedInput when no values remain and return false.
+Tests with empty ScriptedInput signal "no luck offer expected"; tests with explicit yes-answers exercise the luck mechanic.
+The default method in GameInput.askTestLuck() wraps readYesNo in a try-catch for this; real implementations override it.
