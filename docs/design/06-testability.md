@@ -122,6 +122,9 @@ public class RecordingGameLogger implements GameLogger {
     public SessionLog sessionLog();
     public List<GameError> errors();
     public boolean hasErrors();
+    /** Called by ScenarioRunner after the game ends to set the final result string. */
+    public void setResult(String result);
+    public void setAdventureId(String adventureId);
 }
 ```
 
@@ -193,7 +196,7 @@ public record ScenarioResult(
 
 In scripted mode, `ScriptedInput` throws `AssertionError` if the choice sequence is exhausted before the game ends — this surfaces scenarios where the adventure takes an unexpected path.
 
-In random mode, the runner picks uniformly from the available non-system choices at each step. Use `SeededDice` for a reproducible random run: if a random run fails, record the seed and re-run with the same seed to reproduce the failure.
+In random mode, the runner picks uniformly from the available non-system choices at each step. Random selection uses `dice.roll(n) - 1` (0-based index into the choice list, where `n` is the number of available choices) — this ensures `SeededDice` produces a fully reproducible sequence. Use `SeededDice` for a reproducible random run: if a random run fails, record the seed and re-run with the same seed to reproduce the failure.
 
 ---
 

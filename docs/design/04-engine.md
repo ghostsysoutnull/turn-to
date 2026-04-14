@@ -46,8 +46,10 @@ public class GameState {
 ```java
 public class Game {
     public Game(GameInput input, GameOutput output, AdventureLoader loader,
-                Dice dice, ScriptEngine scriptEngine, CombatSystemRegistry combatRegistry);
+                Dice dice, ScriptEngine scriptEngine, CombatSystemRegistry combatRegistry,
+                GameLogger logger);
     public void run(String adventureId);
+    public GameState state();
 }
 ```
 

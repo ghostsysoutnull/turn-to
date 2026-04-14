@@ -135,6 +135,7 @@ public record CombatEvent(
 ) implements SectionEvent {}
 
 public record StatChangeEvent(AttributeType attribute, int delta) implements SectionEvent {}
+public enum ItemAction { GAIN, LOSS }
 public record ItemEvent(String itemName, ItemAction action, int quantity) implements SectionEvent {}
 public record LuckTestEvent(int successSection, int failSection) implements SectionEvent {}
 public record SkillTestEvent(int successSection, int failSection) implements SectionEvent {}
