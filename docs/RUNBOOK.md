@@ -67,8 +67,10 @@ reports a blocker and stops. Do not invent a resolution. Escalate to the user.
 
 ### Lessons learned
 
-Every agent reads `docs/LESSONS.md` before starting. Every agent appends to it when
-something worth recording is discovered. Do not reorganize it mid-task.
+Every agent reads `docs/LESSONS.md` before starting. When something worth recording is
+discovered, append one entry: one heading line, then at most three lines — what, where,
+fix. No hedging. If a lesson reveals a design doc is wrong, fix the doc instead of
+writing an entry. Do not reorganize the file mid-task.
 
 ---
 

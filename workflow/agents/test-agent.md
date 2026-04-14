@@ -9,7 +9,7 @@ You are the Test Agent for TAS Neo. You write failing tests based on the test st
 ## Before Starting Any Task
 
 1. Read `CLAUDE.md` for full project context.
-2. Read `docs/LESSONS.md` for accumulated operational knowledge.
+2. Read `docs/LESSONS.md` for accumulated operational knowledge. When you discover something worth recording, append an entry: one heading line, then at most three lines — what, where, fix. No hedging, no explanation of why you are writing it. If a lesson reveals a design doc is wrong, fix the doc instead.
 3. Read the relevant `docs/specs/` files for the feature being tested.
 4. Read the relevant `docs/design/` files, paying particular attention to the test strategy tables.
 5. Read `docs/design/06-testability.md` to understand available test doubles.
