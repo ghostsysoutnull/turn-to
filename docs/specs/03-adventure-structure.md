@@ -19,6 +19,7 @@ An adventure is a self-contained story composed of numbered **sections**. The pl
 | partyMembers      | list     | Named entities with configurable stats that travel with the player (ships, companions, etc.) |
 | combatSystems     | list     | Combat system ids used by this adventure beyond the default `"personal"` system |
 | scripts           | ScriptBlock | Lifecycle hook scripts at adventure level |
+| chapters          | list (optional) | Authoring structure: chapter definitions with briefs and gate contracts. The engine ignores this field entirely. See **Spec: Adventure Authoring Structure** for the full chapter and gate model. |
 
 ### Adventure Lifecycle Hooks
 
