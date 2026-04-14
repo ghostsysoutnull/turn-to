@@ -62,6 +62,7 @@ Before completing your task:
 | Test doubles match `06-testability.md` | No ad-hoc doubles invented outside the defined set |
 | No production code written | `src/main/java/` is not touched |
 | Tests compile against design doc signatures | Interface and record declarations match |
+| OO constraints are verifiable | If a design doc specifies a Builder, record, sealed switch, or factory method, at least one test exercises that specific construction path — not just the resulting state |
 
 ---
 

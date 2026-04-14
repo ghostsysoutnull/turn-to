@@ -40,6 +40,22 @@ The failing tests are your contract. The design docs provide the interface signa
 - Introduce static state.
 - Violate the layer dependency rules in `docs/design/01-architecture.md`.
 
+### Object-oriented design rules
+
+These rules are non-negotiable. They were established through explicit design review and are enforced by the test suite.
+
+1. **Sealed switch, never instanceof.** When dispatching over a sealed type hierarchy, use a Java 21 `switch` expression. Never use `instanceof` chains. Missing branches are compile errors — that is the point.
+
+2. **Records for value objects.** Any type that is immutable and carries data (no mutation after construction) must be a `record`. Use a class only when the type is mutable or has non-trivial lifecycle (e.g. `Player`, `GameState`, `PartyMember`).
+
+3. **Builder for 4+ param constructors.** Any constructor with 4 or more parameters requires a static inner `Builder` with a fluent API. `build()` throws `IllegalStateException` for unset required fields. Optional fields default to empty/`ScriptBlock.empty()`.
+
+4. **Parameter object for 4+ param methods.** Any method call with 4 or more parameters that share a theme must group the infrastructure (or domain) arguments into a record or context object. See `CombatContext` as the canonical example.
+
+5. **Centralized dispatch.** Event and command dispatch belongs in one place. `HookDispatcher.processEvent(SectionEvent)` owns all event dispatch — `Game` never switches on event types. Do not scatter switch statements across classes.
+
+6. **Static factory methods.** When a constructor has optional parameters that produce `Optional.empty()` noise at call sites, provide named factory methods (see `Choice.to(...)`). The canonical constructor exists for deserialization only.
+
 ### Code quality rules
 - Write only what is needed to make the tests pass.
 - Do not add error handling for scenarios that cannot happen at runtime.
