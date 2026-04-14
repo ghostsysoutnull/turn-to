@@ -42,19 +42,40 @@ The failing tests are your contract. The design docs provide the interface signa
 
 ### Object-oriented design rules
 
-These rules are non-negotiable. They were established through explicit design review and are enforced by the test suite.
+Three durable principles govern every design decision. The specific rules below are applications of these principles in this codebase — not a checklist to tick. When you encounter a novel situation, reason from the principle, not just the rule.
 
-1. **Sealed switch, never instanceof.** When dispatching over a sealed type hierarchy, use a Java 21 `switch` expression. Never use `instanceof` chains. Missing branches are compile errors — that is the point.
+---
 
-2. **Records for value objects.** Any type that is immutable and carries data (no mutation after construction) must be a `record`. Use a class only when the type is mutable or has non-trivial lifecycle (e.g. `Player`, `GameState`, `PartyMember`).
+**Principle 1 — Objects own their decisions.**
 
-3. **Builder for 4+ param constructors.** Any constructor with 4 or more parameters requires a static inner `Builder` with a fluent API. `build()` throws `IllegalStateException` for unset required fields. Optional fields default to empty/`ScriptBlock.empty()`.
+Logic that depends only on an object's state belongs on that object. Do not pull data out of objects to make decisions externally — push the decision in.
 
-4. **Parameter object for 4+ param methods.** Any method call with 4 or more parameters that share a theme must group the infrastructure (or domain) arguments into a record or context object. See `CombatContext` as the canonical example.
+- `player.isAlive()`, not `if (player.getStamina() == 0)` scattered across the engine.
+- A sealed type hierarchy that receives dispatch via `switch` is preferable to an external class that interrogates fields and branches. If you find yourself writing `instanceof` chains or multi-field conditionals on another object's state, a method is missing on that object.
+- Application: `HookDispatcher.processEvent(SectionEvent)` owns all event dispatch. `Game` never switches on event types. Do not scatter dispatch across classes.
+- Application: use Java 21 `switch` over sealed hierarchies — never `instanceof` chains. Missing branches are compile errors; that is the point.
 
-5. **Centralized dispatch.** Event and command dispatch belongs in one place. `HookDispatcher.processEvent(SectionEvent)` owns all event dispatch — `Game` never switches on event types. Do not scatter switch statements across classes.
+---
 
-6. **Static factory methods.** When a constructor has optional parameters that produce `Optional.empty()` noise at call sites, provide named factory methods (see `Choice.to(...)`). The canonical constructor exists for deserialization only.
+**Principle 2 — Construction must produce valid objects.**
+
+An object that can exist in an invalid state is a latent bug. Construction is the last line of defense.
+
+- Use `record` for any type that is immutable after construction. Use a class only when the type is mutable or has non-trivial lifecycle (e.g. `Player`, `GameState`, `PartyMember`).
+- Any constructor with 4 or more parameters requires a static inner `Builder`. `build()` throws `IllegalStateException` for any unset required field. Optional fields default to empty collections or `ScriptBlock.empty()`.
+- Any method with 4 or more parameters that share a theme must group those arguments into a record or context object — see `CombatContext`. A long parameter list is a sign that a concept is missing a name.
+- When a constructor has optional parameters that produce `Optional.empty()` noise at call sites, provide named static factory methods (see `Choice.to(...)`). The canonical constructor exists for deserialization only.
+- Compact constructors on records (`ScriptBlock`, `Attribute`) must enforce all invariants — defensive copy, clamping, validation — before the object escapes.
+
+---
+
+**Principle 3 — Encapsulate what varies.**
+
+If a concept changes independently, it deserves its own type. Primitives and maps are implementation details, not domain concepts.
+
+- A `String` standing in for a domain concept (an item name, a section id, a stat name) is a sign that a value type is missing. Introduce the type when the concept has invariants or behaviour.
+- `Map<String, Object>` is acceptable at system boundaries (adventure JSON params) but must not propagate into domain logic. Wrap it or extract typed accessors before passing it inward.
+- If two classes change for the same reason, they may belong together. If one class changes for two different reasons, it should be split.
 
 ### Code quality rules
 - Write only what is needed to make the tests pass.
