@@ -35,6 +35,8 @@ Every script receives two globals: `ctx` and `state`.
 | `ctx.hasItem(name)` | Return true if player carries at least 1 unit |
 | `ctx.getItemCount(name)` | Return current quantity (0 if absent) |
 | `ctx.getPartyMember(id)` | Return a party member proxy (see below) |
+| `ctx.addPartyMember(id)` | Move a pre-defined party member to `ACTIVE` state. If already `ACTIVE`, no-ops. If `REMOVED`, re-activates with preserved stats. If id is unknown, no-ops. |
+| `ctx.removePartyMember(id)` | Move an `ACTIVE` party member to `REMOVED` state. Does not trigger `onDefeat`. If already `REMOVED` or `WAITING`, no-ops. If id is unknown, no-ops. |
 | `ctx.navigateTo(section)` | Navigate to a section (valid in `onEnter`, `onExit`, `onCombatEnd`) |
 | `ctx.currentSection()` | Return current section number |
 | `ctx.showMessage(text)` | Display a message to the player |
@@ -47,14 +49,13 @@ Every script receives two globals: `ctx` and `state`.
 
 | Method | Description |
 |--------|-------------|
-| `member.modifyStat(name, delta)` | Modify a named stat (clamped to [0, max]) |
-| `member.getStat(name)` | Return current stat value |
-| `member.getMaxStat(name)` | Return max stat value |
-| `member.isDefeated()` | True if the life stat has reached 0 |
-| `member.setVisible(bool)` | Show or hide in the status bar |
-| `member.isVisible()` | Current visibility state |
+| `member.modifyStat(name, delta)` | Modify a named stat (clamped to [0, max]). If the life stat reaches 0, the `onDefeat` consequence fires. |
+| `member.getStat(name)` | Return current stat value. |
+| `member.getMaxStat(name)` | Return max stat value. |
+| `member.isActive()` | True if the member is in `ACTIVE` state. |
+| `member.isDefeated()` | True if the life stat has reached 0. Member may be `ACTIVE` or `REMOVED` when this returns true. |
 
-If the id is unknown or the member has been removed, the proxy silently no-ops all calls.
+If the id is unknown, the proxy silently no-ops all mutation calls and returns `false` / `0` for query calls.
 
 ---
 
