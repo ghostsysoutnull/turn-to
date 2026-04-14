@@ -34,11 +34,29 @@ Every script receives two globals: `ctx` and `state`.
 | `ctx.removeItem(name, quantity)` | Remove specified quantity (capped at current stock) |
 | `ctx.hasItem(name)` | Return true if player carries at least 1 unit |
 | `ctx.getItemCount(name)` | Return current quantity (0 if absent) |
+| `ctx.getPartyMember(id)` | Return a party member proxy (see below) |
 | `ctx.navigateTo(section)` | Navigate to a section (valid in `onEnter`, `onExit`, `onCombatEnd`) |
 | `ctx.currentSection()` | Return current section number |
 | `ctx.showMessage(text)` | Display a message to the player |
 | `ctx.addChoice(text, section)` | Add a choice to the current list (`onChoices` hook only) |
 | `ctx.removeChoice(text)` | Remove a choice by its text (`onChoices` hook only) |
+
+### Party member proxy
+
+`ctx.getPartyMember(id)` returns a proxy object with its own methods:
+
+| Method | Description |
+|--------|-------------|
+| `member.modifyStat(name, delta)` | Modify a named stat (clamped to [0, max]) |
+| `member.getStat(name)` | Return current stat value |
+| `member.getMaxStat(name)` | Return max stat value |
+| `member.isDefeated()` | True if the life stat has reached 0 |
+| `member.setVisible(bool)` | Show or hide in the status bar |
+| `member.isVisible()` | Current visibility state |
+
+If the id is unknown or the member has been removed, the proxy silently no-ops all calls.
+
+---
 
 ### `state` — adventure-scoped persistent state
 

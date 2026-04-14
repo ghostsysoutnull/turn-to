@@ -14,6 +14,7 @@ A text-based terminal adventure game inspired by the Fighting Fantasy gamebook s
 | [04 - Terminal UI](docs/specs/04-terminal-ui.md) | Screen layout, input/output behaviour |
 | [05 - Scripting](docs/specs/05-scripting.md) | Lua scripting system, lifecycle hook points, ScriptContext API |
 | [06 - Items](docs/specs/06-items.md) | Item categories, inventory rules, item lifecycle hooks |
+| [07 - Party Members](docs/specs/07-party-members.md) | Configurable companion entities: ships, companions, crews — fixed and dice-formula stats |
 
 ### Technical Design
 
@@ -27,6 +28,8 @@ A text-based terminal adventure game inspired by the Fighting Fantasy gamebook s
 | [06 - Testability](docs/design/06-testability.md) | Test doubles, test strategy per layer |
 | [07 - Scripting Engine](docs/design/07-scripting-engine.md) | LuaJ integration, HookDispatcher, ScriptContext, sandboxing |
 | [08 - Item Model](docs/design/08-item-model.md) | Item, Inventory, equip system, combat integration |
+| [09 - Party Member Model](docs/design/09-party-member-model.md) | PartyMember, StatDefinition, DiceFormula, defeat consequences |
+| [10 - Combat Systems](docs/design/10-combat-systems.md) | Pluggable CombatSystem interface, registry, PersonalCombatSystem, system composition |
 
 ## Tech Stack
 

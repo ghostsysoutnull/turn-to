@@ -63,8 +63,12 @@ public class Adventure {
     private final int startSection;
     private final int initialProvisions;
     private final Map<Integer, Section> sections;
+    private final List<PartyMemberDefinition> partyMemberDefinitions;
+    private final List<String> combatSystems;           // ids beyond "personal"
 
-    public Section getSection(int number);  // throws if not found
+    public Section getSection(int number);              // throws if not found
+    public List<PartyMemberDefinition> partyMemberDefinitions();
+    public boolean hasItem(String name);
 }
 ```
 
@@ -99,9 +103,16 @@ public sealed interface SectionEvent
 ```
 
 ```java
-public record CombatEvent(List<Creature> creatures, boolean simultaneous) implements SectionEvent {}
+public record CombatEvent(
+    String system,                  // default "personal"
+    List<String> participantIds,    // party member ids
+    List<Creature> opponents,
+    boolean simultaneous,
+    Map<String, Object> params,
+    ScriptBlock scripts
+) implements SectionEvent {}
 public record StatChangeEvent(AttributeType attribute, int delta) implements SectionEvent {}
-public record ItemEvent(String itemName, ItemAction action) implements SectionEvent {}  // action: GAIN | LOSE
+public record ItemEvent(String itemName, ItemAction action, int quantity) implements SectionEvent {}
 public record LuckTestEvent(int successSection, int failSection) implements SectionEvent {}
 public record SkillTestEvent(int successSection, int failSection) implements SectionEvent {}
 public record NavigateEvent(int targetSection) implements SectionEvent {}
@@ -150,15 +161,17 @@ public record CombatResult(
 
 ```java
 public sealed interface Condition
-    permits HasItemCondition, LacksItemCondition,
-            StatCondition, GoldCondition {}
+    permits HasItemCondition, LacksItemCondition, StatCondition, GoldCondition,
+            PartyStatCondition, PartyMemberPresentCondition {}
 
 public record HasItemCondition(String itemName) implements Condition {}
 public record LacksItemCondition(String itemName) implements Condition {}
 public record StatCondition(AttributeType attribute, ComparisonType comparison, int threshold) implements Condition {}
 public record GoldCondition(int minimum) implements Condition {}
+public record PartyStatCondition(String memberId, String statName, ComparisonType comparison, int threshold) implements Condition {}
+public record PartyMemberPresentCondition(String memberId, boolean present) implements Condition {}
 ```
 
 `ComparisonType` enum: `AT_LEAST`, `AT_MOST`.
 
-A `ConditionEvaluator` service class handles evaluation against a `Player` instance, keeping evaluation logic out of the domain records themselves.
+A `ConditionEvaluator` service class handles evaluation against `Player` and `GameState`, keeping evaluation logic out of the domain records themselves.

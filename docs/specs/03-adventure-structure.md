@@ -16,6 +16,8 @@ An adventure is a self-contained story composed of numbered **sections**. The pl
 | startSection      | int      | Section number where the adventure begins |
 | initialProvisions | int      | Number of provisions the player starts with |
 | items             | list     | All item definitions available in this adventure |
+| partyMembers      | list     | Named entities with configurable stats that travel with the player (ships, companions, etc.) |
+| combatSystems     | list     | Combat system ids used by this adventure beyond the default `"personal"` system |
 | scripts           | ScriptBlock | Lifecycle hook scripts at adventure level |
 
 ### Adventure Lifecycle Hooks
@@ -123,6 +125,12 @@ Each item definition includes:
 - A description shown in the inventory
 - A category (USABLE, EQUIPPABLE, KEY, PASSIVE)
 - A script block with item lifecycle hooks (`onPickup`, `onDrop`, `onUse`, `onEquip`, `onUnequip`, `onCombatRound`)
+
+---
+
+## Party Members
+
+Adventures can declare zero or more party members — named entities with fully configurable stats that persist across sections. See **Spec: Party Members** for the full definition.
 
 ---
 

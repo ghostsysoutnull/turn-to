@@ -73,7 +73,7 @@ com.tas.neo
 │   │   ├── ScriptBlock.java               # record: map of hook name → script string
 │   │   └── event
 │   │       ├── SectionEvent.java          # sealed interface
-│   │       ├── CombatEvent.java
+│   │       ├── CombatEvent.java           # includes system, participants, params
 │   │       ├── StatChangeEvent.java
 │   │       ├── ItemEvent.java
 │   │       ├── LuckTestEvent.java
@@ -84,13 +84,22 @@ com.tas.neo
 │   │   ├── Item.java
 │   │   ├── ItemCategory.java              # enum: USABLE, EQUIPPABLE, KEY, PASSIVE
 │   │   └── ItemScriptHook.java            # enum: ON_PICKUP, ON_DROP, ON_USE, ON_EQUIP, ON_UNEQUIP, ON_COMBAT_ROUND
+│   ├── party
+│   │   ├── PartyMember.java
+│   │   ├── PartyMemberStat.java           # record
+│   │   ├── PartyMemberDefinition.java     # loader-only; holds StatDefinitions
+│   │   ├── DefeatConsequence.java         # sealed interface
+│   │   └── Visibility.java               # enum: ALWAYS, HIDDEN
 │   └── combat
 │       ├── Creature.java                  # record
 │       ├── CombatRound.java               # record
-│       └── CombatResult.java              # record
+│       ├── CombatResult.java              # record
+│       └── CombatOutcome.java             # record: generalised outcome for pluggable systems
 ├── mechanics
 │   ├── Dice.java                          # interface
 │   ├── RandomDice.java
+│   ├── DiceFormula.java                   # parses and rolls "NdS+M" expressions
+│   ├── StatDefinition.java                # sealed interface: FixedStatDefinition, DiceStatDefinition
 │   ├── CombatEngine.java
 │   ├── LuckTest.java
 │   └── SkillTest.java
@@ -105,12 +114,18 @@ com.tas.neo
 │   ├── GameOutput.java                    # interface
 │   ├── TerminalInput.java
 │   └── TerminalOutput.java
+├── combat
+│   ├── CombatSystem.java                  # interface
+│   ├── CombatSystemRegistry.java          # interface
+│   ├── DefaultCombatSystemRegistry.java
+│   └── personal
+│       └── PersonalCombatSystem.java      # wraps CombatEngine
 ├── loader
 │   ├── AdventureLoader.java               # interface
 │   └── JsonAdventureLoader.java
 └── engine
     ├── Game.java
-    ├── GameState.java
+    ├── GameState.java                     # gains partyMembers map
     └── HookDispatcher.java                # fires lifecycle hooks via ScriptEngine
 ```
 
@@ -121,11 +136,12 @@ com.tas.neo
 | Layer     | May depend on                          | Must NOT depend on       |
 |-----------|----------------------------------------|--------------------------|
 | domain    | nothing                                | all other layers         |
-| mechanics | domain                                 | engine, io, loader, scripting |
-| scripting | domain                                 | engine, io, loader, mechanics |
-| io        | domain                                 | engine, mechanics, loader, scripting |
-| loader    | domain                                 | engine, mechanics, io, scripting |
-| engine    | domain, mechanics, io, loader, scripting | nothing restricted     |
+| mechanics | domain                                 | engine, io, loader, scripting, combat |
+| scripting | domain                                 | engine, io, loader, mechanics, combat |
+| io        | domain                                 | engine, mechanics, loader, scripting  |
+| loader    | domain                                 | engine, mechanics, io, scripting      |
+| combat    | domain, mechanics                      | engine, io, loader, scripting         |
+| engine    | domain, mechanics, io, loader, scripting, combat | nothing restricted  |
 | Main      | all layers                             | —                        |
 
 ---
@@ -190,6 +206,8 @@ public interface ScriptContext {
     void removeItem(String itemName, int quantity);
     boolean hasItem(String itemName);
     int getItemCount(String itemName);
+    // Party members
+    PartyMemberProxy getPartyMember(String id);
     // Navigation
     void navigateTo(int section);
     int currentSection();
@@ -214,12 +232,16 @@ public interface ScriptContext {
 `Main` is the only class that touches concrete implementations:
 
 ```java
-Dice dice                 = new RandomDice();
-GameInput input           = new TerminalInput(System.in);
-GameOutput output         = new TerminalOutput(System.out);
-ScriptEngine scriptEngine = new LuaScriptEngine();
-AdventureLoader loader    = new JsonAdventureLoader(Path.of("adventures"));
-Game game                 = new Game(input, output, loader, dice, scriptEngine);
+Dice dice                         = new RandomDice();
+GameInput input                   = new TerminalInput(System.in);
+GameOutput output                 = new TerminalOutput(System.out);
+ScriptEngine scriptEngine         = new LuaScriptEngine();
+AdventureLoader loader            = new JsonAdventureLoader(Path.of("adventures"));
+CombatSystemRegistry combatRegistry = new DefaultCombatSystemRegistry(
+    new PersonalCombatSystem(new CombatEngine(dice, input, output))
+    // register additional systems here per adventure need
+);
+Game game = new Game(input, output, loader, dice, scriptEngine, combatRegistry);
 game.run("the-warlock-of-firetop-mountain");
 ```
 
