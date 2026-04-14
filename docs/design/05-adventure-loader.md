@@ -45,6 +45,27 @@ adventures/
   },
   "items": [ ],
   "partyMembers": [ ],
+  "grids": [
+    {
+      "id": "cave-network",
+      "width": 3,
+      "height": 3,
+      "floors": 1,
+      "cells": [
+        {
+          "id": "entrance",
+          "x": 0, "y": 0, "z": 0,
+          "narrative": "Cold air rushes past as you step inside.",
+          "events": [],
+          "scripts": {},
+          "passages": {
+            "east":  {},
+            "north": { "toSection": 2, "label": "Leave the cave" }
+          }
+        }
+      ]
+    }
+  ],
   "sections": [
     {
       "number": 1,
@@ -58,6 +79,7 @@ adventures/
       },
       "choices": [
         { "text": "Enter the mountain", "targetSection": 2 },
+        { "text": "Explore the cave", "toGrid": "cave-network", "toCell": "entrance" },
         { "text": "Turn back", "targetSection": 400 }
       ]
     },
@@ -104,6 +126,14 @@ All rules are enforced at load time. Violations throw `AdventureLoadException`.
 | All item names referenced in events or scripts exist in the adventure's item list |
 | All party member ids referenced in `CombatEvent.participantIds` exist in `partyMembers` |
 | All `combatSystems` ids beyond `"personal"` are registered in `CombatSystemRegistry` |
+| All grid ids are unique within the adventure |
+| All cell positions `(x, y, z)` within their grid's declared dimensions |
+| No two cells at the same `(x, y, z)` within a grid |
+| No two cells with the same `id` within a grid |
+| All cell passages without `toSection` target a coordinate that contains a cell |
+| All `toSection` values in cell passages reference an existing section |
+| All `toGrid` + `toCell` pairs in choices reference an existing grid id and a cell with a matching `id` |
+| A choice must not declare both `targetSection` and `toGrid`/`toCell` |
 
 Sections of type VICTORY or INSTANT_DEATH with choices produce a warning — the choices are ignored.
 
@@ -116,4 +146,9 @@ Sections of type VICTORY or INSTANT_DEATH with choices produce a warning — the
 | Valid adventure loads | Fixture JSON → assert `Adventure` fields correct |
 | Each validation rule | Corresponding malformed fixture → assert `AdventureLoadException` |
 | Party member stat resolution | Fixture with dice-formula stat, `FixedDice` → assert expected value |
+| Valid grid loads | Fixture JSON with grid → assert grid id, dimensions, cell count, passage structure correct |
+| Each grid validation rule | Corresponding malformed fixture → assert `AdventureLoadException` |
+| `toGrid`/`toCell` choice resolves | Fixture with section choice targeting a named grid cell → assert resolves without error |
+| `toGrid`/`toCell` choice with unknown grid | Malformed fixture → assert `AdventureLoadException` |
+| `toGrid`/`toCell` choice with unknown cell id | Malformed fixture → assert `AdventureLoadException` |
 | Engine tests | `InMemoryAdventureLoader` — supplies `Adventure` objects directly, no filesystem |
