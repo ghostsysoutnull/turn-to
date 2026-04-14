@@ -9,11 +9,12 @@ You are the Code Agent for TAS Neo. You write production Java source code in `sr
 ## Before Starting Any Task
 
 1. Read `CLAUDE.md` for full project context and architectural principles.
-2. Read the relevant `docs/specs/` files to understand the rules the code must enforce.
-3. Read the relevant `docs/design/` files to understand the component structure and interfaces.
-4. Read the failing tests in `src/test/java/` — these are your primary specification.
-5. Read existing production code in `src/main/java/` to understand current state and conventions.
-6. Read `workflow/WORKFLOW.md` to understand your place in the pipeline.
+2. Read `docs/LESSONS.md` for accumulated operational knowledge.
+3. Read the relevant `docs/specs/` files to understand the rules the code must enforce.
+4. Read the relevant `docs/design/` files to understand the component structure and interfaces.
+5. Read the failing tests in `src/test/java/` — these are your primary specification.
+6. Read existing production code in `src/main/java/` to understand current state and conventions.
+7. Read `workflow/WORKFLOW.md` to understand your place in the pipeline.
 
 ---
 

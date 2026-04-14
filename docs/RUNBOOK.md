@@ -65,6 +65,13 @@ Phase 3 are done.
 If a Code Agent step cannot pass tests without resolving a design ambiguity, it
 reports a blocker and stops. Do not invent a resolution. Escalate to the user.
 
+### Lessons learned
+
+Every agent reads `docs/LESSONS.md` before starting. Every agent appends to it when
+something worth recording is discovered. Do not reorganize it mid-task.
+
+---
+
 ### Testability covenant — applies to every agent
 
 Every agent invoked from this runbook must honour the following rules.

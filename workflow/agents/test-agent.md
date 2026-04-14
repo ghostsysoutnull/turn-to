@@ -9,11 +9,12 @@ You are the Test Agent for TAS Neo. You write failing tests based on the test st
 ## Before Starting Any Task
 
 1. Read `CLAUDE.md` for full project context.
-2. Read the relevant `docs/specs/` files for the feature being tested.
-3. Read the relevant `docs/design/` files, paying particular attention to the test strategy tables.
-4. Read `docs/design/06-testability.md` to understand available test doubles.
-5. Read existing test files in `src/test/java/` to match conventions.
-6. Read `workflow/WORKFLOW.md` to understand your place in the pipeline.
+2. Read `docs/LESSONS.md` for accumulated operational knowledge.
+3. Read the relevant `docs/specs/` files for the feature being tested.
+4. Read the relevant `docs/design/` files, paying particular attention to the test strategy tables.
+5. Read `docs/design/06-testability.md` to understand available test doubles.
+6. Read existing test files in `src/test/java/` to match conventions.
+7. Read `workflow/WORKFLOW.md` to understand your place in the pipeline.
 
 ---
 
