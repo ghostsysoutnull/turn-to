@@ -26,8 +26,8 @@ public class GameState {
     public void setGameOver();
     public void setVictory();
     public PartyMember getPartyMember(String id);
-    public List<PartyMember> visiblePartyMembers();
-    public void removePartyMember(String id);
+    public List<PartyMember> activePartyMembers();
+    public void setPartyMemberState(String id, MemberState state);
 }
 ```
 
@@ -88,7 +88,7 @@ The engine injects these choices into every section's choice list at display tim
 At adventure start, the engine:
 
 1. Rolls player stats using `DiceFormula` (SKILL: `1d6+6`, STAMINA: `2d6+12`, LUCK: `1d6+6`). Rolled values become both initial and maximum.
-2. Creates each declared party member by resolving their `StatDefinition` entries via `Dice`.
+2. Creates each declared party member by resolving their `StatDefinition` entries via `Dice`. Each member's initial `MemberState` is set from `PartyMemberDefinition.initialState()` (`ACTIVE` or `WAITING`). Stats are rolled regardless of initial state.
 3. Fires `AdventureHook.ON_LOAD`, then `AdventureHook.ON_START`.
 
 ---

@@ -1,22 +1,33 @@
 # Design: Party Member Model
 
+## MemberState
+
+```java
+public enum MemberState { WAITING, ACTIVE, REMOVED }
+```
+
+A party member moves through states in the direction `WAITING → ACTIVE → REMOVED`. A `REMOVED` member may be re-activated back to `ACTIVE` via `ctx.addPartyMember(id)`. Stats are **not** re-rolled on re-activation.
+
+---
+
 ## PartyMember
 
 ```java
 public class PartyMember {
     public String id();
     public String displayName();
-    public boolean isVisible();
-    public void setVisible(boolean visible);
+    public MemberState state();
+    public boolean isActive();
     public int getStat(String name);
     public int getMaxStat(String name);
     public void modifyStat(String name, int delta);
     public boolean hasStat(String name);
     public boolean isDefeated();
+    public void setState(MemberState state);
 }
 ```
 
-`PartyMember` is mutable — stats change during play. All definition fields are final. `isDefeated()` returns true when the designated life stat reaches 0. Modification clamps to `[0, max]`.
+`PartyMember` is mutable — stats and state change during play. All definition fields are final. `isDefeated()` returns true when the designated life stat reaches 0. Stat modification clamps to `[0, max]`. `isActive()` is a convenience that returns `state() == MemberState.ACTIVE`.
 
 ---
 
@@ -45,7 +56,7 @@ public record RemoveConsequence(String message) implements DefeatConsequence {}
 public record NavigateConsequence(int section, String message) implements DefeatConsequence {}
 ```
 
-Defeat is handled by `HookDispatcher` immediately after any stat modification that causes `isDefeated()` to become true.
+Defeat is handled by `HookDispatcher` immediately after any stat modification that causes `isDefeated()` to become true. Both `RemoveConsequence` and `NavigateConsequence` move the member to `REMOVED` state before any navigation occurs.
 
 ---
 
@@ -87,16 +98,6 @@ Supported syntax: `NdS`, `NdS+M`, `NdS-M` (e.g. `"2d6+12"`, `"1d6+6"`, `"1d6"`).
 
 ---
 
-## Visibility
-
-```java
-public enum Visibility { ALWAYS, HIDDEN }
-```
-
-The loader sets `visible = (definition.visibility() == Visibility.ALWAYS)` during creation. Scripts toggle it via `ctx.getPartyMember(id).setVisible(...)`. Defeated members are automatically hidden by `HookDispatcher` after applying the defeat consequence.
-
----
-
 ## PartyMemberDefinition
 
 Loader-only object carrying the unresolved configuration. Converted to a live `PartyMember` at adventure start.
@@ -107,10 +108,12 @@ public class PartyMemberDefinition {
     public String displayName();
     public String lifeStat();
     public DefeatConsequence onDefeat();
-    public Visibility visibility();
+    public MemberState initialState();
     public Map<String, StatDefinition> stats();
 }
 ```
+
+`initialState()` is `ACTIVE` by default. Members declared with `WAITING` are not shown in the status bar until `ctx.addPartyMember(id)` is called.
 
 ---
 
@@ -121,8 +124,12 @@ public record PartyStatCondition(
     String memberId, String statName, ComparisonType comparison, int threshold
 ) implements Condition {}
 
-public record PartyMemberPresentCondition(String memberId, boolean present) implements Condition {}
+public record PartyMemberActiveCondition(String memberId) implements Condition {}
+public record PartyMemberWaitingCondition(String memberId) implements Condition {}
+public record PartyMemberRemovedCondition(String memberId) implements Condition {}
 ```
+
+These replace the former `PartyMemberPresentCondition`. Each condition tests an exact lifecycle state. `PartyStatCondition` requires the member to be `ACTIVE`; if the member is not `ACTIVE`, the condition evaluates to false.
 
 `ConditionEvaluator` resolves these against `GameState`, which holds the live party member map.
 
@@ -137,8 +144,21 @@ public record PartyMemberPresentCondition(String memberId, boolean present) impl
 | `DiceStatDefinition` resolution | `FixedDice` with and without `fixedMax` |
 | `PartyMemberStat.modify` | Assert clamping at 0 and max |
 | `PartyMember.isDefeated` | Set life stat to 0 → assert true |
+| `PartyMember.isActive` | Member in each state → assert correct boolean |
 | Defeat → `GAME_OVER` | Stat reduced to 0 → assert `state.isGameOver()` |
-| Defeat → `REMOVE` | Stat reduced to 0 → assert member absent from `GameState` |
-| Defeat → `NAVIGATE` | Stat reduced to 0 → assert `state.currentSection()` changed |
-| Visibility toggle | `setVisible(false)` then `true` → assert `visiblePartyMembers()` |
+| Defeat → `REMOVE` | Stat reduced to 0 → assert member state is `REMOVED` in `GameState` |
+| Defeat → `NAVIGATE` | Stat reduced to 0 → assert member state is `REMOVED` and `state.currentSection()` changed |
+| `ctx.addPartyMember` on `WAITING` member | Member moves to `ACTIVE` → assert `isActive()` true |
+| `ctx.addPartyMember` on `ACTIVE` member | No-op → assert state unchanged |
+| `ctx.addPartyMember` on `REMOVED` member | Member re-activates → assert `isActive()` true, stats preserved |
+| `ctx.addPartyMember` unknown id | No-op → assert no exception |
+| `ctx.removePartyMember` on `ACTIVE` member | Member moves to `REMOVED` → assert not in `activePartyMembers()` |
+| `ctx.removePartyMember` on `WAITING` member | No-op → assert state unchanged |
+| `ctx.removePartyMember` on `REMOVED` member | No-op → assert state unchanged |
+| `ctx.removePartyMember` does not trigger `onDefeat` | Remove `ACTIVE` member → assert game not over, no defeat message |
+| `PartyMemberActiveCondition` | `ACTIVE` member → true; `WAITING`/`REMOVED` → false |
+| `PartyMemberWaitingCondition` | `WAITING` member → true; others → false |
+| `PartyMemberRemovedCondition` | `REMOVED` member → true; others → false |
+| `PartyStatCondition` on non-ACTIVE member | Member not `ACTIVE` → condition evaluates false |
 | Proxy no-op on unknown id | `ctx.getPartyMember('unknown')` → assert no exception |
+| Stats rolled at load time, not on join | Member with dice-formula stat: stats fixed before `addPartyMember` call |

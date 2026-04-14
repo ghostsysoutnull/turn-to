@@ -43,6 +43,8 @@ public interface ScriptContext {
     boolean hasItem(String itemName);
     int getItemCount(String itemName);
     PartyMemberProxy getPartyMember(String id);
+    void addPartyMember(String id);
+    void removePartyMember(String id);
     void navigateTo(int section);
     int currentSection();
     void showMessage(String message);
@@ -113,13 +115,12 @@ public class PartyMemberProxy {
     public void modifyStat(String name, int delta);
     public int getStat(String name);
     public int getMaxStat(String name);
+    public boolean isActive();
     public boolean isDefeated();
-    public boolean isVisible();
-    public void setVisible(boolean visible);
 }
 ```
 
-If the requested id is unknown or the member has been removed, the proxy silently no-ops all calls and logs a warning.
+If the requested id is unknown, the proxy silently no-ops all mutation calls, returns `false` for boolean queries, and returns `0` for numeric queries.
 
 ---
 

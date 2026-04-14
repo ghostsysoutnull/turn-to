@@ -98,7 +98,7 @@ com.tas.neo
 │   │   ├── PartyMemberStat.java           # record
 │   │   ├── PartyMemberDefinition.java     # loader-only
 │   │   ├── DefeatConsequence.java         # sealed interface
-│   │   └── Visibility.java               # enum: ALWAYS, HIDDEN
+│   │   └── MemberState.java              # enum: WAITING, ACTIVE, REMOVED
 │   └── combat
 │       ├── Creature.java                  # record
 │       ├── CombatRound.java               # record
@@ -178,7 +178,7 @@ public interface GameInput {
 ### `GameOutput`
 ```java
 public interface GameOutput {
-    void showStatus(Player player, List<PartyMember> visibleMembers);
+    void showStatus(Player player, List<PartyMember> activeMembers);
     void showNarrative(String text);
     void showChoices(List<Choice> choices);
     void showMessage(String message);
@@ -218,6 +218,8 @@ public interface ScriptContext {
     boolean hasItem(String itemName);
     int getItemCount(String itemName);
     PartyMemberProxy getPartyMember(String id);
+    void addPartyMember(String id);
+    void removePartyMember(String id);
     void navigateTo(int section);
     int currentSection();
     void showMessage(String message);

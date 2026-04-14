@@ -166,14 +166,17 @@ public record CombatOutcome(CombatOutcomeType type, Optional<Integer> navigateTo
 ```java
 public sealed interface Condition
     permits HasItemCondition, LacksItemCondition, StatCondition, GoldCondition,
-            PartyStatCondition, PartyMemberPresentCondition {}
+            PartyStatCondition, PartyMemberActiveCondition,
+            PartyMemberWaitingCondition, PartyMemberRemovedCondition {}
 
 public record HasItemCondition(String itemName) implements Condition {}
 public record LacksItemCondition(String itemName) implements Condition {}
 public record StatCondition(AttributeType attribute, ComparisonType comparison, int threshold) implements Condition {}
 public record GoldCondition(int minimum) implements Condition {}
 public record PartyStatCondition(String memberId, String statName, ComparisonType comparison, int threshold) implements Condition {}
-public record PartyMemberPresentCondition(String memberId, boolean present) implements Condition {}
+public record PartyMemberActiveCondition(String memberId) implements Condition {}
+public record PartyMemberWaitingCondition(String memberId) implements Condition {}
+public record PartyMemberRemovedCondition(String memberId) implements Condition {}
 ```
 
 `ComparisonType` enum: `AT_LEAST`, `AT_MOST`.
