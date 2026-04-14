@@ -70,6 +70,8 @@ public class PersonalCombatSystem implements CombatSystem {
 }
 ```
 
+`PersonalCombatSystem.run()` calls `engine.fight()`, then applies `CombatResult.playerStaminaLost()` to the player via `player.modifyAttribute(AttributeType.STAMINA, -staminaLost)` before returning the `CombatOutcome`. `CombatEngine` never modifies `Player` directly — it only produces the result.
+
 ---
 
 ## Updated CombatEvent

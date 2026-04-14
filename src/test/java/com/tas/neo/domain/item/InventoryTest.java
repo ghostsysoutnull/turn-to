@@ -110,17 +110,56 @@ class InventoryTest {
     }
 
     @Test
+    void equip_marks_item_as_equipped() {
+        Inventory inv = new Inventory();
+        inv.add(equippable("Magic Sword"));
+
+        inv.equip("Magic Sword");
+
+        assertThat(inv.isEquipped("Magic Sword")).isTrue();
+    }
+
+    @Test
+    void unequip_clears_equipped_state() {
+        Inventory inv = new Inventory();
+        inv.add(equippable("Magic Sword"));
+        inv.equip("Magic Sword");
+
+        inv.unequip("Magic Sword");
+
+        assertThat(inv.isEquipped("Magic Sword")).isFalse();
+    }
+
+    @Test
+    void equip_on_absent_item_is_noop() {
+        Inventory inv = new Inventory();
+
+        inv.equip("Ghost Sword");
+
+        assertThat(inv.isEquipped("Ghost Sword")).isFalse();
+    }
+
+    @Test
     void equippedItems_returns_only_equipped_items() {
         Inventory inv = new Inventory();
-        Item sword = equippable("Magic Sword");
-        Item shield = equippable("Shield");
-        sword.setEquipped(true);
-        inv.add(sword);
-        inv.add(shield);
+        inv.add(equippable("Magic Sword"));
+        inv.add(equippable("Shield"));
+        inv.equip("Magic Sword");
 
         List<Item> equipped = inv.equippedItems();
 
         assertThat(equipped).extracting(Item::name).containsExactly("Magic Sword");
+    }
+
+    @Test
+    void remove_last_unit_clears_entry_from_inventory() {
+        Inventory inv = new Inventory();
+        inv.add(countable("Arrow"), 1);
+
+        inv.remove("Arrow");
+
+        assertThat(inv.has("Arrow")).isFalse();
+        assertThat(inv.allStacks()).isEmpty();
     }
 
     @Test

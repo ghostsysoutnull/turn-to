@@ -3,20 +3,14 @@
 ## Item
 
 ```java
-public class Item {
-    public String name();
-    public String description();
-    public ItemCategory category();
-    public boolean isCountable();
-    public ScriptBlock scripts();
-    public boolean isEquipped();
-    public void setEquipped(boolean equipped);
+public record Item(String name, String description, ItemCategory category,
+                   boolean countable, ScriptBlock scripts) {
     public boolean canBeUsed();
     public boolean canBeEquipped();
 }
 ```
 
-`Item` is not a record because it carries mutable equip state. All other fields are final.
+`Item` is a fully immutable record. Equip state is not an item definition concern — it is tracked in `Inventory` as a `Set<String>` of equipped item names. `canBeUsed()` and `canBeEquipped()` are convenience methods derived from `category`.
 
 ---
 
@@ -56,13 +50,18 @@ public class Inventory {
     public int remove(String itemName, int quantity);
     public boolean has(String itemName);
     public int count(String itemName);
+    public void equip(String itemName);
+    public void unequip(String itemName);
+    public boolean isEquipped(String itemName);
     public List<ItemStack> allStacks();
     public List<Item> equippedItems();
     public List<Item> passiveItems();
 }
 ```
 
-`remove` returns the number of units actually removed (may be less than requested if stock is insufficient). The caller uses this return value to decide whether to fire `onDrop`.
+`remove` returns the number of units actually removed (may be less than requested if stock is insufficient). The caller uses this return value to decide whether to fire `onDrop`. When quantity reaches 0, the map entry is removed — `has()` returns false and the item no longer appears in `allStacks()`.
+
+`equip`/`unequip` are no-ops if the item is not in the inventory. `isEquipped` returns false for unknown items. `equippedItems()` returns items whose names are in the equipped set and whose category is `EQUIPPABLE`.
 
 `LinkedHashMap` preserves insertion order for deterministic display and `onCombatRound` firing order.
 

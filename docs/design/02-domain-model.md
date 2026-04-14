@@ -13,13 +13,18 @@ public class Player {
     public int getStamina();
     public int getMaxStamina();
     public int getLuck();
+    public int getStat(AttributeType type);
     public void modifyAttribute(AttributeType type, int delta);
+    public int getGold();
+    public void modifyGold(int delta);
+    public int getProvisions();
+    public void modifyProvisions(int delta);
     public Inventory getInventory();
     public boolean isAlive();
 }
 ```
 
-`Player` is mutable. It is **not** a record.
+`Player` is mutable. It is **not** a record. `getStat(AttributeType)` is a generic accessor used by `ConditionEvaluator`; it delegates to the same attribute map as the named getters. `modifyGold` clamps to `[0, Integer.MAX_VALUE]`. `modifyProvisions` clamps to `[0, Integer.MAX_VALUE]`.
 
 ---
 
@@ -52,15 +57,17 @@ public class Adventure {
     public String description();
     public int startSection();
     public int initialProvisions();
-    public Section getSection(int number);
+    public Section getSection(int number);   // throws IllegalArgumentException if not found
     public boolean hasItem(String name);
-    public Item getItem(String name);
+    public Item getItem(String name);        // throws IllegalArgumentException if not found
     public List<PartyMemberDefinition> partyMemberDefinitions();
     public List<String> combatSystems();
     public Optional<Grid> getGrid(String id);
     public List<Grid> grids();
 }
 ```
+
+`getSection` and `getItem` throw `IllegalArgumentException` on a miss. Adventures are validated at load time, so a miss is a programming error, not a runtime condition.
 
 ---
 
@@ -107,12 +114,15 @@ public record Choice(String text, ChoiceTarget target, Optional<Condition> condi
 
 ```java
 public record ScriptBlock(Map<String, String> hooks) {
+    public ScriptBlock {
+        hooks = Map.copyOf(hooks); // defensive copy — immutable after construction
+    }
     public Optional<String> get(String hookName);
     public static ScriptBlock empty();
 }
 ```
 
-`Section`, `Adventure`, `Item`, and `CombatEvent` each carry a `ScriptBlock`.
+`Section`, `Adventure`, `Item`, and `CombatEvent` each carry a `ScriptBlock`. The compact constructor copies the map so external mutation after construction is impossible.
 
 ---
 
@@ -207,19 +217,29 @@ public record StateNotEqualsCondition(String key, Object value) implements Condi
 
 ```java
 public class ConditionEvaluator {
-    public boolean evaluate(Condition condition, Player player, GameState state);
+    public boolean evaluate(Condition condition, Player player, GameState state,
+                            AdventureScriptState scriptState);
 }
 ```
+
+`AdventureScriptState` is required because `StateEqualsCondition` and `StateNotEqualsCondition` compare against script flags — those live in `AdventureScriptState`, not `GameState`. Passing it as a parameter keeps `GameState` free of scripting concerns.
 
 Dispatch uses a Java 21 `switch` expression over the sealed `Condition` hierarchy — never `instanceof` chains. Every branch is exhaustive at compile time; adding a new `Condition` subtype without handling it is a compile error.
 
 ```java
 return switch (condition) {
-    case HasItemCondition c    -> player.inventory().has(c.itemName());
-    case StatAtLeastCondition c -> player.getStat(c.attribute()) >= c.value();
-    case StatAtMostCondition c  -> player.getStat(c.attribute()) <= c.value();
-    case StateEqualsCondition c -> Objects.equals(state.getFlag(c.key()), c.value());
-    // ... all subtypes listed explicitly
+    case HasItemCondition c          -> player.getInventory().has(c.itemName());
+    case LacksItemCondition c        -> !player.getInventory().has(c.itemName());
+    case StatCondition c             -> c.comparison() == ComparisonType.AT_LEAST
+                                         ? player.getStat(c.attribute()) >= c.threshold()
+                                         : player.getStat(c.attribute()) <= c.threshold();
+    case GoldCondition c             -> player.getGold() >= c.minimum();
+    case PartyStatCondition c        -> { /* evaluate via state.getPartyMember */ }
+    case PartyMemberActiveCondition c  -> state.getPartyMember(c.memberId()).isActive();
+    case PartyMemberWaitingCondition c -> state.getPartyMember(c.memberId()).state() == MemberState.WAITING;
+    case PartyMemberRemovedCondition c -> state.getPartyMember(c.memberId()).state() == MemberState.REMOVED;
+    case StateEqualsCondition c      -> Objects.equals(scriptState.get(c.key()), c.value());
+    case StateNotEqualsCondition c   -> !Objects.equals(scriptState.get(c.key()), c.value());
 };
 ```
 

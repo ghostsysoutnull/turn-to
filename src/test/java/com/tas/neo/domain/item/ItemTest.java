@@ -8,22 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ItemTest {
 
     @Test
-    void equipped_state_defaults_to_false() {
-        Item sword = new Item("Sword", "A sword", ItemCategory.EQUIPPABLE, false, ScriptBlock.empty());
-
-        assertThat(sword.isEquipped()).isFalse();
-    }
-
-    @Test
-    void setEquipped_toggles_equipped_state() {
-        Item sword = new Item("Sword", "A sword", ItemCategory.EQUIPPABLE, false, ScriptBlock.empty());
-
-        sword.setEquipped(true);
-
-        assertThat(sword.isEquipped()).isTrue();
-    }
-
-    @Test
     void usable_item_canBeUsed_true() {
         Item potion = new Item("Potion", "Heals", ItemCategory.USABLE, true, ScriptBlock.empty());
 

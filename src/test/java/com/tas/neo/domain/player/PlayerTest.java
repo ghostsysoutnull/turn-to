@@ -82,6 +82,65 @@ class PlayerTest {
     }
 
     @Test
+    void getStat_returns_same_value_as_named_getters() {
+        Player p = newPlayer(9, 20, 8, 0, 0);
+
+        assertThat(p.getStat(AttributeType.SKILL)).isEqualTo(9);
+        assertThat(p.getStat(AttributeType.STAMINA)).isEqualTo(20);
+        assertThat(p.getStat(AttributeType.LUCK)).isEqualTo(8);
+    }
+
+    @Test
+    void getGold_returns_initial_gold() {
+        Player p = newPlayer(9, 20, 8, 15, 3);
+
+        assertThat(p.getGold()).isEqualTo(15);
+    }
+
+    @Test
+    void modifyGold_adds_delta() {
+        Player p = newPlayer(9, 20, 8, 10, 0);
+
+        p.modifyGold(5);
+
+        assertThat(p.getGold()).isEqualTo(15);
+    }
+
+    @Test
+    void modifyGold_clamps_to_zero() {
+        Player p = newPlayer(9, 20, 8, 3, 0);
+
+        p.modifyGold(-100);
+
+        assertThat(p.getGold()).isZero();
+    }
+
+    @Test
+    void getProvisions_returns_initial_provisions() {
+        Player p = newPlayer(9, 20, 8, 0, 5);
+
+        assertThat(p.getProvisions()).isEqualTo(5);
+    }
+
+    @Test
+    void modifyProvisions_adds_delta() {
+        Player p = newPlayer(9, 20, 8, 0, 3);
+
+        p.modifyProvisions(-1);
+
+        assertThat(p.getProvisions()).isEqualTo(2);
+    }
+
+    @Test
+    void modifyProvisions_clamps_to_zero() {
+        Player p = newPlayer(9, 20, 8, 0, 1);
+
+        p.modifyProvisions(-100);
+
+        assertThat(p.getProvisions()).isZero();
+    }
+
+    @Test
     void getInventory_returns_the_same_inventory_instance() {
         Player p = newPlayer(9, 20, 8, 0, 0);
         Item torch = new Item("Torch", "A lit torch", ItemCategory.USABLE, false, ScriptBlock.empty());

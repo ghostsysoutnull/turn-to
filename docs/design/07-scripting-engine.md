@@ -63,15 +63,19 @@ public interface ScriptContext {
 
 ## AdventureScriptState
 
-A mutable key/value store scoped to one adventure run. Survives section transitions. Permits `String`, `Integer`, and `Boolean` values only.
+A mutable key/value store scoped to one adventure run. Survives section transitions. Permits `String`, `Integer`, and `Boolean` values only — enforced by typed overloads, not runtime checks.
 
 ```java
 public class AdventureScriptState {
-    public void set(String key, Object value);
-    public Object get(String key);
+    public void set(String key, String value);
+    public void set(String key, int value);
+    public void set(String key, boolean value);
+    public Object get(String key);    // returns String, Integer, or Boolean; null if absent
     public boolean has(String key);
 }
 ```
+
+No `set(String, Object)` overload. Scripts call the typed overload matching the value type. `get` returns `Object` because `ConditionEvaluator` compares with `Objects.equals` against a condition value of the same type.
 
 ---
 
