@@ -65,19 +65,24 @@ Single point of contact between the engine and the scripting/combat layers. Fire
 
 ```java
 public class HookDispatcher {
-    public HookDispatcher(ScriptEngine scriptEngine, GameOutput output,
+    public HookDispatcher(ScriptEngine scriptEngine, GameInput input, GameOutput output,
                           GameState state, AdventureScriptState scriptState,
-                          CombatSystemRegistry combatRegistry);
+                          CombatSystemRegistry combatRegistry, Dice dice);
 
     public void fireAdventureHook(AdventureHook hook, Adventure adventure);
     public void fireSectionHook(SectionHook hook, Section section, List<Choice> mutableChoices);
     public void fireCombatHook(CombatHook hook, CombatEvent event, CombatRound round);
     public void fireItemHook(ItemScriptHook hook, Item item);
     public CombatOutcome processCombatEvent(CombatEvent event);
+    public void processEvent(SectionEvent event);
 }
 ```
 
 If the relevant `ScriptBlock` has no entry for a hook, the call is a no-op.
+
+`processEvent(SectionEvent)` dispatches over the sealed `SectionEvent` hierarchy using a Java 21 `switch` expression. `Game` calls this single method per event — it never switches over event types itself. Adding a new `SectionEvent` subtype requires only updating `HookDispatcher.processEvent`, not `Game`.
+
+`HookDispatcher` constructs `CombatContext` internally from its own `input`, `output`, `combatRegistry`, and `dice` fields when dispatching a `CombatEvent` — callers never build `CombatContext` directly.
 
 ---
 

@@ -98,9 +98,9 @@ Single point of contact between the engine and the scripting layer. Builds the c
 
 ```java
 public class HookDispatcher {
-    public HookDispatcher(ScriptEngine scriptEngine, GameOutput output,
+    public HookDispatcher(ScriptEngine scriptEngine, GameInput input, GameOutput output,
                           GameState state, AdventureScriptState scriptState,
-                          CombatSystemRegistry combatRegistry);
+                          CombatSystemRegistry combatRegistry, Dice dice);
 
     public void fireAdventureHook(AdventureHook hook, Adventure adventure);
     public void fireSectionHook(SectionHook hook, Section section, List<Choice> mutableChoices);
@@ -108,6 +108,7 @@ public class HookDispatcher {
     public void fireCombatHook(CombatHook hook, CombatEvent event, CombatRound round);
     public void fireItemHook(ItemScriptHook hook, Item item);
     public CombatOutcome processCombatEvent(CombatEvent event);
+    public void processEvent(SectionEvent event);
 }
 ```
 

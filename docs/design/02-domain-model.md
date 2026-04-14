@@ -103,10 +103,16 @@ public record GridTarget(String gridId, String cellId) implements ChoiceTarget {
 ## Choice
 
 ```java
-public record Choice(String text, ChoiceTarget target, Optional<Condition> condition, Optional<String> id) {}
+public record Choice(String text, ChoiceTarget target, Optional<Condition> condition, Optional<String> id) {
+    public static Choice to(String text, ChoiceTarget target);
+    public static Choice to(String text, ChoiceTarget target, Condition condition);
+    public static Choice to(String text, ChoiceTarget target, Condition condition, String id);
+}
 ```
 
 `id` is used by `ctx.hideChoice(id)` in `onChoices` scripts. It is unique within a section or cell if present.
+
+The three static factory methods cover the common construction cases and eliminate `Optional.empty()` noise at call sites. The canonical record constructor remains for Jackson deserialization. `Choice.to(text, target)` is equivalent to `new Choice(text, target, Optional.empty(), Optional.empty())`.
 
 ---
 
