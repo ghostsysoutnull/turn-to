@@ -6,41 +6,51 @@
 2. **Dependency inversion** — the game engine depends on interfaces, never on concrete I/O or infrastructure.
 3. **Rich domain model** — game rules live in the domain layer, not in the engine or UI.
 4. **Data-driven adventures** — adventures are loaded from external files, not hardcoded.
+5. **Lifecycle-driven scripting** — the engine owns a fixed set of hook points; scripts are passengers, not drivers.
 
 ---
 
 ## Layer Overview
 
 ```
-┌──────────────────────────────────────────────┐
-│              Entrypoint (Main)               │
-└──────────────────┬───────────────────────────┘
-                   │ wires up
-┌──────────────────▼───────────────────────────┐
-│              Engine Layer                    │
-│   Game, GameState, GameRunner                │
-└───────┬──────────────┬───────────────────────┘
-        │              │
-┌───────▼──────┐  ┌────▼──────────────────────┐
-│  Domain Layer│  │       I/O Layer            │
-│  Player      │  │  GameInput (interface)     │
-│  Adventure   │  │  GameOutput (interface)    │
-│  Section     │  │  TerminalInput             │
-│  Events      │  │  TerminalOutput            │
-│  Combat      │  └───────────────────────────┘
+┌──────────────────────────────────────────────────┐
+│                Entrypoint (Main)                 │
+└────────────────────┬─────────────────────────────┘
+                     │ wires up
+┌────────────────────▼─────────────────────────────┐
+│                 Engine Layer                     │
+│   Game, GameState, HookDispatcher                │
+└───────┬─────────────────┬────────────────────────┘
+        │                 │
+┌───────▼──────┐  ┌───────▼──────────────────────┐
+│ Domain Layer │  │          I/O Layer            │
+│ Player       │  │  GameInput  (interface)       │
+│ Adventure    │  │  GameOutput (interface)       │
+│ Section      │  │  TerminalInput                │
+│ Item         │  │  TerminalOutput               │
+│ Events       │  └───────────────────────────────┘
+│ Combat       │
 └───────┬──────┘
         │
-┌───────▼──────────────────────────────────────┐
-│           Mechanics Layer                    │
-│   Dice (interface), RandomDice               │
-│   CombatEngine, LuckTest, SkillTest          │
-└──────────────────────────────────────────────┘
+┌───────▼──────────────────────────────────────────┐
+│              Mechanics Layer                     │
+│  Dice (interface), RandomDice                    │
+│  CombatEngine, LuckTest, SkillTest               │
+└───────┬──────────────────────────────────────────┘
         │
-┌───────▼──────────────────────────────────────┐
-│           Loader Layer                       │
-│   AdventureLoader (interface)                │
-│   JsonAdventureLoader                        │
-└──────────────────────────────────────────────┘
+┌───────▼──────────────────────────────────────────┐
+│              Scripting Layer                     │
+│  ScriptEngine (interface)                        │
+│  LuaScriptEngine                                 │
+│  ScriptContext (interface)                       │
+│  AdventureScriptState                            │
+└───────┬──────────────────────────────────────────┘
+        │
+┌───────▼──────────────────────────────────────────┐
+│               Loader Layer                       │
+│  AdventureLoader (interface)                     │
+│  JsonAdventureLoader                             │
+└──────────────────────────────────────────────────┘
 ```
 
 ---
@@ -49,19 +59,20 @@
 
 ```
 com.tas.neo
-├── Main.java                          # Entrypoint only; wires dependencies
+├── Main.java                              # Entrypoint only; wires dependencies
 ├── domain
 │   ├── player
 │   │   ├── Player.java
-│   │   ├── Attribute.java             # record
-│   │   └── AttributeType.java         # enum: SKILL, STAMINA, LUCK
+│   │   ├── Attribute.java                 # record
+│   │   └── AttributeType.java             # enum: SKILL, STAMINA, LUCK
 │   ├── adventure
 │   │   ├── Adventure.java
 │   │   ├── Section.java
-│   │   ├── SectionType.java           # enum: NORMAL, VICTORY, INSTANT_DEATH
-│   │   ├── Choice.java                # record
+│   │   ├── SectionType.java               # enum: NORMAL, VICTORY, INSTANT_DEATH
+│   │   ├── Choice.java                    # record
+│   │   ├── ScriptBlock.java               # record: map of hook name → script string
 │   │   └── event
-│   │       ├── SectionEvent.java      # sealed interface
+│   │       ├── SectionEvent.java          # sealed interface
 │   │       ├── CombatEvent.java
 │   │       ├── StatChangeEvent.java
 │   │       ├── ItemEvent.java
@@ -69,42 +80,53 @@ com.tas.neo
 │   │       ├── SkillTestEvent.java
 │   │       ├── NavigateEvent.java
 │   │       └── GoldChangeEvent.java
+│   ├── item
+│   │   ├── Item.java
+│   │   ├── ItemCategory.java              # enum: USABLE, EQUIPPABLE, KEY, PASSIVE
+│   │   └── ItemScriptHook.java            # enum: ON_PICKUP, ON_DROP, ON_USE, ON_EQUIP, ON_UNEQUIP, ON_COMBAT_ROUND
 │   └── combat
-│       ├── Creature.java              # record
-│       ├── CombatRound.java           # record
-│       └── CombatResult.java          # record
+│       ├── Creature.java                  # record
+│       ├── CombatRound.java               # record
+│       └── CombatResult.java              # record
 ├── mechanics
-│   ├── Dice.java                      # interface
+│   ├── Dice.java                          # interface
 │   ├── RandomDice.java
 │   ├── CombatEngine.java
 │   ├── LuckTest.java
 │   └── SkillTest.java
+├── scripting
+│   ├── ScriptEngine.java                  # interface
+│   ├── LuaScriptEngine.java
+│   ├── ScriptContext.java                 # interface exposed to scripts
+│   ├── DefaultScriptContext.java
+│   └── AdventureScriptState.java          # mutable k/v store scoped to an adventure run
 ├── io
-│   ├── GameInput.java                 # interface
-│   ├── GameOutput.java                # interface
+│   ├── GameInput.java                     # interface
+│   ├── GameOutput.java                    # interface
 │   ├── TerminalInput.java
 │   └── TerminalOutput.java
 ├── loader
-│   ├── AdventureLoader.java           # interface
+│   ├── AdventureLoader.java               # interface
 │   └── JsonAdventureLoader.java
 └── engine
     ├── Game.java
     ├── GameState.java
-    └── EventProcessor.java
+    └── HookDispatcher.java                # fires lifecycle hooks via ScriptEngine
 ```
 
 ---
 
 ## Dependency Rules
 
-| Layer | May depend on | Must NOT depend on |
-|-------|--------------|-------------------|
-| domain | nothing | all other layers |
-| mechanics | domain | engine, io, loader |
-| io | domain | engine, mechanics, loader |
-| loader | domain | engine, mechanics, io |
-| engine | domain, mechanics, io, loader | nothing restricted |
-| Main | all layers | — |
+| Layer     | May depend on                          | Must NOT depend on       |
+|-----------|----------------------------------------|--------------------------|
+| domain    | nothing                                | all other layers         |
+| mechanics | domain                                 | engine, io, loader, scripting |
+| scripting | domain                                 | engine, io, loader, mechanics |
+| io        | domain                                 | engine, mechanics, loader, scripting |
+| loader    | domain                                 | engine, mechanics, io, scripting |
+| engine    | domain, mechanics, io, loader, scripting | nothing restricted     |
+| Main      | all layers                             | —                        |
 
 ---
 
@@ -148,6 +170,40 @@ public interface AdventureLoader {
 }
 ```
 
+### `ScriptEngine`
+```java
+public interface ScriptEngine {
+    void execute(String script, ScriptContext context) throws ScriptException;
+}
+```
+
+### `ScriptContext`
+```java
+public interface ScriptContext {
+    // Player
+    void modifyStat(String attribute, int delta);
+    int getStat(String attribute);
+    // Inventory
+    void addItem(String itemName);
+    void removeItem(String itemName);
+    boolean hasItem(String itemName);
+    // Navigation
+    void navigateTo(int section);
+    int currentSection();
+    // Output
+    void showMessage(String message);
+    // Choices (onChoices hook only)
+    void addChoice(String text, int targetSection);
+    void removeChoice(String text);
+    // Adventure state
+    void setState(String key, Object value);
+    Object getState(String key);
+    // Gold
+    void modifyGold(int delta);
+    int getGold();
+}
+```
+
 ---
 
 ## Wiring (Main)
@@ -155,12 +211,13 @@ public interface AdventureLoader {
 `Main` is the only class that touches concrete implementations:
 
 ```java
-Dice dice = new RandomDice();
-GameInput input = new TerminalInput(System.in);
-GameOutput output = new TerminalOutput(System.out);
-AdventureLoader loader = new JsonAdventureLoader(Path.of("adventures"));
-Game game = new Game(input, output, loader, dice);
+Dice dice                 = new RandomDice();
+GameInput input           = new TerminalInput(System.in);
+GameOutput output         = new TerminalOutput(System.out);
+ScriptEngine scriptEngine = new LuaScriptEngine();
+AdventureLoader loader    = new JsonAdventureLoader(Path.of("adventures"));
+Game game                 = new Game(input, output, loader, dice, scriptEngine);
 game.run("the-warlock-of-firetop-mountain");
 ```
 
-Tests substitute `FixedDice`, `ScriptedInput`, and `RecordingOutput` in place of the terminal implementations.
+Tests substitute `FixedDice`, `ScriptedInput`, `RecordingOutput`, `RecordingScriptContext`, and `InMemoryAdventureLoader`.
