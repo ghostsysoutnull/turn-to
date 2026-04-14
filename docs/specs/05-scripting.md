@@ -41,7 +41,7 @@ Every script receives two globals: `ctx` and `state`.
 | `ctx.currentSection()` | Return current section number |
 | `ctx.showMessage(text)` | Display a message to the player |
 | `ctx.addChoice(text, section)` | Add a choice to the current list (`onChoices` hook only) |
-| `ctx.removeChoice(text)` | Remove a choice by its text (`onChoices` hook only) |
+| `ctx.hideChoice(id)` | Hide a static choice by its `id` field (`onChoices` hook only). No-op if the id is not found or the choice was already hidden by a declarative condition. |
 
 ### Party member proxy
 
@@ -154,9 +154,16 @@ if not ctx.hasItem('Lantern') and state.get('caveEntered') then
     ctx.navigateTo(199)
 end
 
--- Section onChoices: dynamic choice injection
+-- Section onChoices: inject a choice based on compound state logic
+-- (simple state checks belong in declarative STATE_EQUALS conditions instead)
 if state.get('bridgeCrossed') and ctx.hasItem('Iron Key') then
     ctx.addChoice('Unlock the iron gate', 312)
+end
+
+-- Section onChoices: hide a static choice by id
+-- (the choice has id="flee" in the section JSON)
+if state.get('cornered') then
+    ctx.hideChoice('flee')
 end
 
 -- Item onUse: healing potion

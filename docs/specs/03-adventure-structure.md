@@ -98,6 +98,7 @@ Events with branching outcomes (LUCK_TEST, SKILL_TEST, COMBAT) specify a **succe
 | text          | string              | Label shown to the player |
 | targetSection | int                 | Section number to navigate to |
 | condition     | Condition (optional)| Prerequisite that must be met for the choice to appear |
+| id            | string (optional)   | Stable identifier used by `onChoices` scripts to hide this choice. Must be unique within the section if present. |
 
 ---
 
@@ -105,15 +106,28 @@ Events with branching outcomes (LUCK_TEST, SKILL_TEST, COMBAT) specify a **succe
 
 Conditions guard choices or events, making them visible/active only when met. For complex conditions, use an `onChoices` script instead.
 
-| Condition Type | Description |
-|----------------|-------------|
-| HAS_ITEM       | Player carries a specific item |
-| LACKS_ITEM     | Player does not carry a specific item |
-| STAT_AT_LEAST  | A given attribute is >= a threshold |
-| STAT_AT_MOST   | A given attribute is <= a threshold |
-| HAS_GOLD       | Player has >= a gold amount |
+| Condition Type   | Description |
+|------------------|-------------|
+| HAS_ITEM         | Player carries a specific item |
+| LACKS_ITEM       | Player does not carry a specific item |
+| STAT_AT_LEAST    | A given attribute is >= a threshold |
+| STAT_AT_MOST     | A given attribute is <= a threshold |
+| HAS_GOLD         | Player has >= a gold amount |
+| STATE_EQUALS     | A state variable equals a given value (string, number, or boolean) |
+| STATE_NOT_EQUALS | A state variable does not equal a given value |
 
 Conditions on choices hide the choice entirely if not met. Conditions on events skip the event entirely if not met.
+
+---
+
+## Choice Visibility: Evaluation Order
+
+When a section has both declarative conditions on choices and an `onChoices` script, evaluation proceeds in two stages:
+
+1. **Declarative conditions** are evaluated on all static choices. Choices whose conditions are not met are removed from the visible list.
+2. **`onChoices` script** fires on the already-filtered list. It may inject new choices via `ctx.addChoice` or hide remaining choices via `ctx.hideChoice`.
+
+`ctx.hideChoice(id)` on a choice that a condition already removed is a no-op. The two-stage model means declarative conditions are the fast path for simple cases; scripts handle logic that cannot be expressed as data.
 
 ---
 
@@ -158,10 +172,20 @@ Adventures can declare zero or more party members — named entities with fully 
       ],
       "scripts": {
         "onEnter": "if ctx.hasItem('Torch') then ctx.showMessage('Your torch lights the way.') end",
-        "onChoices": "if state.get('doorUnlocked') then ctx.addChoice('Pass through the door', 45) end"
+        "onChoices": "if ctx.hasItem('Iron Key') and state.get('bridgeCrossed') then ctx.addChoice('Unlock the gate', 45) end"
       },
       "choices": [
-        { "text": "Enter the mountain", "targetSection": 2 }
+        { "text": "Enter the mountain", "targetSection": 2 },
+        {
+          "text": "Pass through the door",
+          "targetSection": 45,
+          "condition": { "type": "STATE_EQUALS", "key": "doorUnlocked", "value": true }
+        },
+        {
+          "text": "Flee",
+          "id": "flee",
+          "targetSection": 3
+        }
       ]
     }
   ]
