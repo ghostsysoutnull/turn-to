@@ -74,10 +74,10 @@ public record GameError(
 The complete in-memory record of a run.
 
 ```java
-public record SessionLog(
+public record SessionLog<E>(
     String adventureId,
     List<NavigationEntry> path,
-    List<OutputEvent> events,
+    List<E> events,
     List<GameError> errors,
     String result,
     int stepsCount
@@ -85,6 +85,8 @@ public record SessionLog(
 ```
 
 `result` is `"VICTORY"`, `"GAME_OVER"`, or `"ABANDONED"`.
+
+`SessionLog` is generic on the event type to avoid a dependency from `domain.log` onto `io.OutputEvent`. `FileGameLogger` and `RecordingGameLogger` use `SessionLog<OutputEvent>`; tests that have no interest in events use the raw type or `SessionLog<Object>`.
 
 ---
 

@@ -12,12 +12,12 @@ reports. No manual copying or agent selection required.
 ## Current Position
 
 ```
-Phase : 1 — Domain
-Step  : 1.2 — Code Agent
+Phase : 2 — Mechanics
+Step  : 2.1 — Test Agent
 Status: TODO
 ```
 
-**Next action:** Invoke Code Agent with the prompt in § Phase 1 › Step 1.2.
+**Next action:** Invoke Test Agent with the prompt in § Phase 2 › Step 2.1.
 
 ---
 
@@ -26,7 +26,7 @@ Status: TODO
 | Phase | Description | Steps | Done |
 |-------|-------------|-------|------|
 | 0 | Scaffolding | 0.1 Code | ✅ |
-| 1 | Domain | 1.1 Test · 1.2 Code | ✅ ⬜ |
+| 1 | Domain | 1.1 Test · 1.2 Code | ✅ ✅ |
 | 2 | Mechanics | 2.1 Test · 2.2 Code | ⬜ ⬜ |
 | 3 | Scripting + I/O (parallel) | 3.1 Test-S · 3.2 Test-IO · 3.3 Code-S · 3.4 Code-IO | ⬜ ⬜ ⬜ ⬜ |
 | 4 | Combat systems | 4.1 Test · 4.2 Code | ⬜ ⬜ |
@@ -450,6 +450,12 @@ creates the sessions/ directory if it does not exist. File names:
 
 SeededDice lives in com.tas.neo.mechanics alongside RandomDice. It uses
 java.util.Random seeded at construction.
+
+Note: a stub OutputEvent.java exists in src/main/java/com/tas/neo/io/ from Phase 1.
+Replace it with the full production implementation here. The test double copy in
+src/test/java/com/tas/neo/io/OutputEvent.java becomes redundant once the production
+class is correct — the Phase 3 Code Agent should verify they are consistent and remove
+the test copy if the production class covers all the same cases.
 
 Do not touch src/test/.
 ```
