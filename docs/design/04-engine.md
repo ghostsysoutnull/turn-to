@@ -4,11 +4,12 @@
 
 The engine layer ties everything together. It:
 
-- Manages the `GameState` (current section, player)
-- Drives the main game loop (section → events → choices → navigate → repeat)
-- Delegates event processing to `EventProcessor`
-- Delegates combat to `CombatEngine`
+- Manages `GameState` (current section, player, party members)
+- Drives the main game loop: section → events → choices → navigate → repeat
+- Delegates event processing to `HookDispatcher`
+- Delegates combat to `CombatSystemRegistry`
 - Delegates I/O to `GameInput` / `GameOutput`
+- Injects system choices (eat, inventory, quit) into every section
 
 ---
 
@@ -16,15 +17,21 @@ The engine layer ties everything together. It:
 
 ```java
 public class GameState {
-    private final Player player;
-    private Section currentSection;
-    private boolean gameOver;
-    private boolean victory;
-
+    public Player player();
+    public Section currentSection();
     public void navigateTo(Section section);
-    public boolean isTerminal();  // gameOver || victory
+    public boolean isTerminal();
+    public boolean isGameOver();
+    public boolean isVictory();
+    public void setGameOver();
+    public void setVictory();
+    public PartyMember getPartyMember(String id);
+    public List<PartyMember> visiblePartyMembers();
+    public void removePartyMember(String id);
 }
 ```
+
+`isTerminal()` returns true when either `gameOver` or `victory` is set. The game loop checks this after every event and after every navigation.
 
 ---
 
@@ -32,74 +39,41 @@ public class GameState {
 
 ```java
 public class Game {
-    public Game(GameInput input, GameOutput output,
-                AdventureLoader loader, Dice dice) { ... }
-
+    public Game(GameInput input, GameOutput output, AdventureLoader loader,
+                Dice dice, ScriptEngine scriptEngine, CombatSystemRegistry combatRegistry);
     public void run(String adventureId);
 }
 ```
 
-`run()` is the top-level game loop:
-
-```
-adventure = loader.load(adventureId)
-player = createCharacter(adventure)
-state = new GameState(player, adventure.getSection(adventure.startSection()))
-
-while not state.isTerminal():
-    section = state.currentSection()
-    output.clear()
-    output.showStatus(player)
-    output.showNarrative(section.narrative())
-
-    eventProcessor.process(section.events(), state)
-
-    if state.isTerminal(): break
-
-    choices = resolveChoices(section.choices(), player)
-    choices = injectSystemChoices(choices, player)   // eat, inventory, quit
-    output.showChoices(choices)
-
-    chosen = input.readChoice(choices)
-    handleChoice(chosen, state)
-```
+`run()` loads the adventure, creates the player and party members, then drives the game loop until `GameState.isTerminal()`.
 
 ---
 
-## EventProcessor
+## HookDispatcher
 
-Processes a list of `SectionEvent` items against the current `GameState`. Uses pattern matching on the sealed interface:
+Single point of contact between the engine and the scripting/combat layers. Fires named lifecycle hooks and resolves combat events.
 
 ```java
-public class EventProcessor {
-    public void process(List<SectionEvent> events, GameState state) {
-        for (SectionEvent event : events) {
-            if (state.isTerminal()) return;
-            processOne(event, state);
-        }
-    }
+public class HookDispatcher {
+    public HookDispatcher(ScriptEngine scriptEngine, GameOutput output,
+                          GameState state, AdventureScriptState scriptState,
+                          CombatSystemRegistry combatRegistry);
 
-    private void processOne(SectionEvent event, GameState state) {
-        switch (event) {
-            case CombatEvent e      -> handleCombat(e, state);
-            case StatChangeEvent e  -> handleStatChange(e, state);
-            case ItemEvent e        -> handleItem(e, state);
-            case LuckTestEvent e    -> handleLuckTest(e, state);
-            case SkillTestEvent e   -> handleSkillTest(e, state);
-            case NavigateEvent e    -> handleNavigate(e, state);
-            case GoldChangeEvent e  -> handleGoldChange(e, state);
-        }
-    }
+    public void fireAdventureHook(AdventureHook hook, Adventure adventure);
+    public void fireSectionHook(SectionHook hook, Section section, List<Choice> mutableChoices);
+    public void fireCombatHook(CombatHook hook, CombatEvent event, CombatRound round);
+    public void fireItemHook(ItemScriptHook hook, Item item);
+    public CombatOutcome processCombatEvent(CombatEvent event);
 }
 ```
 
-The `switch` is exhaustive by the sealed interface contract — adding a new event type causes a compile error until handled.
+If the relevant `ScriptBlock` has no entry for a hook, the call is a no-op.
 
 ---
 
 ## System Choices
 
-The engine injects these choices into every section's choice list:
+The engine injects these choices into every section's choice list at display time. They are never authored in section data.
 
 | Condition | Injected choice |
 |-----------|----------------|
@@ -107,35 +81,37 @@ The engine injects these choices into every section's choice list:
 | always | "Check inventory" |
 | always | "Quit" |
 
-These are handled entirely within the engine and never navigate to a section.
-
 ---
 
-## Character Creation
+## Character and Party Creation
 
-```java
-private Player createCharacter(Adventure adventure) {
-    int skill   = dice.roll(6) + 6;
-    int stamina = dice.roll(6) + dice.roll(6) + 12;
-    int luck    = dice.roll(6) + 6;
-    return new Player(skill, stamina, luck, adventure.initialProvisions());
-}
-```
+At adventure start, the engine:
 
-The rolled values become both the **initial** and **maximum** values for each attribute.
+1. Rolls player stats using `DiceFormula` (SKILL: `1d6+6`, STAMINA: `2d6+12`, LUCK: `1d6+6`). Rolled values become both initial and maximum.
+2. Creates each declared party member by resolving their `StatDefinition` entries via `Dice`.
+3. Fires `AdventureHook.ON_LOAD`, then `AdventureHook.ON_START`.
 
 ---
 
 ## Section Type Handling
 
-After events complete and before showing choices:
+After all events have processed:
 
-```java
-switch (section.type()) {
-    case VICTORY      -> { output.showVictory(...); state.setVictory(); }
-    case INSTANT_DEATH -> { output.showGameOver(...); state.setGameOver(); }
-    case NORMAL       -> { /* show choices */ }
-}
-```
+- `VICTORY` → fire `ON_VICTORY` hook, show victory message, set `state.setVictory()`
+- `INSTANT_DEATH` → show death message, set `state.setGameOver()`
+- `NORMAL` → build and display choice list
 
-Player death (STAMINA == 0) is detected in `EventProcessor` after any event that modifies STAMINA, and sets `state.setGameOver()` immediately.
+Player death (STAMINA == 0) is detected by `HookDispatcher` immediately after any stat-modifying event and sets `state.setGameOver()` without waiting for section type resolution.
+
+---
+
+## Test Strategy
+
+| Scenario | Setup | What to assert |
+|----------|-------|----------------|
+| Victory section ends game | `InMemoryAdventureLoader` with VICTORY section | `state.isVictory() == true` |
+| INSTANT_DEATH ends game | Section of type INSTANT_DEATH | `state.isGameOver() == true` |
+| Player death mid-event | STAMINA reduced to 0 by `StatChangeEvent` | `state.isGameOver()`, no choices shown |
+| System choices injected | Any normal section | "Check inventory" and "Quit" always present |
+| Navigation follows choice | `ScriptedInput` selecting choice 1 | `state.currentSection()` == target |
+| Party member created | Adventure with dice-formula stat | Stat within expected range |

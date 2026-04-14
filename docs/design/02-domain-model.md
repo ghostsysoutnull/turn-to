@@ -5,26 +5,21 @@
 ```java
 public class Player {
     private final Map<AttributeType, Attribute> attributes;
-    private final List<String> inventory;
+    private final Inventory inventory;
     private int gold;
     private int provisions;
 
-    // Attribute access
     public int getSkill();
     public int getStamina();
     public int getMaxStamina();
     public int getLuck();
-
-    // Mutations
-    public void modifyAttribute(AttributeType type, int delta);  // clamps to [0, max]
-    public void addItem(String item);
-    public boolean removeItem(String item);
-    public boolean hasItem(String item);
-    public boolean isAlive();  // stamina > 0
+    public void modifyAttribute(AttributeType type, int delta);
+    public Inventory getInventory();
+    public boolean isAlive();
 }
 ```
 
-`Player` is mutable — it accumulates state changes throughout the game. It is **not** a record.
+`Player` is mutable. It is **not** a record.
 
 ---
 
@@ -32,53 +27,51 @@ public class Player {
 
 ```java
 public record Attribute(AttributeType type, int current, int max) {
-    public Attribute modify(int delta) {
-        int next = Math.clamp(current + delta, 0, max);
-        return new Attribute(type, next, max);
-    }
+    public Attribute modify(int delta);
 }
 ```
 
-Immutable value object. `Player` holds a map of these and replaces them on change.
+Immutable value object. `Player` holds a map and replaces entries on change. Modification clamps to `[0, max]`.
 
 ---
 
 ## AttributeType
 
 ```java
-public enum AttributeType {
-    SKILL, STAMINA, LUCK
+public enum AttributeType { SKILL, STAMINA, LUCK }
+```
+
+---
+
+## Adventure
+
+```java
+public class Adventure {
+    public String id();
+    public String title();
+    public String description();
+    public int startSection();
+    public int initialProvisions();
+    public Section getSection(int number);
+    public boolean hasItem(String name);
+    public Item getItem(String name);
+    public List<PartyMemberDefinition> partyMemberDefinitions();
+    public List<String> combatSystems();
 }
 ```
 
 ---
 
-## Adventure and Section
-
-```java
-public class Adventure {
-    private final String id;
-    private final String title;
-    private final String description;
-    private final int startSection;
-    private final int initialProvisions;
-    private final Map<Integer, Section> sections;
-    private final List<PartyMemberDefinition> partyMemberDefinitions;
-    private final List<String> combatSystems;           // ids beyond "personal"
-
-    public Section getSection(int number);              // throws if not found
-    public List<PartyMemberDefinition> partyMemberDefinitions();
-    public boolean hasItem(String name);
-}
-```
+## Section
 
 ```java
 public class Section {
-    private final int number;
-    private final String narrative;
-    private final List<SectionEvent> events;
-    private final List<Choice> choices;
-    private final SectionType type;
+    public int number();
+    public String narrative();
+    public List<SectionEvent> events();
+    public List<Choice> choices();
+    public SectionType type();
+    public ScriptBlock scripts();
 }
 ```
 
@@ -92,25 +85,37 @@ public record Choice(String text, int targetSection, Optional<Condition> conditi
 
 ---
 
+## ScriptBlock
+
+```java
+public record ScriptBlock(Map<String, String> hooks) {
+    public Optional<String> get(String hookName);
+    public static ScriptBlock empty();
+}
+```
+
+`Section`, `Adventure`, `Item`, and `CombatEvent` each carry a `ScriptBlock`.
+
+---
+
 ## SectionEvent Hierarchy
 
-Uses a **sealed interface** so the engine's `switch` is exhaustive at compile time:
+Uses a **sealed interface** so the engine's `switch` is exhaustive at compile time. Adding a new event type without handling it is a compile error.
 
 ```java
 public sealed interface SectionEvent
     permits CombatEvent, StatChangeEvent, ItemEvent,
             LuckTestEvent, SkillTestEvent, NavigateEvent, GoldChangeEvent {}
-```
 
-```java
 public record CombatEvent(
-    String system,                  // default "personal"
-    List<String> participantIds,    // party member ids
+    String system,
+    List<String> participantIds,
     List<Creature> opponents,
     boolean simultaneous,
     Map<String, Object> params,
     ScriptBlock scripts
 ) implements SectionEvent {}
+
 public record StatChangeEvent(AttributeType attribute, int delta) implements SectionEvent {}
 public record ItemEvent(String itemName, ItemAction action, int quantity) implements SectionEvent {}
 public record LuckTestEvent(int successSection, int failSection) implements SectionEvent {}
@@ -125,10 +130,8 @@ public record GoldChangeEvent(int delta) implements SectionEvent {}
 
 ```java
 public record Creature(String name, int skill, int stamina) {
-    public Creature wound(int damage) {
-        return new Creature(name, skill, stamina - damage);
-    }
-    public boolean isAlive() { return stamina > 0; }
+    public Creature wound(int damage);
+    public boolean isAlive();
 }
 ```
 
@@ -145,19 +148,20 @@ public record CombatRound(
     int creatureAttackStrength,
     int playerRoll,
     int creatureRoll,
-    CombatRoundOutcome outcome  // PLAYER_WOUNDS, CREATURE_WOUNDS, DRAW
+    CombatRoundOutcome outcome
 ) {}
 
-public record CombatResult(
-    boolean playerWon,
-    int roundsFought,
-    int playerStaminaLost
-) {}
+public record CombatResult(boolean playerWon, int roundsFought, int playerStaminaLost) {}
+
+public record CombatOutcome(CombatOutcomeType type, Optional<Integer> navigateTo) {}
 ```
+
+`CombatRoundOutcome` enum: `PLAYER_WOUNDS`, `CREATURE_WOUNDS`, `DRAW`.
+`CombatOutcomeType` enum: `VICTORY`, `DEFEAT`, `FLED`, `DELEGATED`.
 
 ---
 
-## Condition
+## Condition Hierarchy
 
 ```java
 public sealed interface Condition
@@ -174,4 +178,4 @@ public record PartyMemberPresentCondition(String memberId, boolean present) impl
 
 `ComparisonType` enum: `AT_LEAST`, `AT_MOST`.
 
-A `ConditionEvaluator` service class handles evaluation against `Player` and `GameState`, keeping evaluation logic out of the domain records themselves.
+`ConditionEvaluator` is a service class that evaluates conditions against `Player` and `GameState`. Evaluation logic does not live in the records themselves.

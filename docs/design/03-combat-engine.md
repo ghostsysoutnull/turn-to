@@ -2,91 +2,41 @@
 
 ## Responsibilities
 
-`CombatEngine` orchestrates a full combat encounter. It:
+`CombatEngine` orchestrates a personal combat encounter. It:
 
 - Runs combat rounds until one side reaches 0 STAMINA
-- Produces a `CombatRound` record for each round (displayed by `GameOutput`)
-- Handles the optional Luck test mid-combat via `GameInput`
+- Produces a `CombatRound` record per round, passed to `GameOutput`
+- Offers the player an optional Luck test after each wound via `GameInput`
 - Returns a `CombatResult` when combat ends
 
-`CombatEngine` does **not** modify `Player` directly — it returns the result and the engine layer applies it.
+`CombatEngine` does **not** modify `Player` directly — it returns the result and the caller applies the changes.
 
 ---
 
-## Constructor Dependencies
+## Class Declaration
 
 ```java
 public class CombatEngine {
-    public CombatEngine(Dice dice, GameInput input, GameOutput output) { ... }
+    public CombatEngine(Dice dice, GameInput input, GameOutput output);
+    public CombatResult fight(Player player, List<Creature> creatures, boolean simultaneous);
 }
 ```
 
-- `Dice` — injectable for deterministic testing
-- `GameInput` — to ask player if they want to Test Luck
-- `GameOutput` — to display each round
-
----
-
-## Core Method
-
-```java
-public CombatResult fight(Player player, List<Creature> creatures, boolean simultaneous);
-```
-
-For `simultaneous = false` (default): fight each creature in sequence.
-For `simultaneous = true`: all creatures attack the player each round.
-
----
-
-## Single-Creature Combat Loop (pseudocode)
-
-```
-round = 1
-while creature.isAlive() and player.isAlive():
-    playerAS = player.skill + dice.roll2d6()
-    creatureAS = creature.skill + dice.roll2d6()
-
-    if playerAS > creatureAS:
-        damage = 2
-        if player wants to test luck:
-            damage = luckTest.test(player) ? 4 : 1
-        creature = creature.wound(damage)
-        outcome = PLAYER_WOUNDS
-
-    else if creatureAS > playerAS:
-        damage = 2
-        if player wants to test luck:
-            damage = luckTest.test(player) ? 1 : 3
-        player.modifyAttribute(STAMINA, -damage)
-        outcome = CREATURE_WOUNDS
-
-    else:
-        outcome = DRAW
-
-    output.showCombatRound(new CombatRound(round, playerAS, creatureAS, ...))
-    round++
-
-return new CombatResult(player.isAlive(), round - 1, staminaLost)
-```
+- `simultaneous = false`: fight each creature in sequence (default).
+- `simultaneous = true`: all creatures attack the player each round.
 
 ---
 
 ## LuckTest
 
-`LuckTest` is a standalone class used by both `CombatEngine` and `EventProcessor`:
-
 ```java
 public class LuckTest {
-    public LuckTest(Dice dice) { ... }
-
-    public boolean test(Player player) {
-        int roll = dice.roll2d6();
-        boolean lucky = roll <= player.getLuck();
-        player.modifyAttribute(LUCK, -1);  // always decreases
-        return lucky;
-    }
+    public LuckTest(Dice dice);
+    public boolean test(Player player);
 }
 ```
+
+Rolls 2d6 and compares against the player's current LUCK. LUCK is always decremented by 1 regardless of outcome — this is a core rule, not an implementation choice.
 
 ---
 
@@ -94,29 +44,22 @@ public class LuckTest {
 
 ```java
 public class SkillTest {
-    public SkillTest(Dice dice) { ... }
-
-    public boolean test(Player player) {
-        int roll = dice.roll2d6();
-        return roll <= player.getSkill();
-    }
+    public SkillTest(Dice dice);
+    public boolean test(Player player);
 }
 ```
 
-Note: SKILL is not decremented by a Skill Test — unlike LUCK.
+Rolls 2d6 and compares against the player's current SKILL. Unlike LUCK, SKILL is not decremented by a Skill Test.
 
 ---
 
 ## Test Strategy
 
-```java
-// Deterministic combat test
-Dice fixed = sides -> 3;  // always rolls 3 on any die
-CombatEngine engine = new CombatEngine(fixed, new ScriptedInput(), new RecordingOutput());
-
-// Player SKILL 10 + 6 (3+3) = 16 AS
-// Creature SKILL 8 + 6 = 14 AS  → player always wins each round
-CombatResult result = engine.fight(player, List.of(goblin), false);
-assertThat(result.playerWon()).isTrue();
-assertThat(result.roundsFought()).isEqualTo(5);  // goblin has 10 STAMINA / 2 per round
-```
+| Scenario | Setup | What to assert |
+|----------|-------|----------------|
+| Player wins every round | `FixedDice` giving player high AS, creature low AS | `CombatResult.playerWon() == true`, correct round count |
+| Creature wins every round | `FixedDice` giving creature high AS | `CombatResult.playerWon() == false` |
+| Draw rounds | `FixedDice` giving equal AS | No STAMINA lost, round count increments |
+| Luck test improves wound | `SequenceDice` + `ScriptedInput` confirming luck | Extra damage dealt to creature |
+| Luck test worsens wound | `SequenceDice` + `ScriptedInput` confirming luck | Reduced damage to creature |
+| Simultaneous multi-combat | Two creatures, `simultaneous = true` | Both creatures attack each round |

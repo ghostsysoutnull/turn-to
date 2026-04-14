@@ -2,8 +2,8 @@
 
 ## Guiding Principles
 
-1. **Testability first** — every component is testable in isolation. No static state, no direct System.in/out usage outside of terminal adapter classes.
-2. **Dependency inversion** — the game engine depends on interfaces, never on concrete I/O or infrastructure.
+1. **Testability first** — every component is testable in isolation. No static state, no direct System.in/out usage outside terminal adapter classes.
+2. **Dependency inversion** — the engine depends on interfaces, never on concrete I/O or infrastructure.
 3. **Rich domain model** — game rules live in the domain layer, not in the engine or UI.
 4. **Data-driven adventures** — adventures are loaded from external files, not hardcoded.
 5. **Lifecycle-driven scripting** — the engine owns a fixed set of hook points; scripts are passengers, not drivers.
@@ -28,13 +28,15 @@
 │ Adventure    │  │  GameOutput (interface)       │
 │ Section      │  │  TerminalInput                │
 │ Item         │  │  TerminalOutput               │
-│ Events       │  └───────────────────────────────┘
+│ PartyMember  │  └───────────────────────────────┘
+│ Events       │
 │ Combat       │
 └───────┬──────┘
         │
 ┌───────▼──────────────────────────────────────────┐
 │              Mechanics Layer                     │
 │  Dice (interface), RandomDice                    │
+│  DiceFormula, StatDefinition                     │
 │  CombatEngine, LuckTest, SkillTest               │
 └───────┬──────────────────────────────────────────┘
         │
@@ -44,6 +46,13 @@
 │  LuaScriptEngine                                 │
 │  ScriptContext (interface)                       │
 │  AdventureScriptState                            │
+└───────┬──────────────────────────────────────────┘
+        │
+┌───────▼──────────────────────────────────────────┐
+│              Combat Layer                        │
+│  CombatSystem (interface)                        │
+│  CombatSystemRegistry (interface)                │
+│  PersonalCombatSystem                            │
 └───────┬──────────────────────────────────────────┘
         │
 ┌───────▼──────────────────────────────────────────┐
@@ -59,7 +68,7 @@
 
 ```
 com.tas.neo
-├── Main.java                              # Entrypoint only; wires dependencies
+├── Main.java
 ├── domain
 │   ├── player
 │   │   ├── Player.java
@@ -83,32 +92,33 @@ com.tas.neo
 │   ├── item
 │   │   ├── Item.java
 │   │   ├── ItemCategory.java              # enum: USABLE, EQUIPPABLE, KEY, PASSIVE
-│   │   └── ItemScriptHook.java            # enum: ON_PICKUP, ON_DROP, ON_USE, ON_EQUIP, ON_UNEQUIP, ON_COMBAT_ROUND
+│   │   └── ItemScriptHook.java            # enum: ON_PICKUP, ON_DROP, ON_USE, ...
 │   ├── party
 │   │   ├── PartyMember.java
 │   │   ├── PartyMemberStat.java           # record
-│   │   ├── PartyMemberDefinition.java     # loader-only; holds StatDefinitions
+│   │   ├── PartyMemberDefinition.java     # loader-only
 │   │   ├── DefeatConsequence.java         # sealed interface
 │   │   └── Visibility.java               # enum: ALWAYS, HIDDEN
 │   └── combat
 │       ├── Creature.java                  # record
 │       ├── CombatRound.java               # record
 │       ├── CombatResult.java              # record
-│       └── CombatOutcome.java             # record: generalised outcome for pluggable systems
+│       └── CombatOutcome.java             # record
 ├── mechanics
 │   ├── Dice.java                          # interface
 │   ├── RandomDice.java
-│   ├── DiceFormula.java                   # parses and rolls "NdS+M" expressions
-│   ├── StatDefinition.java                # sealed interface: FixedStatDefinition, DiceStatDefinition
+│   ├── DiceFormula.java
+│   ├── StatDefinition.java                # sealed interface
 │   ├── CombatEngine.java
 │   ├── LuckTest.java
 │   └── SkillTest.java
 ├── scripting
 │   ├── ScriptEngine.java                  # interface
 │   ├── LuaScriptEngine.java
-│   ├── ScriptContext.java                 # interface exposed to scripts
+│   ├── ScriptContext.java                 # interface
 │   ├── DefaultScriptContext.java
-│   └── AdventureScriptState.java          # mutable k/v store scoped to an adventure run
+│   ├── AdventureScriptState.java
+│   └── PartyMemberProxy.java
 ├── io
 │   ├── GameInput.java                     # interface
 │   ├── GameOutput.java                    # interface
@@ -119,30 +129,30 @@ com.tas.neo
 │   ├── CombatSystemRegistry.java          # interface
 │   ├── DefaultCombatSystemRegistry.java
 │   └── personal
-│       └── PersonalCombatSystem.java      # wraps CombatEngine
+│       └── PersonalCombatSystem.java
 ├── loader
 │   ├── AdventureLoader.java               # interface
 │   └── JsonAdventureLoader.java
 └── engine
     ├── Game.java
-    ├── GameState.java                     # gains partyMembers map
-    └── HookDispatcher.java                # fires lifecycle hooks via ScriptEngine
+    ├── GameState.java
+    └── HookDispatcher.java
 ```
 
 ---
 
 ## Dependency Rules
 
-| Layer     | May depend on                          | Must NOT depend on       |
-|-----------|----------------------------------------|--------------------------|
-| domain    | nothing                                | all other layers         |
-| mechanics | domain                                 | engine, io, loader, scripting, combat |
-| scripting | domain                                 | engine, io, loader, mechanics, combat |
-| io        | domain                                 | engine, mechanics, loader, scripting  |
-| loader    | domain                                 | engine, mechanics, io, scripting      |
-| combat    | domain, mechanics                      | engine, io, loader, scripting         |
-| engine    | domain, mechanics, io, loader, scripting, combat | nothing restricted  |
-| Main      | all layers                             | —                        |
+| Layer     | May depend on                                    | Must NOT depend on              |
+|-----------|--------------------------------------------------|---------------------------------|
+| domain    | nothing                                          | all other layers                |
+| mechanics | domain                                           | engine, io, loader, scripting, combat |
+| scripting | domain                                           | engine, io, loader, mechanics   |
+| io        | domain                                           | engine, mechanics, loader, scripting |
+| combat    | domain, mechanics                                | engine, io, loader, scripting   |
+| loader    | domain                                           | engine, mechanics, io, scripting |
+| engine    | domain, mechanics, io, loader, scripting, combat | —                               |
+| Main      | all layers                                       | —                               |
 
 ---
 
@@ -168,11 +178,12 @@ public interface GameInput {
 ### `GameOutput`
 ```java
 public interface GameOutput {
-    void showStatus(Player player);
+    void showStatus(Player player, List<PartyMember> visibleMembers);
     void showNarrative(String text);
     void showChoices(List<Choice> choices);
     void showMessage(String message);
     void showCombatRound(CombatRound round);
+    void showInventory(List<ItemStack> stacks, int gold, int provisions);
     void showGameOver(String message);
     void showVictory(String message);
     void clear();
@@ -196,32 +207,41 @@ public interface ScriptEngine {
 ### `ScriptContext`
 ```java
 public interface ScriptContext {
-    // Player
     void modifyStat(String attribute, int delta);
     int getStat(String attribute);
-    // Inventory
+    void modifyGold(int delta);
+    int getGold();
     void addItem(String itemName);
     void addItem(String itemName, int quantity);
     void removeItem(String itemName);
     void removeItem(String itemName, int quantity);
     boolean hasItem(String itemName);
     int getItemCount(String itemName);
-    // Party members
     PartyMemberProxy getPartyMember(String id);
-    // Navigation
     void navigateTo(int section);
     int currentSection();
-    // Output
     void showMessage(String message);
-    // Choices (onChoices hook only)
     void addChoice(String text, int targetSection);
     void removeChoice(String text);
-    // Adventure state
-    void setState(String key, Object value);
-    Object getState(String key);
-    // Gold
-    void modifyGold(int delta);
-    int getGold();
+}
+```
+
+### `CombatSystem`
+```java
+public interface CombatSystem {
+    String id();
+    CombatOutcome run(Player player, List<PartyMember> participants,
+                     List<Creature> opponents, Map<String, Object> params,
+                     CombatSystemRegistry registry, HookDispatcher hooks,
+                     GameInput input, GameOutput output, Dice dice);
+}
+```
+
+### `CombatSystemRegistry`
+```java
+public interface CombatSystemRegistry {
+    CombatSystem get(String id);
+    boolean has(String id);
 }
 ```
 
@@ -232,17 +252,14 @@ public interface ScriptContext {
 `Main` is the only class that touches concrete implementations:
 
 ```java
-Dice dice                         = new RandomDice();
-GameInput input                   = new TerminalInput(System.in);
-GameOutput output                 = new TerminalOutput(System.out);
-ScriptEngine scriptEngine         = new LuaScriptEngine();
-AdventureLoader loader            = new JsonAdventureLoader(Path.of("adventures"));
+Dice dice                           = new RandomDice();
+GameInput input                     = new TerminalInput(System.in);
+GameOutput output                   = new TerminalOutput(System.out);
+ScriptEngine scriptEngine           = new LuaScriptEngine();
+AdventureLoader loader              = new JsonAdventureLoader(Path.of("adventures"));
 CombatSystemRegistry combatRegistry = new DefaultCombatSystemRegistry(
     new PersonalCombatSystem(new CombatEngine(dice, input, output))
-    // register additional systems here per adventure need
 );
 Game game = new Game(input, output, loader, dice, scriptEngine, combatRegistry);
 game.run("the-warlock-of-firetop-mountain");
 ```
-
-Tests substitute `FixedDice`, `ScriptedInput`, `RecordingOutput`, `RecordingScriptContext`, and `InMemoryAdventureLoader`.

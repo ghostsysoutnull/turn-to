@@ -2,99 +2,97 @@
 
 ## Principle
 
-Every layer of the system must be testable in isolation without a real terminal, real filesystem, or random dice. This is achieved by injecting all external dependencies through interfaces.
+Every layer of the system must be testable in isolation without a real terminal, real filesystem, or random dice. This is achieved by injecting all external dependencies through interfaces and providing a set of test doubles in `src/test`.
 
 ---
 
 ## Test Doubles
 
+All test doubles live under `src/test/java` alongside the tests that use them.
+
 ### `FixedDice`
 
-Returns a predetermined value for every roll. Useful for deterministic combat and stat tests.
+Returns a predetermined value for every roll. Used for deterministic combat and stat tests where a single constant outcome is sufficient.
 
 ```java
 public class FixedDice implements Dice {
-    private final int value;
-    public FixedDice(int value) { this.value = value; }
-
-    @Override
-    public int roll(int sides) { return value; }
+    public FixedDice(int value);
+    public int roll(int sides);
 }
 ```
 
 ### `SequenceDice`
 
-Returns values from a predefined sequence, cycling or throwing when exhausted.
+Returns values from a predefined sequence in order. Throws `AssertionError` when the sequence is exhausted — signals that the test did not control enough rolls.
 
 ```java
 public class SequenceDice implements Dice {
-    public SequenceDice(int... values) { ... }
-
-    @Override
-    public int roll(int sides) { return nextValue(); }
+    public SequenceDice(int... values);
+    public int roll(int sides);
 }
 ```
 
-Use this to simulate specific combat scenarios (e.g. player misses first round, hits second).
-
----
+Use when specific per-round outcomes matter (e.g. player misses round 1, hits round 2).
 
 ### `ScriptedInput`
 
-Supplies a pre-written sequence of choices and yes/no answers.
+Supplies a pre-written sequence of choices and yes/no answers. Throws `AssertionError` if the script is exhausted unexpectedly.
 
 ```java
 public class ScriptedInput implements GameInput {
-    public ScriptedInput(int... choices) { ... }
-
-    @Override
-    public int readChoice(List<Choice> available) { return nextChoice(); }
-
-    @Override
-    public boolean readYesNo(String prompt) { return nextBoolean(); }
-
-    @Override
-    public void waitForEnter() { /* no-op */ }
+    public ScriptedInput(int... choices);
+    public int readChoice(List<Choice> available);
+    public boolean readYesNo(String prompt);
+    public void waitForEnter();
 }
 ```
-
-Throws `AssertionError` if the script is exhausted unexpectedly — a test failure signal.
-
----
 
 ### `RecordingOutput`
 
-Captures all output calls for assertion.
+Captures all output calls for assertion. Does not print anything.
 
 ```java
 public class RecordingOutput implements GameOutput {
-    private final List<String> messages = new ArrayList<>();
-    private final List<CombatRound> rounds = new ArrayList<>();
-
-    @Override public void showMessage(String m) { messages.add(m); }
-    @Override public void showCombatRound(CombatRound r) { rounds.add(r); }
-    // ... etc
-
-    public List<String> getMessages() { return Collections.unmodifiableList(messages); }
-    public List<CombatRound> getCombatRounds() { return Collections.unmodifiableList(rounds); }
-    public boolean wasCleared() { ... }
+    public List<String> getMessages();
+    public List<CombatRound> getCombatRounds();
+    public boolean wasGameOverShown();
+    public boolean wasVictoryShown();
+    public boolean wasCleared();
 }
 ```
 
----
+### `RecordingScriptContext`
+
+Captures every call a script makes against the context, for testing Lua scripts in isolation.
+
+```java
+public class RecordingScriptContext implements ScriptContext {
+    public List<String> getMessages();
+    public List<StatChange> getStatChanges();
+    public int navigatedTo();
+    public boolean itemAdded(String name);
+    public boolean itemRemoved(String name);
+}
+```
+
+### `NoOpScriptEngine`
+
+Executes nothing. Used in engine and combat tests that do not involve scripts, to avoid LuaJ overhead.
+
+```java
+public class NoOpScriptEngine implements ScriptEngine {
+    public void execute(String script, ScriptContext context);
+}
+```
 
 ### `InMemoryAdventureLoader`
 
-Accepts an `Adventure` object directly, bypassing file I/O.
+Accepts `Adventure` objects directly. Used in all engine-level tests, bypassing JSON parsing and filesystem I/O.
 
 ```java
 public class InMemoryAdventureLoader implements AdventureLoader {
-    private final Map<String, Adventure> adventures;
-
-    public InMemoryAdventureLoader(Adventure... adventures) { ... }
-
-    @Override
-    public Adventure load(String id) { return adventures.get(id); }
+    public InMemoryAdventureLoader(Adventure... adventures);
+    public Adventure load(String id);
 }
 ```
 
@@ -104,38 +102,16 @@ public class InMemoryAdventureLoader implements AdventureLoader {
 
 | What to test | Test doubles used | What to assert |
 |---|---|---|
-| `CombatEngine` | `FixedDice` / `SequenceDice`, `ScriptedInput`, `RecordingOutput` | `CombatResult` fields, rounds displayed |
-| `LuckTest` | `FixedDice` | Return value, LUCK decremented |
-| `EventProcessor` | `FixedDice`, `RecordingOutput` | Player state changes, navigation changes, output messages |
-| `Game` (full loop) | All test doubles + `InMemoryAdventureLoader` | `GameState` after run, messages shown |
+| `Player` | None | Attribute clamping, inventory mutations |
+| `Inventory` | None | Quantity tracking, `onDrop` boundary |
+| `DiceFormula` | `FixedDice` | Correct totals for given rolls |
+| `LuckTest` | `FixedDice` | Lucky/unlucky return value, LUCK decremented |
+| `SkillTest` | `FixedDice` | Pass/fail return value, SKILL unchanged |
+| `CombatEngine` | `FixedDice`, `SequenceDice`, `ScriptedInput`, `RecordingOutput` | `CombatResult` fields, rounds displayed |
+| `HookDispatcher` / scripts | `NoOpScriptEngine` or `LuaScriptEngine` + `RecordingScriptContext` | Hooks fired, context calls recorded |
+| `Game` (full loop) | All test doubles + `InMemoryAdventureLoader` | `GameState` after run, output recorded |
 | `JsonAdventureLoader` | Real filesystem (test resources) | `Adventure` structure, validation errors |
-| `Player` | None | Attribute clamping, inventory mutation |
-| `TerminalOutput` | Captured `PrintStream` | Exact or partial string output |
-| `TerminalInput` | `ByteArrayInputStream` with scripted bytes | Correct choice parsing, re-prompt on invalid input |
-
----
-
-## Example: Full Game Integration Test
-
-```java
-@Test
-void playerDiesWhenStaminaReachesZero() {
-    var section1 = new Section(1, "You enter a room.", List.of(
-        new CombatEvent(List.of(new Creature("Giant", 12, 100)), false)
-    ), List.of());  // no choices, but combat death ends game
-
-    var adventure = new Adventure("test", "Test", "", 1, 0,
-        Map.of(1, section1));
-
-    var dice = new FixedDice(1);  // player always rolls lowest AS, always loses
-    var input = new ScriptedInput();  // no luck tests
-    var output = new RecordingOutput();
-    var loader = new InMemoryAdventureLoader(adventure);
-
-    var game = new Game(input, output, loader, dice);
-    game.run("test");
-
-    assertThat(output.wasGameOverShown()).isTrue();
-    assertThat(output.wasVictoryShown()).isFalse();
-}
-```
+| `TerminalOutput` | Captured `PrintStream` | String output content |
+| `TerminalInput` | `ByteArrayInputStream` | Choice parsing, re-prompt on invalid input |
+| `PartyMember` defeat | `InMemoryAdventureLoader`, `FixedDice` | Correct consequence applied |
+| `CombatSystem` | `FixedDice`, `NoOpScriptEngine` | `CombatOutcome.type()` correct |

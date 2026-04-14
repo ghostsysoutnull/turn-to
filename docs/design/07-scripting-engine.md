@@ -6,7 +6,7 @@ The scripting layer executes Lua scripts at engine-defined lifecycle hook points
 
 ---
 
-## ScriptEngine Interface
+## ScriptEngine
 
 ```java
 public interface ScriptEngine {
@@ -16,46 +16,15 @@ public interface ScriptEngine {
 
 `ScriptException` is a checked wrapper around Lua runtime errors. The engine catches it, logs it, and continues — a failing script never crashes the game.
 
+`LuaScriptEngine` implements this using **LuaJ** (pure-Java Lua 5.2 interpreter). A new Lua environment is created per execution — scripts share no Lua state across invocations. Shared state is handled exclusively through `AdventureScriptState`.
+
 ---
 
-## LuaScriptEngine
+## Sandboxing
 
-Uses **LuaJ** (pure-Java Lua 5.2 interpreter):
+`LuaScriptEngine` removes access to filesystem and OS modules before executing any script. Scripts retain access to `math`, `string`, and `table`. `print` is redirected to `GameOutput.showMessage`.
 
-```java
-public class LuaScriptEngine implements ScriptEngine {
-
-    @Override
-    public void execute(String script, ScriptContext context) throws ScriptException {
-        Globals globals = JsePlatform.standardGlobals();
-        globals.set("ctx",   CoerceJavaToLua.coerce(context));
-        globals.set("state", CoerceJavaToLua.coerce(context.getState()));
-        try {
-            globals.load(script).call();
-        } catch (LuaError e) {
-            throw new ScriptException(e.getMessage(), e);
-        }
-    }
-}
-```
-
-A **new `Globals` environment is created per execution** — scripts share no Lua state across invocations. Shared state is handled exclusively through `AdventureScriptState` via `state.set/get`.
-
-### Sandboxing
-
-The standard LuaJ `JsePlatform.standardGlobals()` is trimmed before use:
-
-```java
-globals.set("io",      LuaValue.NIL);
-globals.set("os",      LuaValue.NIL);
-globals.set("package", LuaValue.NIL);
-globals.set("require", LuaValue.NIL);
-globals.set("dofile",  LuaValue.NIL);
-globals.set("load",    LuaValue.NIL);
-globals.set("loadfile",LuaValue.NIL);
-```
-
-Scripts retain: `math`, `string`, `table`, `print` (redirected to `GameOutput.showMessage`).
+The modules removed are: `io`, `os`, `package`, `require`, `dofile`, `load`, `loadfile`.
 
 ---
 
@@ -68,144 +37,100 @@ public interface ScriptContext {
     void modifyGold(int delta);
     int getGold();
     void addItem(String itemName);
+    void addItem(String itemName, int quantity);
     void removeItem(String itemName);
+    void removeItem(String itemName, int quantity);
     boolean hasItem(String itemName);
+    int getItemCount(String itemName);
+    PartyMemberProxy getPartyMember(String id);
     void navigateTo(int section);
     int currentSection();
     void showMessage(String message);
     void addChoice(String text, int targetSection);
     void removeChoice(String text);
-    AdventureScriptState getState();
 }
 ```
 
-`DefaultScriptContext` holds references to `Player`, `GameState`, `GameOutput`, and the mutable choice list (for `onChoices` hooks). Methods that are invalid for a given hook (e.g. `navigateTo` in `onChoices`) throw `UnsupportedOperationException`.
+`DefaultScriptContext` holds references to `Player`, `GameState`, `GameOutput`, and the mutable choice list. Methods invalid for a given hook (e.g. `navigateTo` inside `onChoices`) throw `UnsupportedOperationException`.
 
 ---
 
 ## AdventureScriptState
 
-A simple mutable key/value store, scoped to one adventure run. Survives section transitions.
+A mutable key/value store scoped to one adventure run. Survives section transitions. Permits `String`, `Integer`, and `Boolean` values only.
 
 ```java
 public class AdventureScriptState {
-    private final Map<String, Object> values = new HashMap<>();
-
-    public void set(String key, Object value);  // String, Integer, Boolean only
-    public Object get(String key);              // null if not set
+    public void set(String key, Object value);
+    public Object get(String key);
     public boolean has(String key);
 }
 ```
 
-Only `String`, `Integer`, and `Boolean` values are permitted. The `set` method validates the type and throws `ScriptException` otherwise.
+---
+
+## ScriptBlock
+
+```java
+public record ScriptBlock(Map<String, String> hooks) {
+    public Optional<String> get(String hookName);
+    public static ScriptBlock empty();
+}
+```
+
+Carried by `Adventure`, `Section`, `Item`, and `CombatEvent`. A missing hook entry is treated as a no-op by `HookDispatcher`.
 
 ---
 
 ## HookDispatcher
 
-`HookDispatcher` is the single point of contact between the engine and the scripting layer. It knows which hook to fire, builds the correct `ScriptContext`, and calls `ScriptEngine.execute`.
+Single point of contact between the engine and the scripting layer. Builds the correct `ScriptContext` for each hook point and calls `ScriptEngine.execute`.
 
 ```java
 public class HookDispatcher {
     public HookDispatcher(ScriptEngine scriptEngine, GameOutput output,
-                          GameState state, AdventureScriptState scriptState) { ... }
+                          GameState state, AdventureScriptState scriptState,
+                          CombatSystemRegistry combatRegistry);
 
     public void fireAdventureHook(AdventureHook hook, Adventure adventure);
     public void fireSectionHook(SectionHook hook, Section section, List<Choice> mutableChoices);
     public void fireCombatHook(CombatHook hook, CombatEvent event, CombatRound round);
-    public void fireItemHook(ItemScriptHook hook, Item item, CombatRound round);
+    public void fireItemHook(ItemScriptHook hook, Item item);
+    public CombatOutcome processCombatEvent(CombatEvent event);
 }
 ```
 
-The engine calls `HookDispatcher` at each lifecycle point. If the relevant script block has no entry for the hook, the call is a no-op.
+Defeat checking after party member stat changes is also the responsibility of `HookDispatcher`, since it has access to both `GameState` and `GameOutput`.
 
 ---
 
-## Integration with Game Loop
+## PartyMemberProxy
+
+A thin wrapper returned to scripts via `ctx.getPartyMember(id)`. Exposes a Lua-friendly API over `PartyMember`.
 
 ```java
-// Section entry
-dispatcher.fireAdventureHook(AdventureHook.ON_ENTER_SECTION, adventure);  // not an adventure hook — section:
-dispatcher.fireSectionHook(SectionHook.ON_ENTER, section, choices);
-
-output.showNarrative(section.narrative());
-dispatcher.fireSectionHook(SectionHook.ON_DISPLAY, section, choices);
-
-// Before presenting choices
-dispatcher.fireSectionHook(SectionHook.ON_CHOICES, section, mutableChoices);
-output.showChoices(mutableChoices);
-
-// After player selects
-dispatcher.fireSectionHook(SectionHook.ON_EXIT, section, choices);
-```
-
----
-
-## ScriptBlock Domain Object
-
-`ScriptBlock` is a record holding the optional script strings per hook:
-
-```java
-public record ScriptBlock(Map<String, String> hooks) {
-    public Optional<String> get(String hookName) {
-        return Optional.ofNullable(hooks.get(hookName));
-    }
-
-    public static ScriptBlock empty() {
-        return new ScriptBlock(Map.of());
-    }
+public class PartyMemberProxy {
+    public void modifyStat(String name, int delta);
+    public int getStat(String name);
+    public int getMaxStat(String name);
+    public boolean isDefeated();
+    public boolean isVisible();
+    public void setVisible(boolean visible);
 }
 ```
 
-`Section`, `Adventure`, and `Item` each carry a `ScriptBlock`.
+If the requested id is unknown or the member has been removed, the proxy silently no-ops all calls and logs a warning.
 
 ---
 
 ## Test Strategy
 
-### `RecordingScriptContext`
-
-Captures every call made by a script for assertion:
-
-```java
-public class RecordingScriptContext implements ScriptContext {
-    private final List<String> messages = new ArrayList<>();
-    private final List<StatChange> statChanges = new ArrayList<>();
-    private int navigatedTo = -1;
-
-    // ... implements all methods, recording calls
-
-    public List<String> getMessages() { ... }
-    public int navigatedTo() { ... }
-    public boolean itemAdded(String name) { ... }
-}
-```
-
-### `NoOpScriptEngine`
-
-Returns immediately without executing anything — useful for engine tests that don't involve scripts:
-
-```java
-public class NoOpScriptEngine implements ScriptEngine {
-    @Override
-    public void execute(String script, ScriptContext context) { /* no-op */ }
-}
-```
-
-### Direct script testing
-
-```java
-@Test
-void healingPotionRestoresStamina() {
-    var ctx = new RecordingScriptContext(player);
-    var engine = new LuaScriptEngine();
-    engine.execute("""
-        ctx.modifyStat('STAMINA', 6)
-        ctx.showMessage('You feel restored.')
-        ctx.removeItem('Healing Potion')
-    """, ctx);
-
-    assertThat(player.getStamina()).isEqualTo(initialStamina + 6);
-    assertThat(ctx.getMessages()).contains("You feel restored.");
-}
-```
+| What | Approach |
+|------|----------|
+| `LuaScriptEngine` executes script | `RecordingScriptContext` → assert calls recorded |
+| Failed script does not crash | Script with syntax error → assert `ScriptException` caught, game continues |
+| Sandboxing | Script attempting `io.open(...)` → assert error, no file access |
+| `HookDispatcher` no-op on empty hook | `ScriptBlock.empty()` → assert `ScriptEngine.execute` never called |
+| `HookDispatcher` fires correct hook | Fixture section with `onEnter` script → assert it executes on entry |
+| `navigateTo` blocked in `onChoices` | `DefaultScriptContext` in choices mode → assert `UnsupportedOperationException` |
+| Party member proxy no-op on unknown id | `ctx.getPartyMember('unknown')` → assert no exception, warning logged |
