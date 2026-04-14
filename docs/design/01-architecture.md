@@ -185,8 +185,11 @@ public interface ScriptContext {
     int getStat(String attribute);
     // Inventory
     void addItem(String itemName);
+    void addItem(String itemName, int quantity);
     void removeItem(String itemName);
+    void removeItem(String itemName, int quantity);
     boolean hasItem(String itemName);
+    int getItemCount(String itemName);
     // Navigation
     void navigateTo(int section);
     int currentSection();

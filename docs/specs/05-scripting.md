@@ -28,9 +28,12 @@ Every script receives two globals: `ctx` and `state`.
 | `ctx.getStat(attr)` | Return current value of an attribute |
 | `ctx.modifyGold(delta)` | Add or subtract gold |
 | `ctx.getGold()` | Return current gold |
-| `ctx.addItem(name)` | Add named item to inventory |
-| `ctx.removeItem(name)` | Remove named item from inventory |
-| `ctx.hasItem(name)` | Return true if player carries the item |
+| `ctx.addItem(name)` | Add 1 unit of named item to inventory |
+| `ctx.addItem(name, quantity)` | Add the specified quantity of named item |
+| `ctx.removeItem(name)` | Remove 1 unit (capped at current stock) |
+| `ctx.removeItem(name, quantity)` | Remove specified quantity (capped at current stock) |
+| `ctx.hasItem(name)` | Return true if player carries at least 1 unit |
+| `ctx.getItemCount(name)` | Return current quantity (0 if absent) |
 | `ctx.navigateTo(section)` | Navigate to a section (valid in `onEnter`, `onExit`, `onCombatEnd`) |
 | `ctx.currentSection()` | Return current section number |
 | `ctx.showMessage(text)` | Display a message to the player |

@@ -9,13 +9,15 @@ public class Item {
     private final String name;
     private final String description;
     private final ItemCategory category;
+    private final boolean countable;       // display hint: always show quantity
     private final ScriptBlock scripts;
-    private boolean equipped;   // only relevant for EQUIPPABLE items
+    private boolean equipped;              // only relevant for EQUIPPABLE items
 
     public boolean isEquipped();
     public void setEquipped(boolean equipped);
-    public boolean canBeUsed();    // category == USABLE
-    public boolean canBeEquipped();// category == EQUIPPABLE
+    public boolean canBeUsed();            // category == USABLE
+    public boolean canBeEquipped();        // category == EQUIPPABLE
+    public boolean isCountable();
 }
 ```
 
@@ -48,7 +50,12 @@ public enum ItemScriptHook {
     ON_COMBAT_ROUND;
 
     public String hookName() {
-        return name().toLowerCase().replace('_', '');  // "onPickup", "onCombatRound", etc.
+        // "ON_COMBAT_ROUND" → "onCombatRound"
+        String[] parts = name().toLowerCase().split("_");
+        StringBuilder sb = new StringBuilder(parts[0]);
+        for (int i = 1; i < parts.length; i++)
+            sb.append(Character.toUpperCase(parts[i].charAt(0))).append(parts[i].substring(1));
+        return sb.toString();
     }
 }
 ```
@@ -57,89 +64,155 @@ public enum ItemScriptHook {
 
 ## Inventory
 
-`Inventory` is owned by `Player` and manages item quantities:
+`Inventory` is owned by `Player` and manages item quantities via `ItemStack`:
 
 ```java
 public class Inventory {
     private final Map<String, ItemStack> stacks = new LinkedHashMap<>();
 
-    public void add(Item item);
-    public boolean remove(String itemName);        // removes one; returns false if not present
+    public void add(Item item, int quantity);
+    public void add(Item item);                    // delegates to add(item, 1)
+
+    /**
+     * Removes up to `quantity` units.
+     * Returns the number actually removed (may be less if stock is insufficient).
+     * Callers use the return value to decide whether onDrop should fire.
+     */
+    public int remove(String itemName, int quantity);
+    public int remove(String itemName);            // delegates to remove(name, 1)
+
     public boolean has(String itemName);
     public int count(String itemName);
-    public List<Item> allItems();                  // one entry per unique name
+    public List<ItemStack> allStacks();
     public List<Item> equippedItems();
     public List<Item> passiveItems();
 }
 ```
 
-`ItemStack` is a private record holding `Item` definition and `int quantity`.
+### ItemStack
+
+```java
+public record ItemStack(Item item, int quantity) {
+    public ItemStack add(int delta) {
+        return new ItemStack(item, quantity + delta);
+    }
+    public ItemStack remove(int delta) {
+        return new ItemStack(item, Math.max(0, quantity - delta));
+    }
+    public boolean isEmpty() {
+        return quantity == 0;
+    }
+    public String displayName() {
+        if (item.isCountable() || quantity > 1)
+            return item.name() + " x" + quantity;
+        return item.name();
+    }
+}
+```
 
 `LinkedHashMap` preserves insertion order for deterministic inventory display and `onCombatRound` firing order.
 
 ---
 
-## Item Resolution
+## `onDrop` Firing Logic
 
-Items are **defined** in the adventure's item list and **referenced** by name everywhere else (events, scripts, conditions). The loader resolves names to `Item` definitions at load time — a reference to an unknown item name is a load-time error.
+`onDrop` fires only when the stack reaches 0 — the last unit leaves the inventory. This is enforced in `DefaultScriptContext.removeItem`:
 
 ```java
-// In JsonAdventureLoader validation:
-adventure.sections().forEach(section ->
-    section.events().stream()
-        .filter(e -> e instanceof ItemEvent)
-        .map(e -> (ItemEvent) e)
-        .forEach(e -> {
-            if (!adventure.hasItem(e.itemName()))
-                throw new AdventureLoadException("Unknown item: " + e.itemName());
-        })
-);
+@Override
+public void removeItem(String itemName, int quantity) {
+    int removed = player.getInventory().remove(itemName, quantity);
+    if (removed > 0 && player.getInventory().count(itemName) == 0) {
+        Item item = adventure.getItem(itemName);
+        dispatcher.fireItemHook(ItemScriptHook.ON_DROP, item);
+    }
+}
 ```
+
+`onPickup` fires on every `addItem` call regardless of quantity:
+
+```java
+@Override
+public void addItem(String itemName, int quantity) {
+    Item item = adventure.getItem(itemName);
+    player.getInventory().add(item, quantity);
+    dispatcher.fireItemHook(ItemScriptHook.ON_PICKUP, item);
+}
+```
+
+---
+
+## ScriptContext — Quantity-Aware API
+
+```java
+public interface ScriptContext {
+    // existing methods ...
+
+    void addItem(String itemName);                  // adds 1
+    void addItem(String itemName, int quantity);    // adds quantity
+    void removeItem(String itemName);               // removes 1
+    void removeItem(String itemName, int quantity); // removes quantity (capped at current stock)
+    boolean hasItem(String itemName);               // true if count > 0
+    int getItemCount(String itemName);              // current quantity (0 if absent)
+}
+```
+
+The quantity-less overloads delegate to the quantity variants with `1`. Lua sees all four methods via LuaJ's Java binding — calling `ctx.addItem('Arrow', 10)` and `ctx.addItem('Arrow')` both work.
+
+---
+
+## ITEM_GAIN Event — Quantity Support
+
+The structured `ITEM_GAIN` event also supports quantity:
+
+```json
+{ "type": "ITEM_GAIN", "itemName": "Arrow", "quantity": 20 }
+```
+
+`quantity` defaults to 1 if omitted. The `ItemEvent` record gains an optional quantity field:
+
+```java
+public record ItemEvent(String itemName, ItemAction action, int quantity) implements SectionEvent {
+    public ItemEvent(String itemName, ItemAction action) {
+        this(itemName, action, 1);
+    }
+}
+```
+
+---
+
+## Item Resolution
+
+Items are **defined** in the adventure's item list and **referenced** by name everywhere else. The loader resolves names to `Item` definitions at load time — a reference to an unknown item name is a load-time error.
 
 ---
 
 ## Integration with CombatEngine
 
-At the start of each combat round, `HookDispatcher.fireItemHook` is called for:
-1. All **EQUIPPABLE** items that are currently equipped
-2. All **PASSIVE** items in the inventory
-
-```java
-// Inside CombatEngine, after resolving the round outcome:
-for (Item item : player.getInventory().equippedItems()) {
-    dispatcher.fireItemHook(ItemScriptHook.ON_COMBAT_ROUND, item, round);
-}
-for (Item item : player.getInventory().passiveItems()) {
-    dispatcher.fireItemHook(ItemScriptHook.ON_COMBAT_ROUND, item, round);
-}
-```
-
-`CombatEngine` receives `HookDispatcher` as a constructor dependency, keeping it testable via `NoOpScriptEngine` in combat-focused unit tests.
+At each combat round, `HookDispatcher.fireItemHook` is called for all equipped and passive items. Item quantity does not affect combat hook firing — an item fires `onCombatRound` as long as it is present (quantity ≥ 1).
 
 ---
 
 ## Inventory Screen Rendering
 
-`GameOutput` gains one method:
-
 ```java
-void showInventory(List<Item> items, int gold, int provisions);
+void showInventory(List<ItemStack> stacks, int gold, int provisions);
 ```
 
-The engine calls this when the player selects "Check inventory" from the system choices. The terminal implementation renders:
+The terminal implementation renders:
 
 ```
 INVENTORY
 ─────────────────────────────────────
-  Healing Potion    x2    [Use]
-  Magic Sword       x1    [Unequip]   ← currently equipped
-  Iron Key          x1
-  Cursed Amulet     x1
+  Healing Potion x3    [Use]
+  Arrow x20            [Use]
+  Torch x5             [Use]
+  Magic Sword          [Unequip]   ← currently equipped
+  Iron Key
+  Cursed Amulet
 ─────────────────────────────────────
   Gold: 15    Provisions: 3
 ```
-
-`TerminalInput.readInventoryAction` returns the player's selection. For tests, `ScriptedInput` extends to support inventory selections.
 
 ---
 
@@ -147,9 +220,10 @@ INVENTORY
 
 | What | Approach |
 |------|----------|
-| `Item` equip state | Plain unit test; no dependencies |
-| `Inventory` add/remove/count | Plain unit test |
-| Item `onUse` script | `LuaScriptEngine` + `RecordingScriptContext` |
-| `onCombatRound` passive effect | `FixedDice` combat + `LuaScriptEngine` + assert player stat after round |
-| Non-droppable item (`onDrop` refuses) | Script test verifying item re-added and message shown |
-| Loader rejects unknown item reference | Fixture JSON with bad item name → assert `AdventureLoadException` |
+| `Inventory` add/remove quantity | Plain unit test; assert `count()` after each operation |
+| `onDrop` fires only at 0 | Remove N-1 units, assert not fired; remove last unit, assert fired |
+| `onPickup` fires per call, not per unit | `addItem('Arrow', 10)` → assert fired once |
+| `removeItem` capped at stock | Remove 10 of 5 → assert 5 removed, `onDrop` fired |
+| `ITEM_GAIN` with quantity | Loader test: section event adds 20 arrows → inventory count 20 |
+| `countable` display | `ItemStack.displayName()` unit test for both `true` and `false` cases |
+| Cursed amulet refuses drop | Script test: `onDrop` re-adds item; assert count still 1 after removal attempt |
