@@ -31,6 +31,17 @@ A text-based terminal adventure game inspired by the Fighting Fantasy gamebook s
 | [09 - Party Member Model](docs/design/09-party-member-model.md) | PartyMember, StatDefinition, DiceFormula, defeat consequences |
 | [10 - Combat Systems](docs/design/10-combat-systems.md) | Pluggable CombatSystem interface, registry, PersonalCombatSystem, system composition |
 
+## Agent Workflow
+
+This project uses a four-agent pipeline. See [`workflow/WORKFLOW.md`](workflow/WORKFLOW.md) for the full process.
+
+| Agent | Role | Definition |
+|-------|------|------------|
+| Spec | Writes and validates specs | [`workflow/agents/spec-agent.md`](workflow/agents/spec-agent.md) |
+| Design | Writes technical design | [`workflow/agents/design-agent.md`](workflow/agents/design-agent.md) |
+| Test | Writes failing tests from design strategy tables | [`workflow/agents/test-agent.md`](workflow/agents/test-agent.md) |
+| Code | Implements to make tests pass | [`workflow/agents/code-agent.md`](workflow/agents/code-agent.md) |
+
 ## Tech Stack
 
 - Java (latest)
