@@ -15,6 +15,7 @@ Practical guidance for invoking the TAS Neo agents. This document does not repea
 | Implement code after tests are written | Code Agent |
 | Create a new adventure from scratch | Adventure Architect Agent |
 | Write sections for a specific adventure chapter | Adventure Author Agent |
+| Write cells for a specific adventure grid | Grid Agent |
 
 For the development pipeline see `workflow/WORKFLOW.md`.
 For the adventure authoring pipeline see `workflow/ADVENTURE-AUTHORING-PIPELINE.md`.

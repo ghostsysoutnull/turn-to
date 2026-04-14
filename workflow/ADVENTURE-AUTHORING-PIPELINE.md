@@ -12,21 +12,24 @@ User
  ▼
 Adventure Architect Agent   — one run, whole adventure
  │  produces: adventure JSON skeleton, adventure manifest,
- │            chapter briefs, gate contracts, section allocations
+ │            chapter briefs, gate contracts, section allocations,
+ │            grid spatial briefs, grid dimensions and entry/exit mapping
  ▼
 User review of scaffold
- │  (approve or revise chapter plan, gate contracts, manifest)
+ │  (approve or revise chapter plan, gate contracts, grid briefs, manifest)
  ▼
 Adventure Author Agents     — one run per chapter, parallel where possible
- │  each produces: chapter sections JSON, manifest additions
+Grid Agents                 — one run per grid, parallel where possible
+ │  Author: produces chapter sections JSON, manifest additions
+ │  Grid:   produces grid cells JSON, manifest additions
  ▼
-Manifest merge              — collect manifest additions from all authors
+Manifest merge              — collect manifest additions from all agents
  ▼
 (optional) Consistency Check Agent
- │  reads: all sections, manifest
- │  reports: cross-chapter continuity issues, dangling references
+ │  reads: all sections, all grids, manifest
+ │  reports: continuity issues, dangling references, unreachable cells
  ▼
-Final assembly              — merge chapter sections into adventure JSON
+Final assembly              — merge sections and grids into adventure JSON
  ▼
 Playable adventure
 ```
@@ -72,17 +75,17 @@ The user provides a design brief before invoking the Architect agent. The brief 
 
 ---
 
-## Phase 3: Adventure Author Agents
+## Phase 3: Adventure Author Agents and Grid Agents
 
-**Invocation**: one run per chapter. Chapters with no incoming manifest dependencies can run in parallel.
+**Invocation**: one run per chapter (Author Agent) or per grid (Grid Agent). Units with no incoming manifest dependencies can run in parallel. Author Agents and Grid Agents may run concurrently with each other.
 
 ### Dependency order
 
-A chapter may be authored in parallel with another chapter if and only if:
-- Its gate-in contract does not reference any item, character, or state introduced by a chapter that has not yet been authored.
+A chapter or grid may be authored in parallel with another unit if and only if:
+- Its gate/arrival contract does not reference any item, character, or state introduced by a unit that has not yet been authored.
 - Its manifest dependencies (items it references) are already declared in the manifest.
 
-The Architect's structured summary includes a "Ready for Authoring" list identifying which chapters can start immediately and which must wait.
+The Architect's structured summary includes a "Ready for Authoring" list identifying which units can start immediately and which must wait.
 
 ### Manifest update protocol
 
@@ -157,6 +160,7 @@ The target range per chapter is **30–60 sections**. An agent authoring more th
 |-------|----------------|
 | Adventure Architect | `workflow/agents/adventure-architect-agent.md` |
 | Adventure Author | `workflow/agents/adventure-author-agent.md` |
+| Grid Agent | `workflow/agents/grid-agent.md` |
 
 ---
 
@@ -184,4 +188,19 @@ Task: Write all sections for chapter <id> of adventure <adventure-id>.
 - Manifest: adventures/<adventure-id>-manifest.json
 - Your chapter id: <id>
 - Your section range: <from>–<to>
+```
+
+## How to Invoke a Grid Agent
+
+```
+You are the Grid Agent for TAS Neo. Your role, responsibilities,
+and boundaries are defined in workflow/agents/grid-agent.md — read it first.
+
+Task: Write all cells for grid <grid-id> of adventure <adventure-id>.
+
+- Adventure file: adventures/<adventure-id>.json
+- Manifest: adventures/<adventure-id>-manifest.json
+- Your grid id: <grid-id>
+- Dimensions: <width>×<height>×<floors>
+- Spatial brief: [paste spatial brief from Architect output here]
 ```
