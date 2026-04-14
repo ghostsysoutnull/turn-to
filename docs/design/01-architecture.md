@@ -26,9 +26,12 @@
 │ Domain Layer │  │          I/O Layer            │
 │ Player       │  │  GameInput  (interface)       │
 │ Adventure    │  │  GameOutput (interface)       │
-│ Section      │  │  TerminalInput                │
-│ Item         │  │  TerminalOutput               │
-│ PartyMember  │  └───────────────────────────────┘
+│ Section      │  │  GameLogger (interface)       │
+│ Item         │  │  TerminalInput                │
+│ PartyMember  │  │  TerminalOutput               │
+│ Events       │  │  FileGameLogger               │
+│ Grid/Cell    │  │  NoOpGameLogger               │
+│ Combat       │  └───────────────────────────────┘
 │ Events       │
 │ Combat       │
 └───────┬──────┘
@@ -99,14 +102,20 @@ com.tas.neo
 │   │   ├── PartyMemberDefinition.java     # loader-only
 │   │   ├── DefeatConsequence.java         # sealed interface
 │   │   └── MemberState.java              # enum: WAITING, ACTIVE, REMOVED
-│   └── combat
-│       ├── Creature.java                  # record
-│       ├── CombatRound.java               # record
-│       ├── CombatResult.java              # record
-│       └── CombatOutcome.java             # record
+│   ├── combat
+│   │   ├── Creature.java                  # record
+│   │   ├── CombatRound.java               # record
+│   │   ├── CombatResult.java              # record
+│   │   └── CombatOutcome.java             # record
+│   └── log
+│       ├── NavigationEntry.java           # record
+│       ├── PlayerSnapshot.java            # record
+│       ├── GameError.java                 # record
+│       └── SessionLog.java                # record
 ├── mechanics
 │   ├── Dice.java                          # interface
 │   ├── RandomDice.java
+│   ├── SeededDice.java
 │   ├── DiceFormula.java
 │   ├── StatDefinition.java                # sealed interface
 │   ├── CombatEngine.java
@@ -122,8 +131,11 @@ com.tas.neo
 ├── io
 │   ├── GameInput.java                     # interface
 │   ├── GameOutput.java                    # interface
+│   ├── GameLogger.java                    # interface
 │   ├── TerminalInput.java
-│   └── TerminalOutput.java
+│   ├── TerminalOutput.java
+│   ├── FileGameLogger.java
+│   └── NoOpGameLogger.java
 ├── combat
 │   ├── CombatSystem.java                  # interface
 │   ├── CombatSystemRegistry.java          # interface
@@ -257,11 +269,12 @@ public interface CombatSystemRegistry {
 Dice dice                           = new RandomDice();
 GameInput input                     = new TerminalInput(System.in);
 GameOutput output                   = new TerminalOutput(System.out);
+GameLogger logger                   = new FileGameLogger("the-warlock-of-firetop-mountain", Path.of("sessions"));
 ScriptEngine scriptEngine           = new LuaScriptEngine();
 AdventureLoader loader              = new JsonAdventureLoader(Path.of("adventures"));
 CombatSystemRegistry combatRegistry = new DefaultCombatSystemRegistry(
     new PersonalCombatSystem(new CombatEngine(dice, input, output))
 );
-Game game = new Game(input, output, loader, dice, scriptEngine, combatRegistry);
+Game game = new Game(input, output, loader, dice, scriptEngine, combatRegistry, logger);
 game.run("the-warlock-of-firetop-mountain");
 ```

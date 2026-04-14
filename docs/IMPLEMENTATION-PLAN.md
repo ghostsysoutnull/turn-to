@@ -25,6 +25,7 @@ Tracks progress from spec through to working code. Each component follows the fo
 | 07 | Party members | ✅ |
 | 08 | Adventure authoring structure | ✅ |
 | 09 | Location networks | ✅ |
+| 10 | Session logging | ✅ |
 
 ---
 
@@ -43,6 +44,7 @@ Tracks progress from spec through to working code. Each component follows the fo
 | 09 | Party member model | ✅ |
 | 10 | Combat systems | ✅ |
 | 11 | Location networks | ✅ |
+| 12 | Session logging | ✅ |
 
 ---
 
@@ -72,6 +74,7 @@ Components are grouped by layer (bottom-up). Each layer depends on the layers ab
 | Party member | `PartyMember`, `PartyMemberStat`, `MemberState`, `DefeatConsequence` | ⬜ | ⬜ |
 | Combat records | `Creature`, `CombatRound`, `CombatResult`, `CombatOutcome` | ⬜ | ⬜ |
 | Location network | `Grid`, `Cell`, `Passage`, `Direction` | ⬜ | ⬜ |
+| Session log domain | `NavigationEntry`, `PlayerSnapshot`, `GameError`, `SessionLog` | ⬜ | ⬜ |
 
 ---
 

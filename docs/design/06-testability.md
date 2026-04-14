@@ -100,6 +100,44 @@ public class RecordingScriptContext implements ScriptContext {
 }
 ```
 
+### `NoOpGameLogger`
+
+Discards all logging calls. Default logger for tests that don't assert on log content.
+
+```java
+public class NoOpGameLogger implements GameLogger {
+    public void logNavigation(NavigationEntry entry);
+    public void logEvent(OutputEvent event);
+    public void logError(GameError error);
+    public void close();
+}
+```
+
+### `RecordingGameLogger`
+
+Accumulates all calls in memory. Used in tests that assert on session log content or error entries.
+
+```java
+public class RecordingGameLogger implements GameLogger {
+    public SessionLog sessionLog();
+    public List<GameError> errors();
+    public boolean hasErrors();
+}
+```
+
+### `SeededDice`
+
+Returns values from a seeded `java.util.Random`. Produces the same sequence for the same seed — use when a random `ScenarioRunner` run fails, to reproduce it exactly.
+
+```java
+public class SeededDice implements Dice {
+    public SeededDice(long seed);
+    public int roll(int sides);
+}
+```
+
+`SeededDice` lives in `src/main/java` (it is a production class). It is listed here because it is the primary tool for reproducible random scenario testing.
+
 ### `NoOpScriptEngine`
 
 Executes nothing. Used in engine and combat tests that do not involve scripts, to avoid LuaJ overhead.
@@ -125,17 +163,23 @@ public class InMemoryAdventureLoader implements AdventureLoader {
 
 ## ScenarioRunner
 
-`ScenarioRunner` drives a complete game run with scripted inputs and deterministic dice. It is the primary tool for end-to-end game tests — full playthroughs, grid traversal sequences, multi-section narratives — without any terminal interaction.
+`ScenarioRunner` drives a complete game run without any terminal interaction. It is the primary tool for end-to-end game tests — full playthroughs, grid traversal sequences, multi-section narratives, and random path exploration.
 
 ```java
 public class ScenarioRunner {
-    public ScenarioRunner(Adventure adventure, Dice dice, int... choiceSequence);
+    // Scripted: follows a fixed choice sequence
+    public static ScenarioRunner scripted(Adventure adventure, Dice dice, int... choices);
+    // Random: picks randomly from available choices using the provided dice
+    public static ScenarioRunner random(Adventure adventure, Dice dice);
+
+    public ScenarioRunner withLogger(GameLogger logger);
     public ScenarioResult run();
 }
 
 public record ScenarioResult(
     GameState finalState,
     RecordingOutput output,
+    SessionLog sessionLog,
     boolean victory,
     boolean gameOver
 ) {
@@ -145,7 +189,11 @@ public record ScenarioResult(
 }
 ```
 
-`ScenarioRunner` wires up `Game` internally using `InMemoryAdventureLoader`, `ScriptedInput`, and `RecordingOutput`. The caller provides `Adventure`, `Dice` (use `FixedDice` for determinism), and the choice sequence. `ScriptedInput` throws `AssertionError` if the choice sequence is exhausted before the game ends — this surfaces scenarios where the adventure takes an unexpected path.
+`ScenarioRunner` wires up `Game` internally using `InMemoryAdventureLoader`, `ScriptedInput` (scripted mode) or a random selector (random mode), `RecordingOutput`, and a `RecordingGameLogger` by default. Override the logger with `withLogger()` when a test needs to assert on log content or suppress all logging with `NoOpGameLogger`.
+
+In scripted mode, `ScriptedInput` throws `AssertionError` if the choice sequence is exhausted before the game ends — this surfaces scenarios where the adventure takes an unexpected path.
+
+In random mode, the runner picks uniformly from the available non-system choices at each step. Use `SeededDice` for a reproducible random run: if a random run fails, record the seed and re-run with the same seed to reproduce the failure.
 
 ---
 
