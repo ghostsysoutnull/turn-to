@@ -48,6 +48,35 @@ These are non-negotiable. Every agent must respect them.
 
 ---
 
+## Testability Covenant
+
+**Every feature — UI, gameplay, scripting, grid navigation, combat, loading — must be fully exercisable by an agent running the test suite, with no human present and no terminal interaction.**
+
+These rules are absolute. Violations are bugs, not style preferences.
+
+### Code rules
+
+- `TerminalInput` and `TerminalOutput` **never** appear in test code. Tests always use `ScriptedInput` and `RecordingOutput`.
+- No test may use `System.in`, `System.out`, or `System.err` directly.
+- No test may read from or write to the filesystem except `JsonAdventureLoaderTest`, which uses fixture files under `src/test/resources/`.
+- No test may have a non-deterministic outcome. All dice rolls use `FixedDice` or `SequenceDice`.
+- No test may `Thread.sleep`, use wall-clock time, or depend on execution order across test classes.
+
+### Output rules
+
+- Tests must produce **no output on success**. A passing test suite outputs only the final summary line.
+- Failure messages must be self-diagnosing: an agent reading the failure message must be able to identify the broken invariant without running the code or reading a stack trace.
+- Do not use `System.out.println` or any logging framework that writes to stdout in test code.
+- AssertJ failure messages satisfy this requirement when assertions are written with `.as("description")` on non-obvious checks.
+
+### Design rules
+
+- Every component that interacts with the outside world (terminal, filesystem, random, time) must be behind an interface with a test double defined in `docs/design/06-testability.md`.
+- `GameState` must expose enough read methods that any game state assertion can be made without accessing private fields.
+- New features that introduce agent-unverifiable behaviour (e.g. direct console writes, blocking reads) are rejected until a test double and test strategy exist for them.
+
+---
+
 ## Documentation Rules
 
 ### Spec documents (`docs/specs/`)

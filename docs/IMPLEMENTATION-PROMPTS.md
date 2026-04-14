@@ -15,6 +15,21 @@ The phases follow the layer dependency order from `docs/IMPLEMENTATION-PLAN.md`.
 
 ---
 
+## Testability covenant — applies to every prompt
+
+Every agent invoked from this document must honour the following rules. They are repeated here so no agent can miss them.
+
+- **No human interaction in tests.** `TerminalInput` and `TerminalOutput` never appear in test code. Use `ScriptedInput` and `RecordingOutput`.
+- **No console output on success.** Tests must not call `System.out.println` or log to stdout. A passing suite produces only the Maven summary line.
+- **Failure messages must be self-diagnosing.** An agent reading a failure must identify the broken invariant without running the code. Use `.as("description")` on non-obvious AssertJ assertions.
+- **No non-determinism.** All dice use `FixedDice` or `SequenceDice`.
+- **Full playthroughs use `ScenarioRunner`.** Do not wire up `Game` manually in engine or integration tests. Use `ScenarioRunner` (defined in `docs/design/06-testability.md`) instead.
+- **Maven Surefire must be configured** in `pom.xml` per `docs/design/06-testability.md` before any tests are written.
+
+If any Code Agent output introduces terminal-touching code in tests or produces console noise, treat it as a defect and invoke the Code Agent again to fix it before proceeding.
+
+---
+
 ## Note on TDD and compilation
 
 This project uses TDD: tests are written before production code. For a greenfield Java project this means the Test Agent's output will reference classes that do not yet exist — the tests will not compile until the Code Agent runs. That is expected and correct.
@@ -39,14 +54,15 @@ Design docs to read (all test strategy tables apply):
 - docs/design/11-location-networks.md — Grid, Cell, Passage, Direction
 - docs/design/06-testability.md   — available test doubles and their signatures
 
-Also write the following test doubles (they will be needed by tests in this and all later phases):
+Also write the following test doubles and utilities (needed by tests in this and all later phases):
 - FixedDice
 - SequenceDice
 - ScriptedInput
-- RecordingOutput
+- RecordingOutput (with OutputEvent sealed hierarchy — see docs/design/06-testability.md)
 - RecordingScriptContext
 - NoOpScriptEngine
 - InMemoryAdventureLoader
+- ScenarioRunner + ScenarioResult
 
 Place test doubles in src/test/java/com/tas/neo/ at the appropriate sub-package. Place test classes in the mirrored path of the class under test (e.g. PlayerTest → src/test/java/com/tas/neo/domain/player/PlayerTest.java).
 
@@ -78,6 +94,8 @@ Package root: com.tas.neo
 Domain package: com.tas.neo.domain
 
 DiceFormula lives in com.tas.neo.mechanics (it is a mechanics concern referenced by domain). Write it there — the domain layer does not need to import it directly. ConditionEvaluator is a service class; it lives in domain alongside the Condition types it evaluates.
+
+Before writing any production class, configure maven-surefire-plugin in pom.xml exactly as specified in docs/design/06-testability.md. This must be in place before the test suite is run for the first time.
 
 Do not implement any class outside the domain and mechanics.DiceFormula. Do not touch src/test/.
 ```
