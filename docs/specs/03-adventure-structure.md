@@ -19,6 +19,7 @@ An adventure is a self-contained story composed of numbered **sections**. The pl
 | partyMembers      | list     | Named entities with configurable stats that travel with the player (ships, companions, etc.) |
 | combatSystems     | list     | Combat system ids used by this adventure beyond the default `"personal"` system |
 | scripts           | ScriptBlock | Lifecycle hook scripts at adventure level |
+| grids             | list (optional) | Location networks: spatially organised grids of cells the player can explore. See **Spec: Location Networks** for the full model. |
 | chapters          | list (optional) | Authoring structure: chapter definitions with briefs and gate contracts. The engine ignores this field entirely. See **Spec: Adventure Authoring Structure** for the full chapter and gate model. |
 
 ### Adventure Lifecycle Hooks
@@ -96,9 +97,13 @@ Events with branching outcomes (LUCK_TEST, SKILL_TEST, COMBAT) specify a **succe
 | Field         | Type                | Description |
 |---------------|---------------------|-------------|
 | text          | string              | Label shown to the player |
-| targetSection | int                 | Section number to navigate to |
+| targetSection | int                 | Section number to navigate to. Mutually exclusive with `toGrid`/`toCell`. |
+| toGrid        | string              | Grid id to enter. Must be paired with `toCell`. Mutually exclusive with `targetSection`. |
+| toCell        | string              | Id of the entry cell within the grid. Must be paired with `toGrid`. |
 | condition     | Condition (optional)| Prerequisite that must be met for the choice to appear |
 | id            | string (optional)   | Stable identifier used by `onChoices` scripts to hide this choice. Must be unique within the section if present. |
+
+A choice must have exactly one navigation target: either `targetSection`, or `toGrid` + `toCell`.
 
 ---
 
@@ -162,6 +167,7 @@ Adventures can declare zero or more party members — named entities with fully 
     "onStart": "ctx.showMessage('Your adventure begins...')"
   },
   "items": [ ... ],
+  "grids": [ ... ],
   "sections": [
     {
       "number": 1,
@@ -176,6 +182,7 @@ Adventures can declare zero or more party members — named entities with fully 
       },
       "choices": [
         { "text": "Enter the mountain", "targetSection": 2 },
+        { "text": "Explore the caves", "toGrid": "cave-network", "toCell": "entrance" },
         {
           "text": "Pass through the door",
           "targetSection": 45,
