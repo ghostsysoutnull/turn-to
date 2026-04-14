@@ -29,6 +29,8 @@ public class PartyMember {
 
 `PartyMember` is mutable — stats and state change during play. All definition fields are final. `isDefeated()` returns true when the designated life stat reaches 0. Stat modification clamps to `[0, max]`. `isActive()` is a convenience that returns `state() == MemberState.ACTIVE`.
 
+**Stat mutation pattern.** `PartyMemberStat` is an immutable record. `modifyStat(name, delta)` replaces the map entry: `stats.put(name, stats.get(name).modify(delta))`. `modify(delta)` on the record returns a new `PartyMemberStat` with `current` clamped to `[0, max]`. Direct map mutation with `put` is the only permitted write path — no other code replaces stat entries.
+
 ---
 
 ## PartyMemberStat

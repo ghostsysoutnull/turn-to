@@ -204,3 +204,46 @@ public record StateNotEqualsCondition(String key, Object value) implements Condi
 `ComparisonType` enum: `AT_LEAST`, `AT_MOST`.
 
 `ConditionEvaluator` is a service class that evaluates conditions against `Player` and `GameState`. Evaluation logic does not live in the records themselves.
+
+```java
+public class ConditionEvaluator {
+    public boolean evaluate(Condition condition, Player player, GameState state);
+}
+```
+
+Dispatch uses a Java 21 `switch` expression over the sealed `Condition` hierarchy — never `instanceof` chains. Every branch is exhaustive at compile time; adding a new `Condition` subtype without handling it is a compile error.
+
+```java
+return switch (condition) {
+    case HasItemCondition c    -> player.inventory().has(c.itemName());
+    case StatAtLeastCondition c -> player.getStat(c.attribute()) >= c.value();
+    case StatAtMostCondition c  -> player.getStat(c.attribute()) <= c.value();
+    case StateEqualsCondition c -> Objects.equals(state.getFlag(c.key()), c.value());
+    // ... all subtypes listed explicitly
+};
+```
+
+---
+
+## Builders
+
+`Adventure`, `Section`, `Cell`, and `Grid` have enough constructor arguments that positional construction is error-prone. Each exposes a static inner `Builder` with a fluent API. Jackson uses `@JsonCreator` on the all-args constructor directly; `Builder` is for production wiring and test fixture construction.
+
+```java
+Adventure adventure = Adventure.builder()
+    .id("warlock")
+    .title("The Warlock of Firetop Mountain")
+    .startSection(1)
+    .section(section1)
+    .section(section2)
+    .build();
+
+Section section = Section.builder()
+    .number(1)
+    .narrative("You stand before the entrance.")
+    .type(SectionType.NORMAL)
+    .choice(Choice.builder().text("Enter").target(new SectionTarget(2)).build())
+    .build();
+```
+
+`Builder.build()` throws `IllegalStateException` for any required field left unset. Optional fields (`scripts`, `events`, `grids`, `items`, `partyMembers`) default to empty collections / `ScriptBlock.empty()` when not set. Every `Builder` is a static inner class of its target type.

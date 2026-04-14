@@ -39,6 +39,8 @@ public class GameState {
 
 `navigateTo(Section)` clears any active grid state — the player exits the grid and is now in a section. `navigateToCell` sets the active grid and cell, clearing any section context. `currentSection()` returns `null` when the player is in a grid.
 
+**Scope constraint.** `GameState` holds exactly: current position (section or grid+cell), the `Player`, the party member map, and terminal flags. It does not store `Adventure` data, section lists, item catalogs, or any data derivable from the loaded adventure. Any method that would require storing adventure data on `GameState` is a design violation — route it through `Adventure` directly in `Game` or `HookDispatcher` instead.
+
 ---
 
 ## Game

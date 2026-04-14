@@ -70,6 +70,12 @@ public class Cell {
 
 Cell lifecycle hooks use the same `SectionHook` enum as sections: `ON_ENTER`, `ON_DISPLAY`, `ON_CHOICES`, `ON_EXIT`.
 
+`Cell` exposes a static inner `Builder`. Required fields: `x`, `y`, `z`, `narrative`. Optional fields default to empty / `ScriptBlock.empty()`.
+
+```java
+Cell cell = Cell.builder().x(0).y(0).z(0).narrative("Cold stone floor.").passage(Direction.EAST, passage).build();
+```
+
 ---
 
 ## Grid
@@ -87,6 +93,12 @@ public class Grid {
 ```
 
 `getCell` returns the cell at the given coordinates, or empty if the position is unoccupied (wall). `getCellById` resolves named entry points. Both return `Optional.empty()` rather than throwing on a miss.
+
+`Grid` exposes a static inner `Builder`. Required fields: `id`. Dimensions (`width`, `height`, `floors`) default to the bounding box of the added cells.
+
+```java
+Grid grid = Grid.builder().id("dungeon-level-1").cell(cell).cell(cell2).build();
+```
 
 ---
 
