@@ -52,6 +52,7 @@ Design docs to read (all test strategy tables apply):
 - docs/design/08-item-model.md    — Item, ItemCategory, Inventory, ItemStack, onDrop/onPickup rules
 - docs/design/09-party-member-model.md — PartyMember, PartyMemberStat, MemberState, DefeatConsequence, StatDefinition, DiceFormula, PartyMemberDefinition, party member conditions
 - docs/design/11-location-networks.md — Grid, Cell, Passage, Direction
+- docs/design/12-session-logging.md — NavigationEntry, PlayerSnapshot, GameError, SessionLog (domain records only — GameLogger interface is in Phase 3)
 - docs/design/06-testability.md   — available test doubles and their signatures
 
 Also write the following test doubles and utilities (needed by tests in this and all later phases):
@@ -62,7 +63,8 @@ Also write the following test doubles and utilities (needed by tests in this and
 - RecordingScriptContext
 - NoOpScriptEngine
 - InMemoryAdventureLoader
-- ScenarioRunner + ScenarioResult
+- ScenarioRunner + ScenarioResult (scripted and random static factories — see docs/design/06-testability.md)
+- RecordingGameLogger (accumulates NavigationEntry, OutputEvent, GameError in memory)
 
 Place test doubles in src/test/java/com/tas/neo/ at the appropriate sub-package. Place test classes in the mirrored path of the class under test (e.g. PlayerTest → src/test/java/com/tas/neo/domain/player/PlayerTest.java).
 
@@ -89,6 +91,7 @@ Design docs to implement from:
 - docs/design/08-item-model.md    — Item, ItemCategory, ItemScriptHook, Inventory, ItemStack
 - docs/design/09-party-member-model.md — PartyMember, PartyMemberStat, MemberState, DefeatConsequence sealed hierarchy, StatDefinition sealed hierarchy, PartyMemberDefinition
 - docs/design/11-location-networks.md — Direction, Passage, Cell, Grid
+- docs/design/12-session-logging.md — NavigationEntry, PlayerSnapshot, GameError, SessionLog (domain records in com.tas.neo.domain.log)
 
 Package root: com.tas.neo
 Domain package: com.tas.neo.domain
@@ -212,11 +215,12 @@ Do not touch src/test/.
 ```
 You are the Test Agent for TAS Neo. Read workflow/agents/test-agent.md first.
 
-Task: Write all failing tests for the I/O layer.
+Task: Write all failing tests for the I/O layer (including session logging implementations).
 
 Design docs to read:
-- docs/design/01-architecture.md — GameInput, GameOutput interface signatures
+- docs/design/01-architecture.md — GameInput, GameOutput, GameLogger interface signatures
 - docs/design/08-item-model.md   — inventory screen rendering (showInventory format)
+- docs/design/12-session-logging.md — GameLogger, FileGameLogger, NoOpGameLogger; text log and JSON log formats; test strategy table
 - docs/design/06-testability.md  — TerminalOutput and TerminalInput test rows
 
 Key contracts to test:
@@ -224,10 +228,14 @@ Key contracts to test:
 - TerminalInput: readChoice returns the player's 1-based selection; re-prompts on invalid input
 - TerminalInput: readYesNo parses y/n correctly; re-prompts on other input
 - Inventory screen renders countable items with quantity suffix, non-countable without
+- FileGameLogger: ScenarioRunner with FileGameLogger pointing to a temp dir → both .txt and .json files written on close(), JSON parses correctly
+- NoOpGameLogger: all calls succeed silently, no files written
+- SeededDice reproducibility: two ScenarioRunner.random() runs with the same seed produce identical navigation paths
 
 Use a captured PrintStream for TerminalOutput tests. Use ByteArrayInputStream for TerminalInput tests.
 
 Place test classes in src/test/java/com/tas/neo/io/.
+SeededDice test may go in src/test/java/com/tas/neo/mechanics/.
 ```
 
 ---
@@ -237,18 +245,24 @@ Place test classes in src/test/java/com/tas/neo/io/.
 ```
 You are the Code Agent for TAS Neo. Read workflow/agents/code-agent.md first.
 
-Task: Implement the I/O layer. Make all I/O tests compile and pass.
+Task: Implement the I/O layer (including session logging). Make all I/O tests compile and pass.
 
 Failing tests to satisfy:
 - src/test/java/com/tas/neo/io/
+- src/test/java/com/tas/neo/mechanics/ (SeededDice reproducibility test)
 
 Design docs to implement from:
-- docs/design/01-architecture.md — GameInput, GameOutput interfaces
+- docs/design/01-architecture.md — GameInput, GameOutput, GameLogger interfaces
 - docs/design/08-item-model.md   — inventory screen format
+- docs/design/12-session-logging.md — GameLogger interface, FileGameLogger (text + JSON via Jackson), NoOpGameLogger; SeededDice (in com.tas.neo.mechanics)
 
 Package: com.tas.neo.io
 
 TerminalInput and TerminalOutput are the only classes that may use System.in and System.out — via injected streams, not directly. All other layers use the interfaces.
+
+FileGameLogger builds the SessionLog in memory and writes both files in close(). The sessions/ directory is created if it does not exist. File names follow the pattern: <adventureId>-<timestamp>.txt and .json.
+
+SeededDice lives in com.tas.neo.mechanics alongside RandomDice. It uses java.util.Random seeded at construction.
 
 Do not touch src/test/.
 ```
@@ -378,6 +392,9 @@ Key contracts to test (all from the design doc test strategy tables):
 - Grid entry via toGrid/toCell choice → state.isInGrid() true, correct cell
 - Grid exit via toSection passage → state.isInGrid() false, correct section
 - Cell events fire on cell entry
+- ScenarioRunner with RecordingGameLogger: sessionLog().path() matches navigation sequence
+- ScenarioRunner with RecordingGameLogger: broken script → hasErrors() true, source and type correct
+- ScenarioRunner default (no logger override): no files written to sessions/
 
 Place test classes in src/test/java/com/tas/neo/engine/.
 ```
@@ -397,6 +414,7 @@ Failing tests to satisfy:
 Design docs to implement from:
 - docs/design/04-engine.md — GameState (including grid navigation: navigateToCell, currentGrid, currentCell, isInGrid), HookDispatcher, Game
 - docs/design/07-scripting-engine.md — HookDispatcher (fireSectionHook, fireCellHook, fireAdventureHook, fireCombatHook, fireItemHook)
+- docs/design/12-session-logging.md — engine integration section: Game receives GameLogger, HookDispatcher catches script errors and calls logError, PlayerSnapshot.of(state) factory
 
 Package: com.tas.neo.engine
 
@@ -406,8 +424,17 @@ The engine layer may depend on all other layers. Wire up in Game.run():
 3. Resolve party member stats via StatDefinition + Dice
 4. Fire ON_LOAD, then ON_START
 5. Enter main game loop
+6. Call logger.logNavigation() on every section/cell transition
+7. Call logger.logEvent() for every OutputEvent produced
+8. Call logger.logError() for every caught script or navigation error (do NOT rethrow — session continues)
+9. Call logger.close() when the session ends (victory, game over, or unrecoverable fault)
 
 Grid navigation: when a choice has a GridTarget, call state.navigateToCell(grid, cell) and process the cell (events → hooks → passage choices + explicit choices). When a passage has toSection, call state.navigateTo(section).
+
+Game constructor signature:
+  public Game(GameInput input, GameOutput output, AdventureLoader loader,
+              Dice dice, ScriptEngine scriptEngine,
+              CombatSystemRegistry combatRegistry, GameLogger logger)
 
 Do not touch src/test/.
 ```
