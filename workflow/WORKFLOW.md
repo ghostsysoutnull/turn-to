@@ -29,6 +29,10 @@ Each stage is a deliberate checkpoint. The user reviews the output of each agent
 
 Creating a new adventure uses a separate pipeline. See `workflow/ADVENTURE-AUTHORING-PIPELINE.md`.
 
+## Practical Usage Guide
+
+For scenario-based guidance — which agent for what task, how to write a good brief, handling blockers, and parallelism rules — see `workflow/AGENT-GUIDE.md`.
+
 ---
 
 ## How to Invoke an Agent
