@@ -57,6 +57,8 @@ public class Adventure {
     public Item getItem(String name);
     public List<PartyMemberDefinition> partyMemberDefinitions();
     public List<String> combatSystems();
+    public Optional<Grid> getGrid(String id);
+    public List<Grid> grids();
 }
 ```
 
@@ -77,11 +79,27 @@ public class Section {
 
 ---
 
+## ChoiceTarget
+
+A choice navigates to exactly one of two target types.
+
+```java
+public sealed interface ChoiceTarget
+    permits SectionTarget, GridTarget {}
+
+public record SectionTarget(int sectionNumber) implements ChoiceTarget {}
+public record GridTarget(String gridId, String cellId) implements ChoiceTarget {}
+```
+
+---
+
 ## Choice
 
 ```java
-public record Choice(String text, int targetSection, Optional<Condition> condition) {}
+public record Choice(String text, ChoiceTarget target, Optional<Condition> condition, Optional<String> id) {}
 ```
+
+`id` is used by `ctx.hideChoice(id)` in `onChoices` scripts. It is unique within a section or cell if present.
 
 ---
 
@@ -167,7 +185,8 @@ public record CombatOutcome(CombatOutcomeType type, Optional<Integer> navigateTo
 public sealed interface Condition
     permits HasItemCondition, LacksItemCondition, StatCondition, GoldCondition,
             PartyStatCondition, PartyMemberActiveCondition,
-            PartyMemberWaitingCondition, PartyMemberRemovedCondition {}
+            PartyMemberWaitingCondition, PartyMemberRemovedCondition,
+            StateEqualsCondition, StateNotEqualsCondition {}
 
 public record HasItemCondition(String itemName) implements Condition {}
 public record LacksItemCondition(String itemName) implements Condition {}
@@ -177,6 +196,8 @@ public record PartyStatCondition(String memberId, String statName, ComparisonTyp
 public record PartyMemberActiveCondition(String memberId) implements Condition {}
 public record PartyMemberWaitingCondition(String memberId) implements Condition {}
 public record PartyMemberRemovedCondition(String memberId) implements Condition {}
+public record StateEqualsCondition(String key, Object value) implements Condition {}
+public record StateNotEqualsCondition(String key, Object value) implements Condition {}
 ```
 
 `ComparisonType` enum: `AT_LEAST`, `AT_MOST`.

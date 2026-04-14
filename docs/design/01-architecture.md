@@ -224,7 +224,7 @@ public interface ScriptContext {
     int currentSection();
     void showMessage(String message);
     void addChoice(String text, int targetSection);
-    void removeChoice(String text);
+    void hideChoice(String id);
 }
 ```
 

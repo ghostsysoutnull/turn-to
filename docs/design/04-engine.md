@@ -20,6 +20,10 @@ public class GameState {
     public Player player();
     public Section currentSection();
     public void navigateTo(Section section);
+    public Optional<Grid> currentGrid();
+    public Optional<Cell> currentCell();
+    public void navigateToCell(Grid grid, Cell cell);
+    public boolean isInGrid();
     public boolean isTerminal();
     public boolean isGameOver();
     public boolean isVictory();
@@ -32,6 +36,8 @@ public class GameState {
 ```
 
 `isTerminal()` returns true when either `gameOver` or `victory` is set. The game loop checks this after every event and after every navigation.
+
+`navigateTo(Section)` clears any active grid state — the player exits the grid and is now in a section. `navigateToCell` sets the active grid and cell, clearing any section context. `currentSection()` returns `null` when the player is in a grid.
 
 ---
 
@@ -115,3 +121,6 @@ Player death (STAMINA == 0) is detected by `HookDispatcher` immediately after an
 | System choices injected | Any normal section | "Check inventory" and "Quit" always present |
 | Navigation follows choice | `ScriptedInput` selecting choice 1 | `state.currentSection()` == target |
 | Party member created | Adventure with dice-formula stat | Stat within expected range |
+| Enter grid via choice | `InMemoryAdventureLoader` with grid, choice using `GridTarget` | `state.isInGrid() == true`, `state.currentCell()` == entry cell |
+| Exit grid via passage `toSection` | Player in grid, selects exit passage | `state.isInGrid() == false`, `state.currentSection()` == target |
+| Cell events fire on entry | Cell with `StatChangeEvent` | Player stat modified |

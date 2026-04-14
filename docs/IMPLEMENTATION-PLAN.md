@@ -42,6 +42,7 @@ Tracks progress from spec through to working code. Each component follows the fo
 | 08 | Item model | ✅ |
 | 09 | Party member model | ✅ |
 | 10 | Combat systems | ✅ |
+| 11 | Location networks | ✅ |
 
 ---
 
@@ -70,7 +71,7 @@ Components are grouped by layer (bottom-up). Each layer depends on the layers ab
 | Item | `Item`, `ItemCategory` | ⬜ | ⬜ |
 | Party member | `PartyMember`, `PartyMemberStat`, `MemberState`, `DefeatConsequence` | ⬜ | ⬜ |
 | Combat records | `Creature`, `CombatRound`, `CombatResult`, `CombatOutcome` | ⬜ | ⬜ |
-| Location network | `Grid`, `Cell`, `Passage` | ⬜ | ⬜ |
+| Location network | `Grid`, `Cell`, `Passage`, `Direction` | ⬜ | ⬜ |
 
 ---
 
@@ -160,17 +161,9 @@ Written alongside tests. Not production code.
 
 ---
 
-## Design gaps to address before implementation
+## Design gaps
 
-| Gap | Affects | Notes |
-|-----|---------|-------|
-| `ScriptContext.removeChoice` → `hideChoice(id)` not yet reflected in design doc 01 interface | `ScriptContext` | Spec updated; design doc 01 interface signature still shows old method |
-| `Choice` `id` and `toGrid`/`toCell` fields not in domain model design | `Choice` | Spec 03 updated; design doc 02 still shows old `Choice` record |
-| `STATE_EQUALS` / `STATE_NOT_EQUALS` condition types not in `Condition` hierarchy | `Condition`, `ConditionEvaluator` | Spec 03 updated; design doc 02 sealed hierarchy is incomplete |
-| `Grid`, `Cell`, `Passage` domain classes not yet designed | Domain layer | Spec 09 written; no design doc covers these classes yet |
-| `AdventureScriptState` grid navigation not covered | Scripting | `ctx.navigateTo` from a grid cell needs grid-aware handling |
-
-These gaps should be resolved by the Design Agent before the Test Agent runs on the affected components.
+All gaps resolved. ✅
 
 ---
 

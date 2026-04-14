@@ -49,11 +49,15 @@ public interface ScriptContext {
     int currentSection();
     void showMessage(String message);
     void addChoice(String text, int targetSection);
-    void removeChoice(String text);
+    void hideChoice(String id);
 }
 ```
 
 `DefaultScriptContext` holds references to `Player`, `GameState`, `GameOutput`, and the mutable choice list. Methods invalid for a given hook (e.g. `navigateTo` inside `onChoices`) throw `UnsupportedOperationException`.
+
+`ctx.currentSection()` returns `-1` when called from a cell script (the player is in a grid, not a section). Cell scripts should not call this method.
+
+`ctx.hideChoice(id)` removes the choice with the matching `id` from the mutable list. No-op if the id is not found or was already removed by a declarative condition.
 
 ---
 
@@ -96,6 +100,7 @@ public class HookDispatcher {
 
     public void fireAdventureHook(AdventureHook hook, Adventure adventure);
     public void fireSectionHook(SectionHook hook, Section section, List<Choice> mutableChoices);
+    public void fireCellHook(SectionHook hook, Cell cell, List<Choice> mutableChoices);
     public void fireCombatHook(CombatHook hook, CombatEvent event, CombatRound round);
     public void fireItemHook(ItemScriptHook hook, Item item);
     public CombatOutcome processCombatEvent(CombatEvent event);
