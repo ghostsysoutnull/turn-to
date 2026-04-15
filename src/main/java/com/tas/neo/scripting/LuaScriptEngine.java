@@ -19,7 +19,7 @@ public class LuaScriptEngine implements ScriptEngine {
         try {
             globals.load(script).call();
         } catch (Exception e) {
-            // Script errors are caught and swallowed — a failing script never crashes the game.
+            context.onScriptError(e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
         }
     }
 

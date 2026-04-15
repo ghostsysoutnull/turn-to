@@ -67,7 +67,8 @@ Single point of contact between the engine and the scripting/combat layers. Fire
 public class HookDispatcher {
     public HookDispatcher(ScriptEngine scriptEngine, GameInput input, GameOutput output,
                           GameState state, AdventureScriptState scriptState,
-                          CombatSystemRegistry combatRegistry, Dice dice);
+                          CombatSystemRegistry combatRegistry, Dice dice,
+                          GameLogger logger);
 
     public void fireAdventureHook(AdventureHook hook, Adventure adventure);
     public void fireSectionHook(SectionHook hook, Section section, List<Choice> mutableChoices);

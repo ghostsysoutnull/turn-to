@@ -46,15 +46,21 @@ public class ScenarioRunner {
         return new ScenarioRunner(adventure, dice, new RandomChoiceInput(dice));
     }
 
+    private ScriptEngine scriptEngine = new NoOpScriptEngine();
+
     public ScenarioRunner withLogger(GameLogger logger) {
         this.logger = logger;
+        return this;
+    }
+
+    public ScenarioRunner withScriptEngine(ScriptEngine engine) {
+        this.scriptEngine = engine;
         return this;
     }
 
     public ScenarioResult run() {
         RecordingOutput output = new RecordingOutput();
         InMemoryAdventureLoader loader = new InMemoryAdventureLoader(adventure);
-        ScriptEngine scriptEngine = new NoOpScriptEngine();
         CombatEngine combatEngine = new CombatEngine(dice, input, output);
         CombatSystemRegistry combatRegistry = new DefaultCombatSystemRegistry(
             new PersonalCombatSystem(combatEngine)

@@ -19,4 +19,7 @@ public interface ScriptContext {
     void showMessage(String message);
     void addChoice(String text, int targetSection);
     void hideChoice(String id);
+
+    /** Called by the scripting engine when a script fails. Default is a no-op. */
+    default void onScriptError(String message) {}
 }

@@ -176,6 +176,8 @@ public class ScenarioRunner {
     public static ScenarioRunner random(Adventure adventure, Dice dice);
 
     public ScenarioRunner withLogger(GameLogger logger);
+    /** Override the default NoOpScriptEngine — use LuaScriptEngine to test broken-script behaviour. */
+    public ScenarioRunner withScriptEngine(ScriptEngine engine);
     public ScenarioResult run();
 }
 
