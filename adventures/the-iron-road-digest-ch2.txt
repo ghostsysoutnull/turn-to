@@ -163,7 +163,7 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 [§88] NORMAL          →§89,§45
   "Trust is the wrong word," the Spymaster says....
   events: +Spymaster's Letter
-  conds:  [GOLD>=3]→§89:"Accept the letter and also take a Forged Border Pass (3 gold)"
+  conds:  [GOLD>=3]→§89:"Accept the letter and also take a Forged Border Pass (3 gold)"  [GOLD>=3]→§89:"Ask about the Spy Ring Cipher and the border pass (3 gold)"
   hooks:  onEnter
 
 [§89] NORMAL          →§90,§92

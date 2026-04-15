@@ -2156,8 +2156,12 @@
           }
         },
         {
-          "text": "Ask about the Spy Ring Cipher",
-          "targetSection": 89
+          "text": "Ask about the Spy Ring Cipher and the border pass (3 gold)",
+          "targetSection": 89,
+          "condition": {
+            "type": "HAS_GOLD",
+            "amount": 3
+          }
         },
         {
           "text": "Accept the letter only — find your own route to a pass",
