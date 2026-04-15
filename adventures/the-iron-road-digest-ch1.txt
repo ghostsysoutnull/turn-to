@@ -4,7 +4,6 @@ Generated: 2026-04-15  |  Range: §1–§40  |  Entry: §1
 [§1] NORMAL          →§3,§2
   The Iron Road runs wide and straight through the forest, paved in pale grey stone worn smooth by a thousand years of trade....
   events: +Sealed Satchel
-  hooks:  onEnter
 
 [§2] NORMAL          →§4,§3,§5
   You hold the satchel and you do not move....
@@ -44,7 +43,6 @@ Generated: 2026-04-15  |  Range: §1–§40  |  Entry: §1
 
 [§13] NORMAL          →§23,§36
   You circle back along the high bank, moving low and careful, angling to put both voices ahead of you....
-  hooks:  onEnter
 
 [§14] NORMAL        
   You move east, toward where the forest thins near the road....
@@ -62,7 +60,6 @@ Generated: 2026-04-15  |  Range: §1–§40  |  Entry: §1
 
 [§18] NORMAL          →§9,§31
   You set the satchel on the ground between you....
-  hooks:  onExit
 
 [§19] NORMAL        
   The tracker is fast but you have surprise....
@@ -106,12 +103,10 @@ Generated: 2026-04-15  |  Range: §1–§40  |  Entry: §1
 
 [§31] NORMAL          →§9
   The tracker's eyes flick away for a fraction of a second — the tell of someone deciding how much to say....
-  hooks:  onExit
 
 [§32] NORMAL          →§36
   The token fits in your palm — heavier than it looks, the brass worn at the edges from years of handling....
   events: +Courier's Token
-  hooks:  onEnter
 
 [§33] NORMAL          →§36
   The cloak is plain and dusty — exactly the right kind of nothing....

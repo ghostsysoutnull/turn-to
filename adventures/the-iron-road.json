@@ -385,9 +385,7 @@
           "item": "Sealed Satchel"
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('hasSatchel', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Run into the forest — now, before they reach you",
@@ -417,7 +415,8 @@
           "text": "Ask him who he works for",
           "targetSection": 5
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 3,
@@ -443,14 +442,16 @@
           "text": "Hide in the hollow under the bank and wait",
           "targetSection": 8
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 4,
       "type": "INSTANT_DEATH",
       "narrative": "You set the satchel down on the road between you.\n\nThe commander picks it up. He checks the wax seal — intact — and tucks it under his arm. Then he looks back at you, and something changes in his expression: a small, flat appraisal.\n\n\"Thank you,\" he says.\n\nHe nods once to the man on his left.\n\nYou do not feel the blow. There is only the road rising toward you, and then nothing.\n\nA traveller who knows nothing and can identify no one is still a witness. The Iron Road does not forgive loose ends.",
       "events": [],
-      "choices": []
+      "choices": [],
+      "scripts": {}
     },
     {
       "number": 5,
@@ -466,7 +467,8 @@
           "text": "Run",
           "targetSection": 3
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 6,
@@ -486,7 +488,8 @@
           "text": "Stop at the waystone and prepare for the tracker to reach you",
           "targetSection": 11
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 7,
@@ -506,7 +509,8 @@
           "text": "Press east toward the forest edge and the open road beyond",
           "targetSection": 14
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 8,
@@ -519,7 +523,8 @@
           "failureSection": 16
         }
       ],
-      "choices": []
+      "choices": [],
+      "scripts": {}
     },
     {
       "number": 9,
@@ -535,7 +540,8 @@
           "text": "Wait on the ridge and watch the station before approaching",
           "targetSection": 24
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 10,
@@ -557,7 +563,8 @@
           "text": "Climb the bank and turn to face whoever is coming",
           "targetSection": 11
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 11,
@@ -577,7 +584,8 @@
           "text": "Feint left and bolt past him into the trees",
           "targetSection": 20
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 12,
@@ -597,16 +605,15 @@
           "text": "Leave the track entirely and head north toward higher ground",
           "targetSection": 9
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 13,
       "type": "NORMAL",
       "narrative": "You circle back along the high bank, moving low and careful, angling to put both voices ahead of you. It works — you can hear them below now, quartering the streambed, calling to each other in short syllables that mean nothing to you.\n\nBut circling costs time, and time has a price. By the time you reach the stretch of road you escaped from, you can see that the coachman's body has been moved and the coachman's couch is gone. The courier's body is still there. No one on the road; no witnesses.\n\nThe satchel's wax seal has grown warm against your palm from being clutched so tightly.",
       "events": [],
-      "scripts": {
-        "onEnter": "if not ctx.hasItem('Courier\\'s Token') then state.set('tokenAvailable', true) end"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Search the courier's body before leaving",
@@ -634,7 +641,8 @@
           "failureSection": 40
         }
       ],
-      "choices": []
+      "choices": [],
+      "scripts": {}
     },
     {
       "number": 15,
@@ -646,7 +654,8 @@
           "text": "Approach the waystation",
           "targetSection": 25
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 16,
@@ -666,7 +675,8 @@
           "text": "Attack him while he's close",
           "targetSection": 19
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 17,
@@ -688,16 +698,15 @@
           "text": "Hide in the bramble against the wall",
           "targetSection": 26
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 18,
       "type": "NORMAL",
       "narrative": "You set the satchel on the ground between you. But you do not release it — your hand stays on the strap.\n\nThe tracker watches this. He gives a small, flat smile.\n\n\"You're not going to give it to me,\" he says. It is not a question.\n\nHe crouches to your level, keeping his hands visible, the blade still sheathed. His eyes move to the satchel, then back to your face.\n\n\"Listen carefully,\" he says quietly. \"The man I work for will kill you regardless of what you do with that bag. I've watched him work. You have one option: run north, find the waystation on the hill, wait until dark. Don't go back to the road before then.\"\n\nHe stands. He looks at you for a moment.\n\n\"Don't tell him I said that.\"",
       "events": [],
-      "scripts": {
-        "onExit": "state.set('trackerWarned', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Take the warning and head north",
@@ -725,7 +734,8 @@
           "failureSection": 40
         }
       ],
-      "choices": []
+      "choices": [],
+      "scripts": {}
     },
     {
       "number": 20,
@@ -747,7 +757,8 @@
           "text": "Find somewhere to hide and rest",
           "targetSection": 26
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 21,
@@ -763,7 +774,8 @@
           "text": "Keep to the verge and move cautiously",
           "targetSection": 35
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 22,
@@ -779,7 +791,8 @@
           "text": "Circle around and approach from the north",
           "targetSection": 24
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 23,
@@ -795,7 +808,8 @@
           "text": "Leave it and go north quickly",
           "targetSection": 36
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 24,
@@ -811,7 +825,8 @@
           "text": "Wait and watch for another ten minutes",
           "targetSection": 28
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 25,
@@ -835,7 +850,8 @@
           "text": "Take nothing — leave quickly",
           "targetSection": 36
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 26,
@@ -848,7 +864,8 @@
           "failureSection": 16
         }
       ],
-      "choices": []
+      "choices": [],
+      "scripts": {}
     },
     {
       "number": 27,
@@ -864,7 +881,8 @@
           "text": "Leave it and go north immediately",
           "targetSection": 9
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 28,
@@ -880,7 +898,8 @@
           "text": "Pass the waystation and continue north toward the road",
           "targetSection": 36
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 29,
@@ -901,7 +920,8 @@
           "text": "Head north to the Iron Road",
           "targetSection": 36
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 30,
@@ -921,16 +941,15 @@
           "text": "Give him the satchel",
           "targetSection": 4
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 31,
       "type": "NORMAL",
       "narrative": "The tracker's eyes flick away for a fraction of a second — the tell of someone deciding how much to say.\n\n\"A lord,\" he says finally. \"That's all I'll say. Someone with the resources to put a team on a road courier and the kind of reach that makes what you're carrying more dangerous than a sword.\"\n\nHe stands up. The conversation is over.\n\n\"North,\" he says quietly, as if he never said it. \"You were never here.\"",
       "events": [],
-      "scripts": {
-        "onExit": "state.set('trackerWarned', true); state.set('lordKnown', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Go north",
@@ -948,9 +967,7 @@
           "item": "Courier's Token"
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('courierTokenRevealed', false)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Run north along the road toward the waystation",
@@ -973,7 +990,8 @@
           "text": "Head north to the Iron Road",
           "targetSection": 36
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 34,
@@ -990,7 +1008,8 @@
           "text": "Head north to the Iron Road",
           "targetSection": 36
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 35,
@@ -1006,7 +1025,8 @@
           "text": "Pass the waystation and keep north — do not stop",
           "targetSection": 39
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 36,
@@ -1022,7 +1042,8 @@
           "text": "Keep walking — reach the road junction before dark",
           "targetSection": 39
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 37,
@@ -1034,7 +1055,8 @@
           "text": "Move north toward the ridge",
           "targetSection": 22
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 38,
@@ -1051,7 +1073,8 @@
           "text": "Head north through the forest",
           "targetSection": 9
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 39,
@@ -1073,14 +1096,16 @@
           "text": "Press on through the night — reach the border city faster",
           "targetSection": 41
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 40,
       "type": "INSTANT_DEATH",
       "narrative": "You are faster than you thought you were. But they are faster than you hoped.\n\nThe blow comes from the right — the one you did not account for, the third member of the team you had not seen. It catches you across the side of the head and the ground comes up hard.\n\nYou manage to hold onto the satchel, which is the wrong kind of victory.\n\nThe commander crouches beside you. He is not pleased, but he is not angry either. He takes the satchel with the care of a man retrieving something that belongs to him.\n\n\"I told you,\" he says quietly.\n\nThe Iron Road does not forgive loose ends. You are one.",
       "events": [],
-      "choices": []
+      "choices": [],
+      "scripts": {}
     },
     {
       "number": 41,
@@ -1088,7 +1113,7 @@
       "narrative": "A day and a half of road, and at last Varenmark rises from the dust.\n\nIt is everything you expected and worse: a frontier city of tight-packed stone buildings and narrow streets pressed against the bank of a sluggish river, the air smelling of coal smoke and horse and something under both that you cannot name. The Iron Road becomes the city's main street without ceremony — just a widening of the paved surface, a sudden press of wagons and pedestrians, and a customs gatehouse at the far end where the road continues north into the second kingdom.\n\nYou join the flow of traffic. Around you: merchants, soldiers, labourers, travellers of every sort. You are unremarkable. The satchel is under your cloak, or under your arm, and no one looks twice.\n\nFor now.",
       "events": [],
       "scripts": {
-        "onEnter": "if ctx.hasItem('Traveller\\'s Cloak') and state.get('cloakWorn') then state.set('suspicion', math.max(0, state.get('suspicion') - 1)) end; state.set('inVarenmark', true)"
+        "onEnter": "if ctx.hasItem('Traveller\\'s Cloak') then state.set('suspicion', math.max(0, state.get('suspicion') - 1)) end"
       },
       "choices": [
         {
@@ -1127,7 +1152,8 @@
           "text": "Say nothing and wait",
           "targetSection": 47
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 43,
@@ -1155,16 +1181,15 @@
           "text": "Go directly to the Customs House",
           "targetSection": 50
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 44,
       "type": "NORMAL",
       "narrative": "The Customs House stands at the northern end of Varenmark, where the Iron Road narrows to pass through a stone gatehouse. Two guards stand at the arch; another two patrol the approach. A third figure stands in the doorway of the customs office itself — a heavyset man in a city official's coat, not armour, watching the line of travellers with the patient authority of someone who has weighed up thousands of people and found most of them wanting.\n\nThe inspection is thorough. Papers are checked. Bags are examined at random. A merchant two places ahead of you is pulled aside for additional questioning — his cart is searched while he stands with his arms out and his expression carefully neutral.\n\nYou are not in the queue. You are watching. But one of the gate guards glances your way.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('guardCaptainSeen', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Join the queue — attempt to cross without a pass",
@@ -1202,7 +1227,8 @@
           "text": "Take the back road around the city — no pass required",
           "targetSection": 84
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 46,
@@ -1222,7 +1248,8 @@
           "text": "Ignore the invitation and seek another approach to the border",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 47,
@@ -1242,7 +1269,8 @@
           "text": "Stand up and leave the inn",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 48,
@@ -1271,16 +1299,15 @@
           "text": "Head to the Customs House",
           "targetSection": 50
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 49,
       "type": "NORMAL",
       "narrative": "You approach directly. The watching man does not run, but his posture changes — a slight stiffening, a reassessment.\n\n\"I wasn't looking at you particularly,\" he says. A lie, and not a good one.\n\nHe is younger than he seemed from across the market — twenty-five, perhaps, with an apprentice's callused hands that are recently clean, as if he changed occupations not long ago. There is ink on the inside of his right wrist.\n\nAn engraver's mark. Or a forger's.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('forgerLocated', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "\"I need a document produced. A border pass.\"",
@@ -1314,7 +1341,8 @@
           "text": "Look for a side entrance to the Customs House",
           "targetSection": 59
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 51,
@@ -1338,7 +1366,8 @@
             "item": "Courier's Token"
           }
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 52,
@@ -1362,7 +1391,8 @@
             "item": "Courier's Token"
           }
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 53,
@@ -1382,7 +1412,8 @@
           "text": "Withdraw — this is too exposed",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 54,
@@ -1406,16 +1437,15 @@
           "text": "Stand and leave",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 55,
       "type": "NORMAL",
       "narrative": "You wait. The contact moves to the bar and orders a drink, exchanging two words with the landlord. He does not look at you. He stands there for five minutes, then carries his cup to a corner table where another man is already sitting — older, better dressed, the kind of weight to his coat that suggests something beneath it.\n\nThey speak for two minutes. The older man does not look in your direction. But when the contact rises and moves toward the back of the inn, the older man's eyes track to you for one unhurried second.\n\nThat is the Spymaster. You are almost certain of it.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('spymasterSpotted', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Follow the contact to the back room",
@@ -1445,16 +1475,15 @@
           "text": "Refuse and find another way",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 57,
       "type": "NORMAL",
       "narrative": "The young man's expression closes. He looks past you, then at you.\n\n\"Not on the street,\" he says.\n\nHe names a time and a place in the back lanes — the Forger's Workshop, though he does not call it that. A number of a building, a colour of a door. \"Three gold for a standard merchant's pass. Four if you need it aged. Don't be late. I don't wait.\"\n\nHe walks away before you can respond.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('forgerMet', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Go to the Forger's Workshop at the appointed time",
@@ -1475,9 +1504,7 @@
       "type": "NORMAL",
       "narrative": "You browse, watching from the corner of your eye. The young man with ink-stained hands buys nothing, talks to no one, and after five minutes moves toward the edge of the market and into an alley mouth.\n\nYou follow at a distance. Two turns into the back lanes, he stops at a door the colour of old blood. He knocks twice. A pause. Then twice more. The door opens and he goes in.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('forgerLocated', true); state.set('forgerWorkshopFound', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Knock on the door as he did",
@@ -1503,7 +1530,8 @@
           "text": "Reconsider and approach properly through the side entrance",
           "targetSection": 52
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 60,
@@ -1519,16 +1547,15 @@
           "text": "Ask to speak to the Captain about the temporary transit paper",
           "targetSection": 52
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 61,
       "type": "NORMAL",
       "narrative": "The clerk's eyes move — a small but definite shift. He leans back slightly and raises one hand, a gesture that stops the guard beside him from moving forward.\n\n\"Captain,\" he calls, without raising his voice. \"One for your attention.\"\n\nTwo minutes later you are in the side office. The Captain sits across from you with his arms folded and his expression professionally blank. He has looked at your face for three seconds and made some internal assessment that he has not shared.\n\n\"I'm listening,\" he says.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('captainContacted', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Tell him honestly what happened on the road south of here",
@@ -1546,7 +1573,7 @@
       "narrative": "You produce the Courier's Token and set it on the inspection table.\n\nThere is a silence of approximately two seconds. The clerk's face goes carefully blank — the expression of someone who has seen something significant and decided very quickly not to react. The guard on his left has also gone still.\n\n\"One moment,\" the clerk says. He goes inside.\n\nYou wait, exposed, on the wrong side of a border gatehouse with the dead man's credentials in your hand.",
       "events": [],
       "scripts": {
-        "onEnter": "state.set('suspicion', state.get('suspicion') + 2); state.set('courierTokenRevealed', true)"
+        "onEnter": "state.set('suspicion', state.get('suspicion') + 2)"
       },
       "choices": [
         {
@@ -1593,16 +1620,15 @@
             "item": "Bribe Purse"
           }
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 64,
       "type": "NORMAL",
       "narrative": "The Captain is silent for longer than is comfortable. Then:\n\n\"I know,\" he says. \"There are people in this city who've been asking about it. Some of them I've spoken to, some I've turned away, and one of them I've had followed since this morning.\"\n\nHe looks at you with something that might be respect.\n\n\"You're carrying whatever he was carrying. I can see it from the way you're sitting.\" A pause. \"I'm not interested in what's in it. I'm interested in whether letting you through causes me more trouble than not letting you through.\"",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('captainInformed', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "\"What would ease that calculation?\"",
@@ -1636,16 +1662,15 @@
           "text": "Pocket the token and pivot to straight bribery",
           "targetSection": 63
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 66,
       "type": "NORMAL",
       "narrative": "The grain seller, without pausing her work, says: \"Kallos. Back lanes, third turning past the fish stall, door the colour of old blood. Knock twice, pause, twice again. Merchant's pass is three gold, four if you want it aged and sealed. Don't mention my name.\"\n\nShe hands you your change and turns to the next customer.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('forgerLocated', true); state.set('forgerWorkshopFound', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Go to the Forger's Workshop now",
@@ -1675,7 +1700,8 @@
           "text": "Return to the market",
           "targetSection": 43
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 68,
@@ -1695,7 +1721,8 @@
           "text": "Decline and find your own route to a pass",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 69,
@@ -1715,7 +1742,8 @@
           "text": "Decline and seek another route",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 70,
@@ -1739,7 +1767,8 @@
           "text": "Decline",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 71,
@@ -1747,7 +1776,7 @@
       "narrative": "The older man at the corner table watches you approach. He does not stand. He waits until you sit.\n\nClose up, the Spymaster looks less like a spy and more like a senior administrator: comfortable weight, good cloth, grey at the temples, eyes that have been recording everything in this room since you walked in. He has drunk half his wine.\n\n\"Good,\" he says, as if you have just answered a question he asked some time ago. \"Sit down. I dislike people hovering.\"\n\nHe studies you for a moment.\n\n\"You have the satchel. Yes — I can see that. I don't want to take it from you. What I want is considerably more interesting.\"",
       "events": [],
       "scripts": {
-        "onEnter": "state.set('spymasterMet', true); state.set('spymasterDebt', state.get('spymasterDebt') + 1)"
+        "onEnter": "state.set('spymasterDebt', state.get('spymasterDebt') + 1)"
       },
       "choices": [
         {
@@ -1795,7 +1824,8 @@
           "text": "You cannot afford it — leave",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 73,
@@ -1811,7 +1841,8 @@
           "text": "\"Someone pointed me this way.\"",
           "targetSection": 72
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 74,
@@ -1827,16 +1858,15 @@
           "text": "Apologise and back out, return to the main queue",
           "targetSection": 50
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 75,
       "type": "NORMAL",
       "narrative": "The Captain arrives in three minutes. He looks at the Courier's Token on the table, then at you, and then picks it up.\n\nHe turns it over in his fingers. The kind of familiarity that means he has seen them before.\n\n\"The courier came through my gate six days ago. He was alive.\" He sets the token down. \"Whoever killed him left you with a complicated inheritance.\"\n\nHe is not sympathetic. He is calculating.\n\n\"What do you want from my office?\"",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('captainContacted', true); state.set('captainKnowsToken', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "\"A border pass. I need to continue the courier's route.\"",
@@ -1866,9 +1896,7 @@
           "item": "Legitimate Border Pass"
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('guardCaptainBribed', true); state.set('borderPassType', 'legitimate')"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Thank him and leave Varenmark at dawn",
@@ -1898,7 +1926,8 @@
           "text": "Decline and find another way",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 78,
@@ -1922,7 +1951,8 @@
             "item": "Courier's Token"
           }
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 79,
@@ -1938,9 +1968,7 @@
           "item": "Legitimate Border Pass"
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('guardCaptainBribed', true); state.set('borderPassType', 'legitimate')"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Give a false name and take the pass",
@@ -1953,9 +1981,7 @@
       "type": "NORMAL",
       "narrative": "The Captain looks at you for a long moment.\n\n\"Three parties,\" he says at last. \"One sent a very polished man who asked questions at my gate about a royal courier passing through. Too polished for a soldier, too precise for a merchant. I had him watched. He spent two hours at the Ironbell Inn and left north this morning — which means he's ahead of you already.\"\n\nHe pauses to let that land.\n\n\"The second is a network I've seen operating in this city for three years. They use the back lanes. They are careful and they don't bother honest travellers. The third I know less about — recent arrivals, watching the road inns.\"\n\n\"Two of those three want what you're carrying. The third, I think, wants you to keep it.\"",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('lordAgentNorth', true); state.set('threeFactionsBriefed', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "\"What would it cost me to get through your gate?\"",
@@ -1977,9 +2003,7 @@
           "item": "Legitimate Border Pass"
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('guardCaptainBribed', false); state.set('guardCaptainHelpedRoyal', true); state.set('borderPassType', 'legitimate')"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Thank the Captain and prepare to leave Varenmark at dawn",
@@ -2001,16 +2025,15 @@
           "text": "\"What would change the calculation?\"",
           "targetSection": 63
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 83,
       "type": "NORMAL",
       "narrative": "The man with the pipe looks at you with detached interest.\n\n\"You're looking for the lanes,\" he says. \"The kind of lanes that help.\"\n\nHe speaks slowly, as if he has all the time in the world.\n\n\"Third alley past the fish stall. Door the colour of old blood. Knock twice, pause, twice again. Tell him the pipe-man sent you.\" He draws on the pipe. \"He charges fair. He doesn't ask what the document is for.\"",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('forgerLocated', true); state.set('forgerWorkshopFound', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Go to the Forger's Workshop",
@@ -2042,7 +2065,8 @@
           "text": "Turn back — the risk isn't worth it without more preparation",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 85,
@@ -2062,7 +2086,8 @@
           "text": "\"Who sent you?\"",
           "targetSection": 87
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 86,
@@ -2080,7 +2105,8 @@
           "failureSection": 88
         }
       ],
-      "choices": []
+      "choices": [],
+      "scripts": {}
     },
     {
       "number": 87,
@@ -2096,7 +2122,8 @@
           "text": "\"What do you want from me specifically?\"",
           "targetSection": 88
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 88,
@@ -2109,7 +2136,7 @@
         }
       ],
       "scripts": {
-        "onEnter": "state.set('spymasterLetterGiven', true); state.set('spymasterDebt', state.get('spymasterDebt') + 1)"
+        "onEnter": "state.set('spymasterDebt', state.get('spymasterDebt') + 1)"
       },
       "choices": [
         {
@@ -2165,7 +2192,8 @@
           "text": "Take neither — find your own route",
           "targetSection": 45
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 90,
@@ -2194,16 +2222,15 @@
             "item": "Forged Border Pass"
           }
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 91,
       "type": "NORMAL",
       "narrative": "The customs gatehouse is bright with morning light. You present your Legitimate Border Pass to the clerk, who scans it with the practiced boredom of someone who has seen ten thousand of them. He stamps it without comment, hands it back, and waves you through.\n\nThe second guard at the outer arch gives the satchel a glance — couriers carry satchels; no one raises an eyebrow. The iron-bound gate swings wide.\n\nBeyond it, the Iron Road opens onto a broad plain of pale grass. The frontier city of Varenmark is behind you. The second kingdom stretches ahead, flat and windswept and full of people who do not yet know you are coming.\n\nYou walk through without looking back.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('borderCrossed', true); state.set('borderCrossedVia', 'legitimate')"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Press on up the Iron Road",
@@ -2222,9 +2249,7 @@
           "failureSection": 97
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('borderCrossed', true); state.set('borderCrossedVia', 'forged')"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Wait for the clerk's decision",
@@ -2238,7 +2263,7 @@
       "narrative": "The back road is a shepherd's track that hairpins through a shallow gulch before emerging in a stand of birch trees a kilometre north of the customs gate. You were directed to it by a contact who preferred not to be remembered.\n\nThe track is unused this morning. No guards. No checkpoints. The only witness is a crow on a fence post that watches you pass with professional indifference.\n\nYou emerge onto the Iron Road on the second kingdom side of the border and join the ordinary flow of traffic as if you have always been there. No stamp in any ledger. No record of your crossing.\n\nNo questions asked means no lies told. That is its own kind of freedom.",
       "events": [],
       "scripts": {
-        "onEnter": "state.set('backRoadTaken', true); state.set('borderCrossed', true); state.set('borderCrossedVia', 'backroad'); state.set('suspicion', math.max(0, state.get('suspicion') - 1))"
+        "onEnter": "state.set('suspicion', math.max(0, state.get('suspicion') - 1))"
       },
       "choices": [
         {
@@ -2261,7 +2286,8 @@
           "text": "Cut across the fields and approach the Crossroads Inn from the west",
           "targetSection": 96
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 95,
@@ -2277,7 +2303,8 @@
           "text": "Break away before the inn and observe from the back lane",
           "targetSection": 98
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 96,
@@ -2293,7 +2320,8 @@
           "text": "Wait in the stable yard until dusk and watch who enters the inn",
           "targetSection": 98
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 97,
@@ -2315,9 +2343,7 @@
       "type": "NORMAL",
       "narrative": "You find a quiet table at a roadside alehouse — not the Crossroads Inn, a timber-framed place where local farmers drink and no one cares about travellers.\n\nThe conversation around you is ordinary. Harvest prospects. A field boundary dispute. The price of salt.\n\nBut just before you leave, two men settle in at the corner table and speak in lower voices than their posture suggests they need to. You catch fragments.\n\n\"...the courier corps token... someone carrying it north...\"\n\n\"...Lord's man at the Crossroads will be...\"\n\nThen one of them glances around and they drop lower still. You have heard enough. You leave before they notice you.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('heardAboutLordsAgent', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Head directly to the Crossroads Inn",
@@ -2343,16 +2369,15 @@
           "text": "Go directly to the innkeeper to arrange a room for the night",
           "targetSection": 108
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 100,
       "type": "NORMAL",
       "narrative": "The common room is a long, low-ceilinged space with trestle tables and a fire that has been burning all day. Merchants, drovers, a pair of clerics, two soldiers off-duty in plain clothes. The ordinary human inventory of a busy road inn.\n\nA man near the window catches your attention not by looking at you but by carefully not looking at you.\n\nHe is perhaps fifty, well-dressed in the manner of someone who travels frequently and has learned what roads do to fine cloth. He sits alone with a cup he is not drinking from and a ledger he is not reading.\n\nEverything about him says merchant. Everything about him says something else.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('seenLordsAgent', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Take a seat across the room and watch him",
@@ -2378,16 +2403,15 @@
           "text": "Stand and prepare to leave immediately",
           "targetSection": 105
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 102,
       "type": "NORMAL",
       "narrative": "\"I represent the lord who ordered the courier's removal,\" he says, with no inflection on the word ordered, as if it were the most ordinary phrase in the world. \"The satchel contains correspondence that embarrasses powerful people. Delivering it creates enemies you do not need and will not survive.\"\n\nHe sets the cup down.\n\n\"My employer will pay you twenty gold, your complete safety on the road, and a formal letter of clearance, in exchange for the satchel. No questions asked. No further contact. You walk away a wealthy person with a long life ahead.\"\n\nHe is unhurried. He is not threatening. He is describing a business transaction.\n\n\"You have until morning.\"",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('lordsAgentMet', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "\"Twenty gold and a clearance letter. I'll think about it.\"",
@@ -2428,7 +2452,7 @@
       "narrative": "He takes the satchel without ceremony. Twenty gold changes hands. The letter of clearance — stamped with a seal you do not recognise — joins your other papers.\n\nHe gives you a nod of something that is almost respect.\n\n\"You made the sensible choice. Travel safely.\"\n\nHe is gone before you can count the coins a second time. The satchel is gone. The weight of it — physical and otherwise — is simply absent.\n\nYou feel, simultaneously, lighter and hollow.\n\nThe Iron Road north is clear. The capital gates will pass you without incident. Whatever was in the satchel is no longer your problem, your purpose, or your burden.",
       "events": [],
       "scripts": {
-        "onEnter": "state.set('satchelDeliveredEarly', true); state.set('satchelDestination', 'lords_agent'); ctx.removeItem('Sealed Satchel')"
+        "onEnter": "ctx.removeItem('Sealed Satchel')"
       },
       "choices": [
         {
@@ -2490,7 +2514,8 @@
             "item": "Courier's Token"
           }
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 107,
@@ -2506,7 +2531,8 @@
           "text": "Stop at a roadside shrine and check if you are being followed",
           "targetSection": 120
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 108,
@@ -2518,16 +2544,15 @@
           "text": "Enter Goldmere Estate",
           "targetSection": 109
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 109,
       "type": "NORMAL",
       "narrative": "The Noble Host meets you in the estate's formal sitting room — a room used for practical discussions dressed up as formal ones.\n\nHe is a man of perhaps sixty, lean and dry-voiced, with the measured movements of someone who has been careful all his adult life. He does not ask about the satchel directly. He asks about the road from Varenmark, about the Crossroads Inn, about the man you may or may not have spoken with there.\n\n\"He'll be at the capital gates before you,\" the Noble Host says. \"His people are faster on horseback and slower to make mistakes than most of the others.\"\n\nHe refills your cup.\n\n\"The spy ring can help you. Whether that's what you want is a question only you can answer.\"",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('visitedGoldmere', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "\"What can the spy ring offer me?\"",
@@ -2554,7 +2579,8 @@
           "text": "Accept the Noble's Invitation and take your leave",
           "targetSection": 111
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 111,
@@ -2570,7 +2596,8 @@
           "text": "Decline — the fewer people who know your route the better",
           "targetSection": 112
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 112,
@@ -2582,7 +2609,8 @@
           "text": "Rejoin the main road and continue north",
           "targetSection": 121
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 113,
@@ -2602,16 +2630,15 @@
           "text": "Claim you have an urgent message for the station warden",
           "targetSection": 115
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 114,
       "type": "NORMAL",
       "narrative": "The sentry examines the token with the focused attention of someone who knows exactly what she is looking at. She straightens.\n\n\"I'll fetch the warden.\"\n\nThe warden arrives inside three minutes: a compact man in his forties, silver-haired, with the posture of someone who has been in the corps for twenty years and expects twenty more. He studies the token. He studies you.\n\n\"How did you come by this?\"\n\nYou tell him the version of the truth that is most useful. His bearing changes, as if a variable he had been holding as unknown is now resolved.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('wardenMet', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Tell him everything — the courier, the ambush, the satchel",
@@ -2633,7 +2660,8 @@
           "text": "Follow the warden inside",
           "targetSection": 116
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 116,
@@ -2641,7 +2669,7 @@
       "narrative": "The warden leads you to a side room off the station's main corridor — a room set up for long occupation: a cot, a desk with papers, a cold meal tray.\n\nAn old man sits in the chair by the window. He is past seventy, wrapped in a traveller's coat despite the warmth of the room, with eyes that are alert in a face that is exhausted.\n\nThe Courier's Contact.\n\n\"You made it,\" he says. Not surprised. Relieved in the way of someone who has been calculating odds. \"Sit down. Tell me what happened to Marden.\"\n\nMarden. The courier. You finally have a name for the dead man on the Iron Road.",
       "events": [],
       "scripts": {
-        "onEnter": "if not state.get('contactAlive') then ctx.navigateTo(118) return end; state.set('contactAlive', true); state.set('contactFound', true)"
+        "onEnter": "if not state.get('contactAlive') then ctx.navigateTo(118) return end; state.set('contactAlive', true)"
       },
       "choices": [
         {
@@ -2660,9 +2688,7 @@
           "item": "Relay Station Key"
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('contactInstructed', true); state.set('satchelContentsKnown', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Take the key and go — the capital is half a day away",
@@ -2676,7 +2702,7 @@
       "narrative": "The side room is empty.\n\nThe cot has been slept in recently. The papers on the desk are gone — not filed, swept. One sheet is on the floor: encoded, meaningless to you, but it has a dark smear at the corner that might be dried mud and might be something worse.\n\nThe warden says nothing for a moment.\n\n\"He was here yesterday evening,\" he says finally. \"There was a disturbance in the night. I assumed...\"\n\nHe does not finish. He does not need to. The Courier's Contact is either dead, taken, or fled. The assassins moved faster than either of you expected.",
       "events": [],
       "scripts": {
-        "onEnter": "state.set('contactAlive', false); state.set('contactFound', false)"
+        "onEnter": "state.set('contactAlive', false)"
       },
       "choices": [
         {
@@ -2694,9 +2720,7 @@
       "type": "NORMAL",
       "narrative": "The warden tells you what he knows, which is less than you hoped: the Contact was carrying orders to the palace archivist, the satchel Marden had been delivering was expected, and at least two of the Lord's people knew about this relay station.\n\nHe also gives you something the Contact left behind intentionally — a note, sealed, addressed to the royal archivist by name.\n\n\"He said to give it to whoever came for the satchel if he couldn't deliver it himself,\" the warden says. \"I hope that's you and not whoever killed him.\"\n\nThe note gives you a name and a room number in the palace district. You have a destination, even without a living guide.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('archivistNoteReceived', true); state.set('satchelContentsKnown', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Thank the warden and move toward the capital",
@@ -2733,7 +2757,8 @@
           "text": "Look for a way around the checkpoint",
           "targetSection": 126
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 122,
@@ -2760,7 +2785,8 @@
           "text": "Continue to the Capital Approach",
           "targetSection": 129
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 124,
@@ -2788,7 +2814,8 @@
             "item": "Noble's Invitation"
           }
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 125,
@@ -2810,9 +2837,7 @@
       "type": "NORMAL",
       "narrative": "There is a drainage cut on the east side of the road, following the base of the quarried wall. It is barely wide enough for a person carrying a satchel, but barely wide enough is enough.\n\nYou move along it quickly, keeping low. The checkpoint guards are talking to a carter; their attention is forward and west. The drainage cut takes you past the gatehouse wall and deposits you in a weedy verge on the far side.\n\nYou straighten up, join the road traffic, and keep walking as if you have always been on this side of the checkpoint.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('bypassedApproachCheckpoint', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Continue quickly toward the Capital Approach",
@@ -2838,7 +2863,8 @@
           "text": "Throw something to distract them and run",
           "targetSection": 129
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 128,
@@ -2856,7 +2882,8 @@
           "text": "Keep moving — the capital gates are close",
           "targetSection": 129
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 129,
@@ -2868,16 +2895,15 @@
           "text": "Enter the capital",
           "targetSection": 130
         }
-      ]
+      ],
+      "scripts": {}
     },
     {
       "number": 130,
       "type": "NORMAL",
       "narrative": "You stand at the threshold of the capital.\n\nThe gate road is busy. Merchants, travellers, officials, servants. The noise and press of a city that is the end of the Iron Road and the beginning of everything else. Inside those walls are the factions that have been moving against each other since before you picked up the satchel. Inside are the answers to the questions you have been carrying.\n\nYou check the satchel one last time — or note its absence. You take stock of what you carry: in your hands, in your pockets, in the choices you have made since the ambush site.\n\nThen you step through the gate.",
       "events": [],
-      "scripts": {
-        "onEnter": "state.set('ch3Complete', true)"
-      },
+      "scripts": {},
       "choices": [
         {
           "text": "Enter the capital and find your way to the palace district",
@@ -3128,9 +3154,7 @@
           "item": "Sealed Satchel"
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('satchelDestination', 'spymaster')"
-      },
+      "scripts": {},
       "choices": []
     },
     {
@@ -3214,9 +3238,7 @@
           "item": "Sealed Satchel"
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('satchelDestination', 'destroyed')"
-      },
+      "scripts": {},
       "choices": []
     },
     {
@@ -3364,9 +3386,7 @@
           "delta": 200
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('satchelDestination', 'lord')"
-      },
+      "scripts": {},
       "choices": []
     },
     {
@@ -3508,9 +3528,7 @@
           "item": "Sealed Satchel"
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('satchelDestination', 'royal')"
-      },
+      "scripts": {},
       "choices": []
     },
     {
@@ -3552,9 +3570,7 @@
           "item": "Sealed Satchel"
         }
       ],
-      "scripts": {
-        "onEnter": "state.set('satchelDestination', 'royal')"
-      },
+      "scripts": {},
       "choices": []
     },
     {

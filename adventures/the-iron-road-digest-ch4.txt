@@ -44,7 +44,6 @@ Generated: 2026-04-15  |  Range: §131–§170  |  Entry: §131
 [§141] VICTORY       
   You set the Sealed Satchel on the cedar table....
   events: -Sealed Satchel
-  hooks:  onEnter
 
 [§142] NORMAL          →§146,§143,§140,§149
   You leave the arcade without the satchel changing hands....
@@ -59,7 +58,6 @@ Generated: 2026-04-15  |  Range: §131–§170  |  Entry: §131
 [§145] VICTORY       
   The ash falls into the river....
   events: -Sealed Satchel
-  hooks:  onEnter
 
 [§146] NORMAL          →§155,§156,§164,§147,§138
   The palace district begins where the main city ends: a gatehouse checkpoint staffed by royal household guards in formal livery, not the city...
@@ -83,7 +81,6 @@ Generated: 2026-04-15  |  Range: §131–§170  |  Entry: §131
 [§151] VICTORY       
   You take the coin. The satchel changes hands under the table, smooth as any market transaction....
   events: -Sealed Satchel  GOLD+200
-  hooks:  onEnter
 
 [§152] NORMAL          →§146,§139,§143
   You stand. The Lord's Agent watches you with the same patient expression, neither surprised nor offended....
@@ -113,7 +110,6 @@ Generated: 2026-04-15  |  Range: §131–§170  |  Entry: §131
 [§159] VICTORY       
   You place the Sealed Satchel on the table between you....
   events: -Sealed Satchel
-  hooks:  onEnter
 
 [§160] NORMAL          →§161,§170,§162
   The Contact is not there....
@@ -122,7 +118,6 @@ Generated: 2026-04-15  |  Range: §131–§170  |  Entry: §131
 [§161] VICTORY       
   You hand over the satchel....
   events: -Sealed Satchel
-  hooks:  onEnter
 
 [§162] NORMAL          →§163,§161
   The anteroom door is still open behind you....

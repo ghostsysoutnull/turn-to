@@ -14,7 +14,6 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 
 [§44] NORMAL          →§51,§42,§52
   The Customs House stands at the northern end of Varenmark, where the Iron Road narrows to pass through a stone gatehouse....
-  hooks:  onEnter
 
 [§45] NORMAL          →§42,§53,§50,§84
   You keep your eyes forward and your pace steady — the gait of someone who has somewhere to be and is not interested in conversation....
@@ -31,7 +30,6 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 
 [§49] NORMAL          →§57,§58,§45
   You approach directly....
-  hooks:  onEnter
 
 [§50] NORMAL          →§51,§52,§59
   The Customs House at close range is a solid stone building with a sealed front door and a separate hatch for public business....
@@ -52,18 +50,15 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 
 [§55] NORMAL          →§54,§71,§45
   You wait. The contact moves to the bar and orders a drink, exchanging two words with the landlord....
-  hooks:  onEnter
 
 [§56] NORMAL          →§54,§45
   The contact looks at you steadily....
 
 [§57] NORMAL          →§72,§42,§50
   The young man's expression closes....
-  hooks:  onEnter
 
 [§58] NORMAL          →§73,§45
   You browse, watching from the corner of your eye....
-  hooks:  onEnter
 
 [§59] NORMAL          →§74,§52
   A side passage beside the Customs House leads to a small courtyard....
@@ -73,7 +68,6 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 
 [§61] NORMAL          →§64,§63
   The clerk's eyes move — a small but definite shift....
-  hooks:  onEnter
 
 [§62] NORMAL          →§75,§45
   You produce the Courier's Token and set it on the inspection table....
@@ -85,14 +79,12 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 
 [§64] NORMAL          →§63,§78,§80
   The Captain is silent for longer than is comfortable....
-  hooks:  onEnter
 
 [§65] NORMAL          →§81,§82,§63
   The Captain looks at the Token in your hand for three full seconds....
 
 [§66] NORMAL          →§72,§42
   The grain seller, without pausing her work, says: "Kallos....
-  hooks:  onEnter
 
 [§67] NORMAL          →§83,§85,§43
   The back lanes at midday are quieter than the market but not empty....
@@ -124,12 +116,10 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 
 [§75] NORMAL          →§81,§80
   The Captain arrives in three minutes....
-  hooks:  onEnter
 
 [§76] NORMAL          →§91
   You count out ten gold and set it on the desk....
   events: GOLD-10  +Legitimate Border Pass
-  hooks:  onEnter
 
 [§77] NORMAL          →§76,§78,§45
   The Captain considers the five gold in your palm....
@@ -142,23 +132,19 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 [§79] NORMAL          →§91
   The Bribe Purse has weight to it....
   events: -Bribe Purse  +Legitimate Border Pass
-  hooks:  onEnter
 
 [§80] NORMAL          →§63,§64
   The Captain looks at you for a long moment....
-  hooks:  onEnter
 
 [§81] NORMAL          →§91
   The Captain studies you....
   events: +Legitimate Border Pass
-  hooks:  onEnter
 
 [§82] NORMAL          →§81,§63
   The Captain leans back and looks at the Courier's Token without touching it....
 
 [§83] NORMAL          →§72,§85
   The man with the pipe looks at you with detached interest....
-  hooks:  onEnter
 
 [§84] NORMAL          →§93,§45
   The back road around Varenmark is local knowledge — a drover's track running east along the river bank, bypassing the gatehouse entirely and...

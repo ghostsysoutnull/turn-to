@@ -3,12 +3,10 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
 
 [§91] NORMAL          →§94
   The customs gatehouse is bright with morning light....
-  hooks:  onEnter
 
 [§92] NORMAL          →§94
   The clerk at the customs gatehouse is a thin man with ink-stained fingers and a methodical air....
   events: SKILL_TEST→§94/§97
-  hooks:  onEnter
 
 [§93] NORMAL          →§94
   The back road is a shepherd's track that hairpins through a shallow gulch before emerging in a stand of birch trees a kilometre north of the...
@@ -29,21 +27,18 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
 
 [§98] NORMAL          →§99
   You find a quiet table at a roadside alehouse — not the Crossroads Inn, a timber-framed place where local farmers drink and no one cares abo...
-  hooks:  onEnter
 
 [§99] NORMAL          →§100,§101,§108
   The Crossroads Inn is everything the road promises: large, busy, and neutral by reputation if not by practice....
 
 [§100] NORMAL          →§101,§102
   The common room is a long, low-ceilinged space with trestle tables and a fire that has been burning all day....
-  hooks:  onEnter
 
 [§101] NORMAL          →§102,§105
   You get a drink, find a seat, and watch....
 
 [§102] NORMAL          →§105,§104,§103
   "I represent the lord who ordered the courier's removal," he says, with no inflection on the word ordered, as if it were the most ordinary p...
-  hooks:  onEnter
 
 [§103] NORMAL          →§106
   He receives your refusal with a small nod, as if it confirms something he expected....
@@ -69,7 +64,6 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
 
 [§109] NORMAL          →§110,§111
   The Noble Host meets you in the estate's formal sitting room — a room used for practical discussions dressed up as formal ones....
-  hooks:  onEnter
 
 [§110] NORMAL          →§111
   "A route into the palace district that doesn't go through the main gates," the Noble Host says....
@@ -87,7 +81,6 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
 
 [§114] NORMAL          →§116,§115
   The sentry examines the token with the focused attention of someone who knows exactly what she is looking at....
-  hooks:  onEnter
 
 [§115] NORMAL          →§116
   The warden listens without interrupting....
@@ -99,7 +92,6 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
 [§117] NORMAL          →§121
   He listens to everything....
   events: +Relay Station Key
-  hooks:  onEnter
 
 [§118] NORMAL          →§119,§121
   The side room is empty....
@@ -107,7 +99,6 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
 
 [§119] NORMAL          →§121
   The warden tells you what he knows, which is less than you hoped: the Contact was carrying orders to the palace archivist, the satchel Marde...
-  hooks:  onEnter
 
 [§120] NORMAL          →§121
   You stop at a roadside wayshrine — a small stone alcove with a faded relief of a road deity and a good view in both directions....
@@ -133,7 +124,6 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
 
 [§126] NORMAL          →§127
   There is a drainage cut on the east side of the road, following the base of the quarried wall....
-  hooks:  onEnter
 
 [§127] NORMAL          →§128,§129
   Two figures step out of the shadow of the quarry wall....
@@ -147,5 +137,4 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
 
 [§130] NORMAL          →§131
   You stand at the threshold of the capital....
-  hooks:  onEnter
 
