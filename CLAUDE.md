@@ -119,6 +119,32 @@ These rules are absolute. Violations are bugs, not style preferences.
 
 ---
 
+## Adventure Analysis Tools
+
+Pre-computed report files in `adventures/` answer most questions about an adventure without opening the raw JSON. **Do not write ad-hoc scripts to query adventure JSON when a report file answers the question.**
+
+| Question | Use |
+|----------|-----|
+| Is the adventure structurally sound? Reachability, section types, item references, chapter coverage. | `adventures/<id>-report.txt` |
+| What sections are in chapter N? Narrative, events, choices, gated conditions. | `adventures/<id>-digest-<chapterId>.txt` |
+| Where is state variable X set, read, checked, or removed? | `adventures/<id>-state.txt` |
+| Where is item X gained, lost, required, or forbidden? | `adventures/<id>-items.txt` |
+| What are the gate contracts for each chapter? Guaranteed, possible, forbidden, assumed state. | `adventures/<id>-gates.txt` |
+| Raw section content not covered by a digest (specific prose, edge cases). | `Read` the JSON file directly — not a script |
+
+Regenerate all reports after any change to an adventure JSON file:
+
+```
+mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureReportGenerator  -Dexec.args="adventures/<id>.json"
+mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureStateReport      -Dexec.args="adventures/<id>.json"
+mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureItemReport        -Dexec.args="adventures/<id>.json"
+mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureGateDigest        -Dexec.args="adventures/<id>.json"
+mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureSectionDigest     -Dexec.args="adventures/<id>.json ch1"
+# repeat AdventureSectionDigest for each chapter
+```
+
+---
+
 ## Agent Workflow
 
 This project uses a four-agent pipeline. See `workflow/WORKFLOW.md` for the full process.
