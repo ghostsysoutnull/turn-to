@@ -12,12 +12,10 @@ reports. No manual copying or agent selection required.
 ## Current Position
 
 ```
-Phase : 7 — Integration
-Step  : 7.1 — Code Agent
-Status: TODO
+Phase : COMPLETE
+Step  : —
+Status: All phases done. 410 tests passing.
 ```
-
-**Next action:** Invoke Code Agent with the prompt in § Phase 7 › Step 7.1.
 
 ---
 
@@ -32,7 +30,7 @@ Status: TODO
 | 4 | Combat systems | 4.1 Test · 4.2 Code | ✅ ✅ |
 | 5 | Loader | 5.1 Test · 5.2 Code | ✅ ✅ |
 | 6 | Engine | 6.1 Test · 6.2 Code | ✅ ✅ |
-| 7 | Integration | 7.1 Code | ⬜ |
+| 7 | Integration | 7.1 Code | ✅ |
 
 ---
 
