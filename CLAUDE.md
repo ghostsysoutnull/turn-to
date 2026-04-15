@@ -138,7 +138,11 @@ Pre-computed report files in `adventures/` answer most questions about an advent
 | All sections that set, read, or check a specific state variable. | `AdventureSectionInspector <id>.json --state varName` |
 | Raw JSON gate contracts for a chapter (for preparing an Edit-tool change). | `AdventureSectionInspector <id>.json --gate ch3 [in\|out]` |
 
-**Do not write Python or shell scripts to query or inspect adventure JSON.** Use `AdventureSectionInspector` for targeted queries; use the report files above for whole-adventure summaries. Python is only appropriate for bulk transformations across many sections simultaneously (e.g. a variable-rename audit).
+**Prefer tools over scripts.** Reach for a tool before reaching for Python. Use this hierarchy:
+
+1. **Report files** — whole-adventure structural questions (reachability, items, state, gates)
+2. **`AdventureSectionInspector`** — targeted queries (specific sections, inbound refs, event/condition search, state variable focus, gate JSON)
+3. **Python** — only when neither above covers the situation (e.g. multi-condition cross-section queries the inspector doesn't support); write it as a named script, not an inline one-liner
 
 Regenerate all reports after any change to an adventure JSON file:
 
