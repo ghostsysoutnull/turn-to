@@ -19,9 +19,12 @@ public class TerminalOutput implements GameOutput {
 
     @Override
     public void showStatus(Player player, List<PartyMember> activeMembers) {
-        out.println("SKILL: " + player.getSkill()
-            + "  STAMINA: " + player.getStamina()
-            + "  LUCK: " + player.getLuck());
+        out.println("─────────────────────────────────────────────────────");
+        out.println("  SKILL: " + player.getSkill()
+            + "   STAMINA: " + player.getStamina() + "/" + player.getMaxStamina()
+            + "   LUCK: " + player.getLuck()
+            + "   Gold: " + player.getGold());
+        out.println("─────────────────────────────────────────────────────");
     }
 
     @Override

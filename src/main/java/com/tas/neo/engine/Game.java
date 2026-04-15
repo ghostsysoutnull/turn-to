@@ -138,6 +138,8 @@ public class Game {
         }
 
         // NORMAL section
+        output.clear();
+        output.showStatus(state.getPlayer(), state.activePartyMembers());
         output.showNarrative(section.narrative());
 
         List<Choice> choices = new ArrayList<>(section.choices());
@@ -220,6 +222,8 @@ public class Game {
             return;
         }
 
+        output.clear();
+        output.showStatus(state.getPlayer(), state.activePartyMembers());
         output.showNarrative(cell.narrative());
         output.showChoices(choices);
 
