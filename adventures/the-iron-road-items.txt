@@ -3,13 +3,13 @@ Generated: 2026-04-15  |  Items: 12
 
   Assassin's Blade              GAIN:§38  LOSS:—  REQUIRED:§134,§150
   Bribe Purse                   GAIN:§74  LOSS:§79,§135  REQUIRED:§63,§124,§133
-  Courier's Token               GAIN:§32  LOSS:—  REQUIRED:§51,§52,§78,§106,§113,§133,§146  FORBIDDEN:§146
+  Courier's Token               GAIN:§32  LOSS:—  REQUIRED:§51,§52,§78,§106,§113,§133,§146
   Forged Border Pass            GAIN:§89  LOSS:—  REQUIRED:§90  FORBIDDEN:§90
   Healing Potion                GAIN:§29,§34,§48  LOSS:—
   Legitimate Border Pass        GAIN:§76,§79,§81  LOSS:—
   Noble's Invitation            GAIN:§110  LOSS:—  REQUIRED:§124,§133
   Relay Station Key             GAIN:§117  LOSS:—  REQUIRED:§133,§146
-  Sealed Satchel                GAIN:§1  LOSS:§141,§145,§151,§159,§161  REQUIRED:§140,§143,§148,§150,§158,§160,§162,§169  FORBIDDEN:§158,§160
+  Sealed Satchel                GAIN:§1  LOSS:§104,§141,§145,§151,§159,§161  REQUIRED:§140,§143,§148,§150,§158,§160,§162,§169  FORBIDDEN:§158,§160
   Spy Ring Cipher               GAIN:§90  LOSS:—  REQUIRED:§106
   Spymaster's Letter            GAIN:§88  LOSS:—  REQUIRED:§106,§146
   Traveller's Cloak             GAIN:§29,§33  LOSS:—

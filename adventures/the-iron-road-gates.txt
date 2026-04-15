@@ -74,8 +74,8 @@ CH3  [§91–§130]
        branch §92
        branch §93
   OUT  §131
-       possible:    Player may carry 'Sealed Satchel' (unless state.satchelDeliveredEarly == true)
-                    Player may carry 'Courier's Token'
+       guaranteed:  Player carries 'Sealed Satchel'
+       possible:    Player may carry 'Courier's Token'
                     Player may carry 'Assassin's Blade'
                     Player may carry 'Traveller's Cloak'
                     Player may carry 'Healing Potion'
@@ -87,8 +87,8 @@ CH3  [§91–§130]
 
 CH4  [§131–§170]
   IN   §131
-       possible:    Player may carry 'Sealed Satchel'
-                    Player may carry 'Courier's Token'
+       required:    Player carries 'Sealed Satchel'
+       possible:    Player may carry 'Courier's Token'
                     Player may carry 'Assassin's Blade'
                     Player may carry 'Traveller's Cloak'
                     Player may carry 'Healing Potion'
@@ -101,5 +101,4 @@ CH4  [§131–§170]
                     state.satchelOpened may be true or false
                     state.contactAlive may be true or false
                     state.spymasterDebt is an integer >= 0
-                    state.satchelDeliveredEarly is false (if true, player was routed to an early ending in ch3)
   OUT  (final chapter — no exit contract)

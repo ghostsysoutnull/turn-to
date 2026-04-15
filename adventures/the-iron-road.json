@@ -269,7 +269,7 @@
         "from": 91,
         "to": 130
       },
-      "brief": "NARRATIVE PURPOSE: This chapter moves the player across the second kingdom — open road, noble estates, and a royal relay station — toward the capital's outer approaches. The journey seems more open than the border city but is not safe: the assassins have agents ahead, the spy ring has a safe house at a noble estate, and the relay station is where royal intelligence first confronts the player directly. The chapter forces the critical trust decision: who do you hand the satchel to, if anyone? It closes with the player entering the capital region. The Courier's Contact is first mentioned as a destination here.\n\nSETTING:\n- The Open Road: the Iron Road resumes its width and visibility here. Merchant caravans, noble coaches, and military patrols are regular traffic. Being on the road means being seen.\n- The Crossroads Inn: a large roadside inn at the junction to the capital route. Neutral territory — everyone stops here. The assassins' handler has an agent here.\n- Goldmere Estate: a minor noble's country estate two hours off the main road. The spy ring maintains a contact here. The Noble's Invitation provides cover for visiting.\n- The Relay Station: a fortified waystation operated by the royal courier corps. This is where Courier's Contact may be waiting — or may have already been killed. Royal intelligence is present here.\n- The Capital Approach: the road narrows between quarried stone walls as it enters the capital's outer district. This is the chapter exit.\n\nNAMED CHARACTERS IN THIS CHAPTER:\n- The Courier's Contact: the intended recipient of the satchel. An elderly official connected to royal intelligence. May be at the Relay Station alive and waiting, dead (if the assassins moved faster), or relocated (if royal intelligence evacuated them). The player's choice of route here affects the Contact's fate.\n- The Lord's Agent: the assassins' handler. Appears in person for the first time at the Crossroads Inn, posing as a merchant. Offers to buy the satchel outright. Polished, unhurried, and more dangerous than the killers who work for them. This is not the final chapter encounter — they escape if confronted here.\n- The Noble Host: the owner of Goldmere Estate. A minor noble with spy ring sympathies. Provides shelter, the Noble's Invitation as cover, and access to a spy ring courier who can carry a message to the capital ahead of the player.\n- The Relay Station Warden: a royal courier corps officer. Suspicious of the player but bound by protocol. May issue the Relay Station Key if the player carries the Courier's Token.\n\nITEMS IN THIS CHAPTER:\n- Sealed Satchel (KEY): carried in, must be carried out unless handed to a faction here (which triggers a branch ending or a chapter 4 variant).\n- Border Pass (KEY, either type): no longer needed after the border; may be discarded or used as cover story material.\n- Courier's Token (KEY): if carried, the Relay Station Warden recognises it and the royal-faction path opens.\n- Spy Ring Cipher (KEY): if carried, the Noble Host recognises it and the spy ring path opens.\n- Spymaster's Letter (KEY): if carried, opens an additional route to the Spymaster's capital contact.\n- Noble's Invitation (KEY): gained from the Noble Host at Goldmere Estate. Used as cover for road checkpoints.\n- Relay Station Key (KEY): gained from the Relay Station Warden if the player qualifies. Opens a shortcut into the capital.\n- Healing Potion (USABLE): available at the Crossroads Inn for purchase.\n\nTONE: Deceptively open, then closing. The countryside looks peaceful; the danger is beneath the surface. The Lord's Agent's appearance should feel like a chess player moving a piece into check — no violence yet, just pressure.\n\nARC CONTRIBUTION: By the end of this chapter, the player has made their trust decision or committed to delivering the satchel personally. They should understand what is likely in the satchel even if they have not opened it. The Lord's Agent's appearance makes the antagonist visible and personal. The chapter leaves the player one step from the capital with alliances or enemies in place.\n\nSECTION RANGE: 91–130.\n\nGATE REFERENCES:\n- Entry gates from ch2: sections 91 (legitimate pass), 92 (forged pass — suspicion check on entry), 93 (back road — low suspicion on entry).\n- Exit gate to ch4: section 131. All paths through this chapter converge at section 131.\n- On exit: Sealed Satchel must be carried unless state.satchelDeliveredEarly == true (rare branch).",
+      "brief": "NARRATIVE PURPOSE: This chapter moves the player across the second kingdom — open road, noble estates, and a royal relay station — toward the capital's outer approaches. The journey seems more open than the border city but is not safe: the assassins have agents ahead, the spy ring has a safe house at a noble estate, and the relay station is where royal intelligence first confronts the player directly. The chapter forces the critical trust decision: who do you hand the satchel to, if anyone? It closes with the player entering the capital region. The Courier's Contact is first mentioned as a destination here.\n\nSETTING:\n- The Open Road: the Iron Road resumes its width and visibility here. Merchant caravans, noble coaches, and military patrols are regular traffic. Being on the road means being seen.\n- The Crossroads Inn: a large roadside inn at the junction to the capital route. Neutral territory — everyone stops here. The assassins' handler has an agent here.\n- Goldmere Estate: a minor noble's country estate two hours off the main road. The spy ring maintains a contact here. The Noble's Invitation provides cover for visiting.\n- The Relay Station: a fortified waystation operated by the royal courier corps. This is where Courier's Contact may be waiting — or may have already been killed. Royal intelligence is present here.\n- The Capital Approach: the road narrows between quarried stone walls as it enters the capital's outer district. This is the chapter exit.\n\nNAMED CHARACTERS IN THIS CHAPTER:\n- The Courier's Contact: the intended recipient of the satchel. An elderly official connected to royal intelligence. May be at the Relay Station alive and waiting, dead (if the assassins moved faster), or relocated (if royal intelligence evacuated them). The player's choice of route here affects the Contact's fate.\n- The Lord's Agent: the assassins' handler. Appears in person for the first time at the Crossroads Inn, posing as a merchant. Offers to buy the satchel outright. Polished, unhurried, and more dangerous than the killers who work for them. This is not the final chapter encounter — they escape if confronted here.\n- The Noble Host: the owner of Goldmere Estate. A minor noble with spy ring sympathies. Provides shelter, the Noble's Invitation as cover, and access to a spy ring courier who can carry a message to the capital ahead of the player.\n- The Relay Station Warden: a royal courier corps officer. Suspicious of the player but bound by protocol. May issue the Relay Station Key if the player carries the Courier's Token.\n\nITEMS IN THIS CHAPTER:\n- Sealed Satchel (KEY): carried in, must be carried out unless handed to a faction here (which triggers a branch ending or a chapter 4 variant).\n- Border Pass (KEY, either type): no longer needed after the border; may be discarded or used as cover story material.\n- Courier's Token (KEY): if carried, the Relay Station Warden recognises it and the royal-faction path opens.\n- Spy Ring Cipher (KEY): if carried, the Noble Host recognises it and the spy ring path opens.\n- Spymaster's Letter (KEY): if carried, opens an additional route to the Spymaster's capital contact.\n- Noble's Invitation (KEY): gained from the Noble Host at Goldmere Estate. Used as cover for road checkpoints.\n- Relay Station Key (KEY): gained from the Relay Station Warden if the player qualifies. Opens a shortcut into the capital.\n- Healing Potion (USABLE): available at the Crossroads Inn for purchase.\n\nTONE: Deceptively open, then closing. The countryside looks peaceful; the danger is beneath the surface. The Lord's Agent's appearance should feel like a chess player moving a piece into check — no violence yet, just pressure.\n\nARC CONTRIBUTION: By the end of this chapter, the player has made their trust decision or committed to delivering the satchel personally. They should understand what is likely in the satchel even if they have not opened it. The Lord's Agent's appearance makes the antagonist visible and personal. The chapter leaves the player one step from the capital with alliances or enemies in place.\n\nSECTION RANGE: 91–130.\n\nGATE REFERENCES:\n- Entry gates from ch2: sections 91 (legitimate pass), 92 (forged pass — suspicion check on entry), 93 (back road — low suspicion on entry).\n- Exit gate to ch4: section 131. All paths through this chapter converge at section 131.\n- On exit: Sealed Satchel is always carried. The Lord's Agent deal at the Crossroads Inn (§104) is a VICTORY ending — players who take it do not reach §131.",
       "gates": {
         "entryGate": {
           "entrySection": 91,
@@ -317,9 +317,10 @@
           {
             "entrySection": 131,
             "out": {
-              "guaranteed": [],
+              "guaranteed": [
+                "Player carries 'Sealed Satchel'"
+              ],
               "possible": [
-                "Player may carry 'Sealed Satchel' (unless state.satchelDeliveredEarly == true)",
                 "Player may carry 'Courier's Token'",
                 "Player may carry 'Assassin's Blade'",
                 "Player may carry 'Traveller's Cloak'",
@@ -348,9 +349,10 @@
         "entryGate": {
           "entrySection": 131,
           "in": {
-            "required": [],
+            "required": [
+              "Player carries 'Sealed Satchel'"
+            ],
             "possible": [
-              "Player may carry 'Sealed Satchel'",
               "Player may carry 'Courier's Token'",
               "Player may carry 'Assassin's Blade'",
               "Player may carry 'Traveller's Cloak'",
@@ -365,8 +367,7 @@
               "state.suspicion is an integer (0 = unsuspected; 5–9 = known; 10+ = actively hunted)",
               "state.satchelOpened may be true or false",
               "state.contactAlive may be true or false",
-              "state.spymasterDebt is an integer >= 0",
-              "state.satchelDeliveredEarly is false (if true, player was routed to an early ending in ch3)"
+              "state.spymasterDebt is an integer >= 0"
             ]
           }
         },
@@ -2447,18 +2448,20 @@
     },
     {
       "number": 104,
-      "type": "NORMAL",
+      "type": "VICTORY",
       "narrative": "He takes the satchel without ceremony. Twenty gold changes hands. The letter of clearance — stamped with a seal you do not recognise — joins your other papers.\n\nHe gives you a nod of something that is almost respect.\n\n\"You made the sensible choice. Travel safely.\"\n\nHe is gone before you can count the coins a second time. The satchel is gone. The weight of it — physical and otherwise — is simply absent.\n\nYou feel, simultaneously, lighter and hollow.\n\nThe Iron Road north is clear. The capital gates will pass you without incident. Whatever was in the satchel is no longer your problem, your purpose, or your burden.",
-      "events": [],
-      "scripts": {
-        "onEnter": "ctx.removeItem('Sealed Satchel'); state.set('satchelDeliveredEarly', true)"
-      },
-      "choices": [
+      "events": [
         {
-          "text": "Continue north toward the capital",
-          "targetSection": 130
+          "type": "ITEM_LOSS",
+          "item": "Sealed Satchel"
+        },
+        {
+          "type": "GOLD_CHANGE",
+          "delta": 20
         }
-      ]
+      ],
+      "scripts": {},
+      "choices": []
     },
     {
       "number": 105,
@@ -3122,7 +3125,7 @@
       "narrative": "The Spymaster receives you in a room above the arcade that smells of cedar and old paper. They are not what you expected — quieter, older, with the patient manner of someone who has been doing this long enough that urgency has left them entirely.\n\nThey look at the satchel — or its absence — for a long moment.\n\n\"You've come further than I thought you would,\" they say. \"Most people in your position are dead by Varenmark. The offer still stands. Give me the satchel and I will see you out of the capital tonight with a new name and enough coin to begin somewhere else.\"\n\nThen, if you carry the Spymaster's Letter: \"The letter reduces the price. I respect that you kept it intact.\"\n\nTheir price, with or without the letter, is the same thing: the satchel. Nothing else will do.",
       "events": [],
       "scripts": {
-        "onEnter": "local debt = state.get('spymasterDebt'); if ctx.hasItem('Spymaster\\'s Letter') then ctx.showMessage(\"The Spymaster notes the intact letter. 'I reduce nothing from the price,' they say, 'but I will remember you kept your word.'\"); state.set('spymasterDebt', math.max(0, debt - 1)); end"
+        "onEnter": "local debt = state.get('spymasterDebt'); if ctx.hasItem('Spymaster\\'s Letter') then ctx.showMessage(\"The Spymaster notes the intact letter. 'I reduce nothing from the price,' they say, 'but I will remember you kept your word.'\"); state.set('spymasterDebt', math.max(0, debt - 1)); end if state.get('satchelOpened') == true then ctx.showMessage(\"The Spymaster's hand pauses over the satchel before you have said a word. The wax seal is destroyed — fire damage, by the look of it. 'You cut it close,' they say. 'Are the contents intact?' You say yes. They say nothing further.\") end"
       },
       "choices": [
         {
@@ -3493,7 +3496,9 @@
       "type": "NORMAL",
       "narrative": "The Courier's Contact is an elderly person of indeterminate rank, dressed in the quiet grey of a senior official, who rises when you enter with a speed that belies their age.\n\nThey look at you, then at the satchel — if you carry it.\n\n\"You are not the courier,\" they say. It is not an accusation.\n\n\"No,\" you say.\n\n\"But you have come. And the satchel is…\" They pause. \"Intact?\"\n\nYou tell them what happened on the Iron Road. What you carried since then. All of it.\n\nThey listen without interrupting.",
       "events": [],
-      "scripts": {},
+      "scripts": {
+        "onEnter": "if state.get('satchelOpened') == true then ctx.showMessage(\"They see it before 'Intact?' has finished leaving their mouth — the destroyed seal, the fire-darkened flap. Their expression does not change, but the pause before they speak again is longer than the others have been.\") end"
+      },
       "choices": [
         {
           "text": "Hand over the Sealed Satchel",
@@ -3531,7 +3536,9 @@
       "type": "NORMAL",
       "narrative": "The Contact is not there.\n\nIn their place is a younger official — precise, contained, with the watchful affect of someone who has been briefed on a situation and finds it unpleasant.\n\n\"The Contact was relocated three days ago,\" he says. \"I have authority to receive the delivery in their stead. I am told to expect a satchel.\"\n\nHe looks at your hands.\n\nHe does not offer his name.",
       "events": [],
-      "scripts": {},
+      "scripts": {
+        "onEnter": "if state.get('satchelOpened') == true then ctx.showMessage(\"His eyes find the destroyed seal immediately. He looks at it for a moment, then at you. 'The seal is gone,' he says. 'The contents should be undamaged,' you tell him. He does not respond.\") end"
+      },
       "choices": [
         {
           "text": "Hand over the Sealed Satchel to the intelligence officer",

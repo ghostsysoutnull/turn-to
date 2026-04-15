@@ -5,7 +5,7 @@ REACHABILITY
   All 170 sections reachable from start (1) ✓
 
 SECTION TYPES
-  NORMAL: 159  VICTORY: 5  INSTANT_DEATH: 6
+  NORMAL: 158  VICTORY: 6  INSTANT_DEATH: 6
 
 ITEMS  (12 defined)
   All items referenced in sections ✓
