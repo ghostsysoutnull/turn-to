@@ -210,15 +210,11 @@ class GameSessionLoggingTest {
             .withLogger(new NoOpGameLogger())
             .run();
 
-        // tempDir is the only writable temp dir — no sessions/ directory should be created
-        // in the working directory either
-        Path sessionsDir = Path.of("sessions");
-        boolean sessionsCreated = Files.exists(sessionsDir)
-            && Files.list(sessionsDir).findAny().isPresent();
-
-        assertThat(sessionsCreated)
-            .as("NoOpGameLogger must not write any files to a sessions/ directory")
-            .isFalse();
+        // tempDir is a fresh JUnit-managed directory — NoOpGameLogger must not write into it
+        // (and must not write anywhere else either, but this proves it does no file I/O at all)
+        assertThat(Files.list(tempDir).findAny())
+            .as("NoOpGameLogger must not write any files")
+            .isEmpty();
     }
 
     // -----------------------------------------------------------------------
