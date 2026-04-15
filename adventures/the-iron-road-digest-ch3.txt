@@ -4,7 +4,7 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
 [§91] NORMAL          →§94
   The customs gatehouse is bright with morning light....
 
-[§92] NORMAL          →§94
+[§92] NORMAL        
   The clerk at the customs gatehouse is a thin man with ink-stained fingers and a methodical air....
   events: SKILL_TEST→§94/§97
 
@@ -28,7 +28,7 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
 [§98] NORMAL          →§99
   You find a quiet table at a roadside alehouse — not the Crossroads Inn, a timber-framed place where local farmers drink and no one cares abo...
 
-[§99] NORMAL          →§100,§101,§108
+[§99] NORMAL          →§100,§101,§106
   The Crossroads Inn is everything the road promises: large, busy, and neutral by reputation if not by practice....
 
 [§100] NORMAL          →§101,§102

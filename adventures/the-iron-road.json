@@ -327,7 +327,8 @@
                 "Player may carry 'Spymaster's Letter'",
                 "Player may carry 'Spy Ring Cipher'",
                 "Player may carry 'Noble's Invitation'",
-                "Player may carry 'Relay Station Key'"
+                "Player may carry 'Relay Station Key'",
+                "Player may carry 'Bribe Purse'"
               ],
               "forbidden": []
             }
@@ -357,12 +358,12 @@
               "Player may carry 'Spymaster's Letter'",
               "Player may carry 'Spy Ring Cipher'",
               "Player may carry 'Noble's Invitation'",
-              "Player may carry 'Relay Station Key'"
+              "Player may carry 'Relay Station Key'",
+              "Player may carry 'Bribe Purse'"
             ],
             "assumedState": [
               "state.suspicion is an integer (0 = unsuspected; 5–9 = known; 10+ = actively hunted)",
               "state.satchelOpened may be true or false",
-              "state.guardCaptainBribed may be true",
               "state.contactAlive may be true or false",
               "state.spymasterDebt is an integer >= 0",
               "state.satchelDeliveredEarly is false (if true, player was routed to an early ending in ch3)"
@@ -2253,12 +2254,7 @@
         }
       ],
       "scripts": {},
-      "choices": [
-        {
-          "text": "Wait for the clerk's decision",
-          "targetSection": 94
-        }
-      ]
+      "choices": []
     },
     {
       "number": 93,
@@ -2369,8 +2365,8 @@
           "targetSection": 101
         },
         {
-          "text": "Go directly to the innkeeper to arrange a room for the night",
-          "targetSection": 108
+          "text": "Go directly to the innkeeper, take a room, and sleep",
+          "targetSection": 106
         }
       ],
       "scripts": {}
@@ -2455,7 +2451,7 @@
       "narrative": "He takes the satchel without ceremony. Twenty gold changes hands. The letter of clearance — stamped with a seal you do not recognise — joins your other papers.\n\nHe gives you a nod of something that is almost respect.\n\n\"You made the sensible choice. Travel safely.\"\n\nHe is gone before you can count the coins a second time. The satchel is gone. The weight of it — physical and otherwise — is simply absent.\n\nYou feel, simultaneously, lighter and hollow.\n\nThe Iron Road north is clear. The capital gates will pass you without incident. Whatever was in the satchel is no longer your problem, your purpose, or your burden.",
       "events": [],
       "scripts": {
-        "onEnter": "ctx.removeItem('Sealed Satchel')"
+        "onEnter": "ctx.removeItem('Sealed Satchel'); state.set('satchelDeliveredEarly', true)"
       },
       "choices": [
         {

@@ -83,6 +83,7 @@ CH3  [§91–§130]
                     Player may carry 'Spy Ring Cipher'
                     Player may carry 'Noble's Invitation'
                     Player may carry 'Relay Station Key'
+                    Player may carry 'Bribe Purse'
 
 CH4  [§131–§170]
   IN   §131
@@ -95,9 +96,9 @@ CH4  [§131–§170]
                     Player may carry 'Spy Ring Cipher'
                     Player may carry 'Noble's Invitation'
                     Player may carry 'Relay Station Key'
+                    Player may carry 'Bribe Purse'
        state:       state.suspicion is an integer (0 = unsuspected; 5–9 = known; 10+ = actively hunted)
                     state.satchelOpened may be true or false
-                    state.guardCaptainBribed may be true
                     state.contactAlive may be true or false
                     state.spymasterDebt is an integer >= 0
                     state.satchelDeliveredEarly is false (if true, player was routed to an early ending in ch3)
