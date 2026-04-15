@@ -12,12 +12,12 @@ reports. No manual copying or agent selection required.
 ## Current Position
 
 ```
-Phase : 4 — Combat systems
-Step  : 4.1 — Test Agent
+Phase : 5 — Loader
+Step  : 5.1 — Test Agent
 Status: TODO
 ```
 
-**Next action:** Invoke Test Agent with the prompt in § Phase 4 › Step 4.1.
+**Next action:** Invoke Test Agent with the prompt in § Phase 5 › Step 5.1.
 
 ---
 
@@ -29,7 +29,7 @@ Status: TODO
 | 1 | Domain | 1.1 Test · 1.2 Code | ✅ ✅ |
 | 2 | Mechanics | 2.1 Test · 2.2 Code | ✅ ✅ |
 | 3 | Scripting + I/O (parallel) | 3.1 Test-S · 3.2 Test-IO · 3.3 Code-S · 3.4 Code-IO | ✅ ✅ ✅ ✅ |
-| 4 | Combat systems | 4.1 Test · 4.2 Code | ⬜ ⬜ |
+| 4 | Combat systems | 4.1 Test · 4.2 Code | ✅ ✅ |
 | 5 | Loader | 5.1 Test · 5.2 Code | ⬜ ⬜ |
 | 6 | Engine | 6.1 Test · 6.2 Code | ⬜ ⬜ |
 | 7 | Integration | 7.1 Code | ⬜ |

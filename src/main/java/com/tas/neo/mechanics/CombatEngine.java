@@ -11,6 +11,10 @@ import com.tas.neo.io.GameOutput;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Orchestrates personal combat rounds and returns a result. Does not modify
+ * the player's attributes — the caller is responsible for applying the result.
+ */
 public class CombatEngine {
 
     private static final int NORMAL_WOUND = 2;
@@ -39,10 +43,11 @@ public class CombatEngine {
     private CombatResult fightSequential(Player player, List<Creature> creatures) {
         int roundsFought = 0;
         int playerStaminaLost = 0;
+        int playerInitialStamina = player.getStamina();
 
         for (Creature initial : creatures) {
             Creature creature = initial;
-            while (creature.isAlive() && player.isAlive()) {
+            while (creature.isAlive() && playerStaminaLost < playerInitialStamina) {
                 roundsFought++;
                 int playerRoll = dice.roll2d6();
                 int creatureRoll = dice.roll2d6();
@@ -60,10 +65,9 @@ public class CombatEngine {
                 } else if (outcome == CombatRoundOutcome.CREATURE_WOUNDS) {
                     int damage = resolveCreatureWoundsPlayer(player);
                     playerStaminaLost += damage;
-                    player.modifyAttribute(AttributeType.STAMINA, -damage);
                 }
             }
-            if (!player.isAlive()) {
+            if (playerStaminaLost >= playerInitialStamina) {
                 return new CombatResult(false, roundsFought, playerStaminaLost);
             }
         }
@@ -75,8 +79,9 @@ public class CombatEngine {
         List<Creature> alive = new ArrayList<>(creatures);
         int roundsFought = 0;
         int playerStaminaLost = 0;
+        int playerInitialStamina = player.getStamina();
 
-        while (!alive.isEmpty() && player.isAlive()) {
+        while (!alive.isEmpty() && playerStaminaLost < playerInitialStamina) {
             roundsFought++;
             List<Creature> nextAlive = new ArrayList<>();
             for (int i = 0; i < alive.size(); i++) {
@@ -97,21 +102,20 @@ public class CombatEngine {
                 } else if (outcome == CombatRoundOutcome.CREATURE_WOUNDS) {
                     int damage = resolveCreatureWoundsPlayer(player);
                     playerStaminaLost += damage;
-                    player.modifyAttribute(AttributeType.STAMINA, -damage);
                 }
 
                 if (creature.isAlive()) {
                     nextAlive.add(creature);
                 }
 
-                if (!player.isAlive()) {
+                if (playerStaminaLost >= playerInitialStamina) {
                     return new CombatResult(false, roundsFought, playerStaminaLost);
                 }
             }
             alive = nextAlive;
         }
 
-        return new CombatResult(player.isAlive(), roundsFought, playerStaminaLost);
+        return new CombatResult(playerStaminaLost < playerInitialStamina, roundsFought, playerStaminaLost);
     }
 
     private CombatRoundOutcome determineOutcome(int playerAS, int creatureAS) {

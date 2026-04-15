@@ -24,6 +24,11 @@ specific class, file, or error.
 
 ## Entries
 
+## 2026-04-14 — Code Agent — PersonalCombatSystemTest has a goblin stamina typo
+`run_applies_stamina_lost_to_player_before_returning` uses `Creature("Troll", 10, 20)` but the dice sequence only covers 6 rounds (24 rolls).
+With goblin STAMINA=20 and 5 player-win rounds dealing 2 damage each, the goblin reaches STAMINA=10 — still alive, needing round 7.
+The fight cannot terminate within the supplied dice; the value `20` should be `10`. Fix: Test Agent must correct this in `PersonalCombatSystemTest.java` line 146.
+
 ## 2026-04-14 — Code Agent — CombatEngine luck tests require silent fallback in askTestLuck()
 GameInput.askTestLuck() must catch AssertionError from ScriptedInput when no values remain and return false.
 Tests with empty ScriptedInput signal "no luck offer expected"; tests with explicit yes-answers exercise the luck mechanic.

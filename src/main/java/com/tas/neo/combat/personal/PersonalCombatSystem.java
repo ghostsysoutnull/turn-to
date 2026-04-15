@@ -4,7 +4,9 @@ import com.tas.neo.combat.CombatSystem;
 import com.tas.neo.combat.CombatSystemRegistry;
 import com.tas.neo.domain.combat.CombatOutcome;
 import com.tas.neo.domain.combat.CombatOutcomeType;
+import com.tas.neo.domain.combat.CombatResult;
 import com.tas.neo.domain.combat.Creature;
+import com.tas.neo.domain.player.AttributeType;
 import com.tas.neo.domain.party.PartyMember;
 import com.tas.neo.domain.player.Player;
 import com.tas.neo.engine.HookDispatcher;
@@ -34,6 +36,10 @@ public class PersonalCombatSystem implements CombatSystem {
                              List<Creature> opponents, Map<String, Object> params,
                              CombatSystemRegistry registry, HookDispatcher hooks,
                              GameInput input, GameOutput output, Dice dice) {
-        return new CombatOutcome(CombatOutcomeType.VICTORY, Optional.empty());
+        boolean simultaneous = Boolean.TRUE.equals(params.get("simultaneous"));
+        CombatResult result = engine.fight(player, opponents, simultaneous);
+        player.modifyAttribute(AttributeType.STAMINA, -result.playerStaminaLost());
+        CombatOutcomeType type = result.playerWon() ? CombatOutcomeType.VICTORY : CombatOutcomeType.DEFEAT;
+        return new CombatOutcome(type, Optional.empty());
     }
 }

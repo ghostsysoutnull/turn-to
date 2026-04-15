@@ -8,22 +8,6 @@ The engine has no knowledge of specific combat systems beyond `"personal"`, whic
 
 ---
 
-## CombatContext
-
-Bundles the infrastructure dependencies passed to every combat system. Domain data (`player`, `participants`, `opponents`, `params`) stays explicit on `run()` — these are the *what*. Infrastructure is bundled here — these are the *how*. Adding a new infrastructure dependency requires changing only `CombatContext`, not every `CombatSystem` implementation.
-
-```java
-public record CombatContext(
-    CombatSystemRegistry registry,
-    HookDispatcher hooks,
-    GameInput input,
-    GameOutput output,
-    Dice dice
-) {}
-```
-
----
-
 ## CombatSystem
 
 ```java
@@ -34,12 +18,16 @@ public interface CombatSystem {
         List<PartyMember> participants,
         List<Creature> opponents,
         Map<String, Object> params,
-        CombatContext context
+        CombatSystemRegistry registry,
+        HookDispatcher hooks,
+        GameInput input,
+        GameOutput output,
+        Dice dice
     );
 }
 ```
 
-`participants` are the party members declared in the `CombatEvent`. `params` are system-specific values from the adventure JSON. `context.registry()` allows a system to delegate to another system (e.g. boarding → personal combat).
+`participants` are the party members declared in the `CombatEvent`. `params` are system-specific values from the adventure JSON. `registry` allows a system to delegate to another system (e.g. boarding → personal combat).
 
 ---
 
@@ -66,7 +54,7 @@ public interface CombatSystemRegistry {
 }
 ```
 
-`DefaultCombatSystemRegistry` is built at startup. `PersonalCombatSystem` is always registered. Additional systems are registered in `Main` per adventure need.
+`DefaultCombatSystemRegistry` is built at startup. `PersonalCombatSystem` is always registered. Additional systems are registered in `Main` per adventure need. `get(String id)` throws `IllegalArgumentException` when the id is unknown — no separate `CombatException` class exists.
 
 ---
 

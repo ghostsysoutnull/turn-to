@@ -112,6 +112,22 @@ adventures/
 
 ---
 
+## Defaults Applied at Load Time
+
+| Field | Default when absent from JSON |
+|-------|-------------------------------|
+| `CombatEvent.system` | `"personal"` |
+| `CombatEvent.simultaneous` | `false` |
+| `Section.events` | empty list |
+| `Section.choices` | empty list |
+| `Adventure.grids` | empty list |
+| `Adventure.items` | empty list |
+| `Adventure.partyMembers` | empty list |
+
+These defaults are applied by `JsonAdventureLoader` during deserialization, before validation runs.
+
+---
+
 ## Validation Rules
 
 All rules are enforced at load time. Violations throw `AdventureLoadException`.
