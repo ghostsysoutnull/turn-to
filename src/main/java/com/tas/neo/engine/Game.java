@@ -70,6 +70,7 @@ public class Game {
         try {
             adventure = loader.load(adventureId);
         } catch (AdventureLoadException e) {
+            output.showMessage("Failed to load adventure '" + adventureId + "': " + e.getMessage());
             return;
         }
 
@@ -125,14 +126,12 @@ public class Game {
 
         if (type == SectionType.VICTORY) {
             hooks.fireAdventureHook(AdventureHook.ON_VICTORY, adventure);
-            output.showNarrative(section.narrative());
             output.showVictory(section.narrative());
             state.setVictory();
             return;
         }
 
         if (type == SectionType.INSTANT_DEATH) {
-            output.showNarrative(section.narrative());
             output.showGameOver(section.narrative());
             state.setGameOver();
             return;

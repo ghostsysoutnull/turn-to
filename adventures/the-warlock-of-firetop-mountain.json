@@ -1,0 +1,90 @@
+{
+  "id": "the-warlock-of-firetop-mountain",
+  "title": "The Warlock of Firetop Mountain",
+  "description": "A classic Fighting Fantasy adventure.",
+  "startSection": 1,
+  "initialProvisions": 10,
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You stand before the dark entrance to Firetop Mountain. A chill wind blows from within. Torchlight flickers on damp stone walls. Somewhere deep inside, the Warlock awaits.\n\nTwo passages lead forward.",
+      "choices": [
+        { "text": "Take the left passage", "targetSection": 2 },
+        { "text": "Take the right passage", "targetSection": 3 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "NORMAL",
+      "narrative": "The left passage opens into a small chamber. A goblin guard spins around, reaching for his blade!",
+      "events": [
+        {
+          "type": "COMBAT",
+          "system": "personal",
+          "participantIds": [],
+          "opponents": [
+            { "name": "Goblin Guard", "skill": 5, "stamina": 6 }
+          ],
+          "simultaneous": false
+        }
+      ],
+      "choices": [
+        { "text": "Search the body and take the iron key", "targetSection": 4 }
+      ]
+    },
+    {
+      "number": 3,
+      "type": "NORMAL",
+      "narrative": "The right passage leads to a locked iron door. There is no way through without a key.",
+      "choices": [
+        { "text": "Go back to the entrance", "targetSection": 1 }
+      ]
+    },
+    {
+      "number": 4,
+      "type": "NORMAL",
+      "narrative": "You find a heavy iron key on the goblin's belt and take it. The right passage now beckons.",
+      "events": [
+        { "type": "ITEM", "itemName": "Iron Key", "action": "GAIN", "quantity": 1 }
+      ],
+      "choices": [
+        { "text": "Try the iron key on the locked door", "targetSection": 5 }
+      ]
+    },
+    {
+      "number": 5,
+      "type": "NORMAL",
+      "narrative": "The key turns. The iron door swings open with a groan. Beyond lies a grand hall — and at its far end, the Warlock of Firetop Mountain rises from his throne.",
+      "events": [
+        {
+          "type": "COMBAT",
+          "system": "personal",
+          "participantIds": [],
+          "opponents": [
+            { "name": "Warlock of Firetop Mountain", "skill": 10, "stamina": 14 }
+          ],
+          "simultaneous": false
+        }
+      ],
+      "choices": [
+        { "text": "Claim your victory!", "targetSection": 400 }
+      ]
+    },
+    {
+      "number": 400,
+      "type": "VICTORY",
+      "narrative": "The Warlock falls. His treasure vaults are yours. You have conquered Firetop Mountain!"
+    }
+  ],
+  "items": [
+    {
+      "name": "Iron Key",
+      "description": "A heavy iron key.",
+      "category": "KEY",
+      "countable": false
+    }
+  ],
+  "partyMembers": [],
+  "grids": []
+}
