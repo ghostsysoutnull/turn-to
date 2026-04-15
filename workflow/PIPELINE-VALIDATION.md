@@ -35,9 +35,9 @@ The Iron Road was authored before the formal pipeline existed. This run validate
 | Chapter | Author review | Chapter Reviewer | Verdict | Notes |
 |---------|---------------|-----------------|---------|-------|
 | ch1 [§1–§40] | ✅ Authored | ✅ APPROVED | APPROVED | §29/§33 near-identical cloak descriptions (cosmetic, no fix required). §40 opening line flagged but confirmed intentional. |
-| ch2 [§41–§90] | ✅ Authored | ⬜ Pending | — | Bribe Purse has no ITEM_GAIN — must be added |
-| ch3 [§91–§130] | ✅ Authored | ⬜ Pending | — | |
-| ch4 [§131–§170] | ✅ Authored | ⬜ Pending | — | `satchelOpened` not consumed by ending sections |
+| ch2 [§41–§90] | ✅ Authored | ✅ APPROVED | APPROVED | FBP event leak fixed (§72/§89). Bribe Purse added at §74 (coin dealer, 5 gold). §90 Spy Ring Cipher +3 suspicion hook added. §88 missing gold guard fixed. Three narrative advisories noted (non-blocking). |
+| ch3 [§91–§130] | ✅ Authored | ✅ APPROVED | APPROVED | §92 dead choice removed. §99 choice 3 retargeted (§108→§106). §104 satchelDeliveredEarly flag added. ch3/ch4 gate contracts updated (Bribe Purse, guardCaptainBribed). |
+| ch4 [§131–§170] | ✅ Authored | 🔄 In progress | — | `satchelOpened` set at §165 but not checked by endings — noted as intentionally incomplete. |
 
 ### Phase 4: Consistency Check
 

@@ -20,7 +20,13 @@ Read all of the following before reviewing. Do not open the raw adventure JSON.
 6. `adventures/<id>-gates.txt` — all chapter gate contracts in one view.
 7. `adventures/<id>-manifest.json` — declared items, characters, and locations.
 
-These seven files give you the complete cross-chapter picture. Only open the raw JSON or section digests if a finding requires you to read specific section prose.
+These seven files give you the complete cross-chapter picture. If a finding requires reading specific section prose or verifying inbound references, use `AdventureSectionInspector` rather than opening the full adventure JSON:
+```
+mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureSectionInspector \
+  -Dexec.args="adventures/<id>.json <sectionNumber>"
+mvn exec:java ... -Dexec.args="adventures/<id>.json --refs <sectionNumber>"
+mvn exec:java ... -Dexec.args="adventures/<id>.json --state <varName>"
+```
 
 ---
 

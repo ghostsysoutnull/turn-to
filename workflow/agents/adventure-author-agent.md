@@ -19,7 +19,18 @@ Read all of the following before writing a single section:
 7. The **chapter brief** for the chapter you are writing — your primary anchor for this task.
 8. The **gate-in contract** for this chapter — what you may assume about player state on arrival.
 9. The **gate-out contract** for this chapter — what you must guarantee before the player exits.
-10. The existing **adventure JSON file** — to understand which section numbers are already used, what items are defined, and what state variables have been established.
+10. The existing **adventure JSON file** — use `AdventureSectionInspector` to query it rather
+    than opening the full file. Useful modes before authoring a chapter:
+    ```
+    # See what sections link to your chapter's entry (inbound refs)
+    mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureSectionInspector \
+      -Dexec.args="adventures/<id>.json --refs <entrySection>"
+    # Check gate contracts for your chapter
+    mvn exec:java ... -Dexec.args="adventures/<id>.json --gate <chId>"
+    # Read a specific section before repurposing or referencing it
+    mvn exec:java ... -Dexec.args="adventures/<id>.json <sectionNumber>"
+    ```
+    Only open the raw JSON directly when you need something the inspector does not cover.
 
 Do not begin writing until you have read all ten of the above.
 

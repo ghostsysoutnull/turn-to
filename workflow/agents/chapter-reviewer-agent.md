@@ -23,12 +23,19 @@ Read all of the following before reviewing:
 6. The **chapter brief** for the chapter under review — your primary anchor for what was intended.
 7. The **gate-in contract** — what the player's state is on arrival at this chapter.
 8. The **gate-out contract** — what the player's state must be when leaving this chapter.
-9. The **adventure JSON file** — read only the sections for the chapter under review, not the
-   full file. The report covers adventure-wide structural facts; you only need the section
-   content for narrative and gate contract checks.
+9. The **adventure JSON file** — use `AdventureSectionInspector` to read specific sections
+   rather than opening the full file. For example:
+   ```
+   mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureSectionInspector \
+     -Dexec.args="adventures/<id>.json 88"
+   mvn exec:java ... -Dexec.args="adventures/<id>.json --refs 74"
+   mvn exec:java ... -Dexec.args="adventures/<id>.json --has-event ITEM_GAIN"
+   mvn exec:java ... -Dexec.args="adventures/<id>.json --gate ch2 in"
+   ```
+   Only open the raw JSON directly when you need something the inspector does not cover.
 
-Do not begin reviewing until you have read items 1–8 above. Read item 9 (section content) as
-needed during the review rather than upfront.
+Do not begin reviewing until you have read items 1–8 above. Use the inspector (item 9) as
+needed during the review rather than loading the full adventure JSON upfront.
 
 ---
 
