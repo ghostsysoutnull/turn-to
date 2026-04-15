@@ -2,7 +2,7 @@
 Generated: 2026-04-15  |  Items: 12
 
   Assassin's Blade              GAIN:§38  LOSS:—  REQUIRED:§134,§150
-  Bribe Purse                   GAIN:—  LOSS:§79,§135  REQUIRED:§63,§124,§133
+  Bribe Purse                   GAIN:§74  LOSS:§79,§135  REQUIRED:§63,§124,§133
   Courier's Token               GAIN:§32  LOSS:—  REQUIRED:§51,§52,§78,§106,§113,§133,§146  FORBIDDEN:§146
   Forged Border Pass            GAIN:§89  LOSS:—  REQUIRED:§90  FORBIDDEN:§90
   Healing Potion                GAIN:§29,§34,§48  LOSS:—

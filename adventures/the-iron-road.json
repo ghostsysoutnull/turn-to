@@ -1170,6 +1170,14 @@
           }
         },
         {
+          "text": "Stop at the coin dealer's grate (costs 5 gold — a Bribe Purse)",
+          "targetSection": 74,
+          "condition": {
+            "type": "HAS_GOLD",
+            "amount": 5
+          }
+        },
+        {
           "text": "Approach the watching man",
           "targetSection": 49
         },
@@ -1519,16 +1527,16 @@
     {
       "number": 59,
       "type": "NORMAL",
-      "narrative": "A side passage beside the Customs House leads to a small courtyard. A door there is the goods entrance — unlocked, used by clerks bringing supplies. One of the guards is visible through the gatehouse arch, back turned.\n\nYou could slip inside. It would put you inside the building, possibly near the Captain's office, without the formality of the inspection queue. The risk is obvious: if you are caught in an area you have no business being in, the Captain's cooperation becomes considerably less likely.",
+      "narrative": "A side passage beside the Customs House leads to a small courtyard. A door there is the goods entrance — unlocked, used by clerks bringing supplies. One of the guards is visible through the gatehouse arch, back turned.\n\nYou slip through the side door into a corridor that smells of paper and old ink. Clerks move ahead of you, heads down over their work. You are three steps inside before a guard you did not see turns from a wall recess and looks at you.\n\n\"Visitors through the main hatch,\" he says.\n\nHe has not drawn his weapon. He has not called for help. He is assessing whether you are someone who made an honest mistake or someone he needs to make a different decision about.",
       "events": [],
       "choices": [
         {
-          "text": "Enter through the side door",
-          "targetSection": 74
+          "text": "\"I have an urgent message for the Captain. Personal delivery.\"",
+          "targetSection": 52
         },
         {
-          "text": "Reconsider and approach properly through the side entrance",
-          "targetSection": 52
+          "text": "Apologise and back out, return to the main approach",
+          "targetSection": 50
         }
       ],
       "scripts": {}
@@ -1842,16 +1850,21 @@
     {
       "number": 74,
       "type": "NORMAL",
-      "narrative": "You slip through the side door into a corridor that smells of paper and old ink. Clerks move ahead of you, heads down over their work. You are three steps inside before a guard you did not see turns from a wall recess and looks at you.\n\n\"Visitors through the main hatch,\" he says.\n\nHe has not drawn his weapon. He has not called for help. He is assessing whether you are someone who made an honest mistake or someone he needs to make a different decision about.",
-      "events": [],
-      "choices": [
+      "narrative": "The coin dealer's grate is set into the wall at the market's eastern corner, half-hidden by a bolt of canvas goods that has been there long enough to look permanent. A small brass sign reads: *Exchange — Discreet Service*.\n\nThe man behind the grate is grey-haired, unhurried, and watches your hands rather than your face. He does not ask your name.\n\n\"Five gold,\" he says, sliding a flat leather purse through the slot. It has weight to it — not all coin, by the feel of it. Mixed denomination, mixed origin. The kind of purse you put in someone's palm to make a problem disappear.\n\n\"Used properly,\" he adds, as if confirming your intent, \"that opens most doors in this city. And a few beyond it.\"",
+      "events": [
         {
-          "text": "\"I have an urgent message for the Captain. Personal delivery.\"",
-          "targetSection": 52
+          "type": "GOLD_CHANGE",
+          "delta": -5
         },
         {
-          "text": "Apologise and back out, return to the main queue",
-          "targetSection": 50
+          "type": "ITEM_GAIN",
+          "item": "Bribe Purse"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Thank him and return to the market",
+          "targetSection": 43
         }
       ],
       "scripts": {}

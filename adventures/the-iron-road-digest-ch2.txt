@@ -8,9 +8,9 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 [§42] NORMAL          →§46,§47
   The Ironbell Inn occupies a wide, low building on the market square, its sign — a cast iron bell — hanging motionless over the door....
 
-[§43] NORMAL          →§48,§49,§42,§50
+[§43] NORMAL          →§48,§74,§49,§42,§50
   The market square is dense and loud, stalls packed tight under canvas awnings....
-  conds:  [GOLD>=3]→§48:"Buy a Healing Potion at the herbalist's stall (costs 3 gold)"
+  conds:  [GOLD>=3]→§48:"Buy a Healing Potion at the herbalist's stall (costs 3 gold)"  [GOLD>=5]→§74:"Stop at the coin dealer's grate (costs 5 gold — a Bribe Purse)"
 
 [§44] NORMAL          →§51,§42,§52
   The Customs House stands at the northern end of Varenmark, where the Iron Road narrows to pass through a stone gatehouse....
@@ -60,7 +60,7 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 [§58] NORMAL          →§73,§45
   You browse, watching from the corner of your eye....
 
-[§59] NORMAL          →§74,§52
+[§59] NORMAL          →§52,§50
   A side passage beside the Customs House leads to a small courtyard....
 
 [§60] NORMAL          →§45,§52
@@ -110,8 +110,9 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 [§73] NORMAL          →§90,§72
   The knock pattern works....
 
-[§74] NORMAL          →§52,§50
-  You slip through the side door into a corridor that smells of paper and old ink....
+[§74] NORMAL          →§43
+  The coin dealer's grate is set into the wall at the market's eastern corner, half-hidden by a bolt of canvas goods that has been there long...
+  events: GOLD-5  +Bribe Purse
 
 [§75] NORMAL          →§81,§80
   The Captain arrives in three minutes....
