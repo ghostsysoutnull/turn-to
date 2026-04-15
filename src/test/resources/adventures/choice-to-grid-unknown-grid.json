@@ -1,0 +1,18 @@
+{
+  "id": "choice-to-grid-unknown-grid",
+  "title": "Choice toGrid Unknown Grid",
+  "description": "A section choice targets a toGrid that does not exist.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "grids": [],
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are here.",
+      "choices": [
+        { "text": "Enter cave", "toGrid": "nonexistent-cave", "toCell": "entrance" }
+      ]
+    }
+  ]
+}

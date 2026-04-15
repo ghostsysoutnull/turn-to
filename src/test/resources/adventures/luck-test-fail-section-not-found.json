@@ -1,0 +1,22 @@
+{
+  "id": "luck-test-fail-section-not-found",
+  "title": "Luck Test Fail Section Not Found",
+  "description": "A LUCK_TEST event failSection references a non-existent section.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You test your luck.",
+      "events": [
+        { "type": "LUCK_TEST", "successSection": 2, "failSection": 999 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You were lucky."
+    }
+  ]
+}

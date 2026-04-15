@@ -1,0 +1,35 @@
+{
+  "id": "passage-no-to-section-targets-empty-coord",
+  "title": "Passage Targets Empty Coordinate",
+  "description": "A cell passage without toSection targets a coordinate that has no cell.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "grids": [
+    {
+      "id": "cave",
+      "width": 3,
+      "height": 3,
+      "floors": 1,
+      "cells": [
+        {
+          "id": "entrance",
+          "x": 0, "y": 0, "z": 0,
+          "narrative": "Entrance.",
+          "passages": {
+            "east": {}
+          }
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are here.",
+      "choices": [
+        { "text": "Enter cave", "toGrid": "cave", "toCell": "entrance" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "section-events-absent",
+  "title": "Section Events Absent",
+  "description": "A section has no events field; it should default to an empty list.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are here.",
+      "choices": [
+        { "text": "Continue", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You won."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "duplicate-grid-ids",
+  "title": "Duplicate Grid IDs",
+  "description": "Two grids share the same id.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "grids": [
+    {
+      "id": "cave",
+      "width": 2,
+      "height": 2,
+      "floors": 1,
+      "cells": [
+        { "id": "cell-a", "x": 0, "y": 0, "z": 0, "narrative": "First cell." }
+      ]
+    },
+    {
+      "id": "cave",
+      "width": 2,
+      "height": 2,
+      "floors": 1,
+      "cells": [
+        { "id": "cell-b", "x": 0, "y": 0, "z": 0, "narrative": "Duplicate grid." }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are here.",
+      "choices": [
+        { "text": "Continue", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You won."
+    }
+  ]
+}

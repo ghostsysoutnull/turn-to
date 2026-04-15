@@ -1,0 +1,14 @@
+{
+  "id": "start-section-not-found",
+  "title": "Start Section Not Found",
+  "description": "startSection references a non-existent section number.",
+  "startSection": 99,
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "VICTORY",
+      "narrative": "You have won!"
+    }
+  ]
+}

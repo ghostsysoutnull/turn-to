@@ -1,0 +1,35 @@
+{
+  "id": "passage-to-section-not-found",
+  "title": "Passage toSection Not Found",
+  "description": "A cell passage toSection references a non-existent section.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "grids": [
+    {
+      "id": "cave",
+      "width": 3,
+      "height": 3,
+      "floors": 1,
+      "cells": [
+        {
+          "id": "entrance",
+          "x": 0, "y": 0, "z": 0,
+          "narrative": "Entrance.",
+          "passages": {
+            "north": { "toSection": 999, "label": "Leave cave" }
+          }
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are here.",
+      "choices": [
+        { "text": "Enter cave", "toGrid": "cave", "toCell": "entrance" }
+      ]
+    }
+  ]
+}

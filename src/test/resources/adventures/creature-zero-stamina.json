@@ -1,0 +1,31 @@
+{
+  "id": "creature-zero-stamina",
+  "title": "Creature Zero Stamina",
+  "description": "A COMBAT event contains a creature with STAMINA=0.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "A creature appears.",
+      "events": [
+        {
+          "type": "COMBAT",
+          "system": "personal",
+          "opponents": [
+            { "name": "Dead Goblin", "skill": 5, "stamina": 0 }
+          ]
+        }
+      ],
+      "choices": [
+        { "text": "Continue", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You survived."
+    }
+  ]
+}

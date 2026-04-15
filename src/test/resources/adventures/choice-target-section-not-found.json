@@ -1,0 +1,17 @@
+{
+  "id": "choice-target-section-not-found",
+  "title": "Choice Target Section Not Found",
+  "description": "A choice references a non-existent targetSection.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are here.",
+      "choices": [
+        { "text": "Go somewhere", "targetSection": 999 }
+      ]
+    }
+  ]
+}

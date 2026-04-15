@@ -1,0 +1,22 @@
+{
+  "id": "valid-minimal",
+  "title": "Minimal Adventure",
+  "description": "A minimal valid adventure for loader tests.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are at the beginning.",
+      "choices": [
+        { "text": "Go to section 2", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You have won!"
+    }
+  ]
+}

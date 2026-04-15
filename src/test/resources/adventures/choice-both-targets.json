@@ -1,0 +1,33 @@
+{
+  "id": "choice-both-targets",
+  "title": "Choice Both Targets",
+  "description": "A choice declares both targetSection and toGrid/toCell, which is invalid.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "grids": [
+    {
+      "id": "cave",
+      "width": 2,
+      "height": 2,
+      "floors": 1,
+      "cells": [
+        { "id": "entrance", "x": 0, "y": 0, "z": 0, "narrative": "Entrance." }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are here.",
+      "choices": [
+        { "text": "Ambiguous choice", "targetSection": 2, "toGrid": "cave", "toCell": "entrance" }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You won."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "combat-participant-not-in-party",
+  "title": "Combat Participant Not In Party",
+  "description": "A CombatEvent participantId is not in the partyMembers list.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "partyMembers": [],
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You encounter a foe.",
+      "events": [
+        {
+          "type": "COMBAT",
+          "system": "personal",
+          "participants": ["ally-one"],
+          "opponents": [
+            { "name": "Goblin", "skill": 5, "stamina": 6 }
+          ]
+        }
+      ],
+      "choices": [
+        { "text": "Continue", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You won."
+    }
+  ]
+}

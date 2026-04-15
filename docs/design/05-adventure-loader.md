@@ -22,6 +22,14 @@ public interface AdventureLoader {
 
 Adventures are stored as JSON files under an `adventures/` directory. `JsonAdventureLoader` is constructed with the root path and derives the filename from the adventure id.
 
+```java
+public class JsonAdventureLoader implements AdventureLoader {
+    public JsonAdventureLoader(Path adventuresRoot);
+}
+```
+
+The loader does **not** take a `Dice` argument. `StatDefinition` entries (dice formulas) are stored verbatim in `PartyMemberDefinition` and resolved by `Game` at adventure start — not at load time.
+
 ```
 adventures/
 └── the-warlock-of-firetop-mountain.json

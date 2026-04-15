@@ -1,0 +1,17 @@
+{
+  "id": "normal-section-no-exit",
+  "title": "Normal Section No Exit",
+  "description": "A NORMAL section with no choices, no NAVIGATE event, and no onEnter script.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are trapped with no way out.",
+      "events": [
+        { "type": "STAT_CHANGE", "attribute": "STAMINA", "delta": -1 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "normal-section-on-enter-script",
+  "title": "Normal Section With onEnter Script",
+  "description": "A NORMAL section with no choices but an onEnter script that navigates is valid.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "The script will navigate you.",
+      "scripts": {
+        "onEnter": "ctx.navigate(2)"
+      }
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You won."
+    }
+  ]
+}

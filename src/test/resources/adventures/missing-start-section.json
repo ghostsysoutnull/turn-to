@@ -1,0 +1,13 @@
+{
+  "id": "missing-start-section",
+  "title": "Missing Start Section",
+  "description": "startSection field is absent.",
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "VICTORY",
+      "narrative": "You have won!"
+    }
+  ]
+}

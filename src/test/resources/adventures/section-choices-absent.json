@@ -1,0 +1,22 @@
+{
+  "id": "section-choices-absent",
+  "title": "Section Choices Absent",
+  "description": "A VICTORY section has no choices field; it should default to an empty list.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are here.",
+      "events": [
+        { "type": "NAVIGATE", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You won."
+    }
+  ]
+}

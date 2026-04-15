@@ -1,0 +1,26 @@
+{
+  "id": "item-not-in-adventure-list",
+  "title": "Item Not In Adventure List",
+  "description": "An event references an item name not in the adventure items list.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "items": [],
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You find something.",
+      "events": [
+        { "type": "ITEM", "itemName": "Magic Sword", "action": "ADD", "quantity": 1 }
+      ],
+      "choices": [
+        { "text": "Continue", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You won."
+    }
+  ]
+}

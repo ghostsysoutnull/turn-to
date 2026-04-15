@@ -1,0 +1,45 @@
+{
+  "id": "valid-with-grid",
+  "title": "Valid Adventure With Grid",
+  "description": "A valid adventure containing a grid with cells and passages.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "grids": [
+    {
+      "id": "cave-network",
+      "width": 3,
+      "height": 3,
+      "floors": 1,
+      "cells": [
+        {
+          "id": "entrance",
+          "x": 0, "y": 0, "z": 0,
+          "narrative": "Cold air rushes past.",
+          "passages": {
+            "east": { "toSection": 2, "label": "Leave the cave" }
+          }
+        },
+        {
+          "id": "inner-room",
+          "x": 1, "y": 0, "z": 0,
+          "narrative": "A dark inner room."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You stand before the entrance.",
+      "choices": [
+        { "text": "Enter the cave", "toGrid": "cave-network", "toCell": "entrance" }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You escaped!"
+    }
+  ]
+}

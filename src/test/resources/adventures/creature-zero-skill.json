@@ -1,0 +1,31 @@
+{
+  "id": "creature-zero-skill",
+  "title": "Creature Zero Skill",
+  "description": "A COMBAT event contains a creature with SKILL=0.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "A creature appears.",
+      "events": [
+        {
+          "type": "COMBAT",
+          "system": "personal",
+          "opponents": [
+            { "name": "Broken Goblin", "skill": 0, "stamina": 6 }
+          ]
+        }
+      ],
+      "choices": [
+        { "text": "Continue", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You survived."
+    }
+  ]
+}

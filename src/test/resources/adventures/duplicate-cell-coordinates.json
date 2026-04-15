@@ -1,0 +1,34 @@
+{
+  "id": "duplicate-cell-coordinates",
+  "title": "Duplicate Cell Coordinates",
+  "description": "Two cells share the same (x,y,z) position within a grid.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "grids": [
+    {
+      "id": "cave",
+      "width": 3,
+      "height": 3,
+      "floors": 1,
+      "cells": [
+        { "id": "cell-a", "x": 0, "y": 0, "z": 0, "narrative": "First cell." },
+        { "id": "cell-b", "x": 0, "y": 0, "z": 0, "narrative": "Duplicate position." }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are here.",
+      "choices": [
+        { "text": "Continue", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You won."
+    }
+  ]
+}

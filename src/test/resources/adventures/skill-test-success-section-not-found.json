@@ -1,0 +1,22 @@
+{
+  "id": "skill-test-success-section-not-found",
+  "title": "Skill Test Success Section Not Found",
+  "description": "A SKILL_TEST event successSection references a non-existent section.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You test your skill.",
+      "events": [
+        { "type": "SKILL_TEST", "successSection": 999, "failSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "INSTANT_DEATH",
+      "narrative": "You failed."
+    }
+  ]
+}

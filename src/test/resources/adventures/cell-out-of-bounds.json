@@ -1,0 +1,33 @@
+{
+  "id": "cell-out-of-bounds",
+  "title": "Cell Out Of Bounds",
+  "description": "A cell has coordinates outside the grid dimensions.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "grids": [
+    {
+      "id": "cave",
+      "width": 2,
+      "height": 2,
+      "floors": 1,
+      "cells": [
+        { "id": "out-cell", "x": 5, "y": 5, "z": 0, "narrative": "Way outside." }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "You are here.",
+      "choices": [
+        { "text": "Continue", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "You won."
+    }
+  ]
+}
