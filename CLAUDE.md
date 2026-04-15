@@ -130,7 +130,15 @@ Pre-computed report files in `adventures/` answer most questions about an advent
 | Where is state variable X set, read, checked, or removed? | `adventures/<id>-state.txt` |
 | Where is item X gained, lost, required, or forbidden? | `adventures/<id>-items.txt` |
 | What are the gate contracts for each chapter? Guaranteed, possible, forbidden, assumed state. | `adventures/<id>-gates.txt` |
-| Raw section content not covered by a digest (specific prose, edge cases). | `Read` the JSON file directly — not a script |
+| Full JSON of a specific section (for reading before an Edit-tool change). | `AdventureSectionInspector <id>.json N` |
+| What sections link TO section N? (before repurposing or removing it.) | `AdventureSectionInspector <id>.json --refs N` |
+| All sections containing event type X (optionally filtered by item name). | `AdventureSectionInspector <id>.json --has-event ITEM_GAIN [--item Name]` |
+| All sections with a choice condition of type X. | `AdventureSectionInspector <id>.json --has-condition GoldCondition` |
+| NORMAL sections with no successors (dead ends). | `AdventureSectionInspector <id>.json --dead-ends` |
+| All sections that set, read, or check a specific state variable. | `AdventureSectionInspector <id>.json --state varName` |
+| Raw JSON gate contracts for a chapter (for preparing an Edit-tool change). | `AdventureSectionInspector <id>.json --gate ch3 [in\|out]` |
+
+**Do not write Python or shell scripts to query or inspect adventure JSON.** Use `AdventureSectionInspector` for targeted queries; use the report files above for whole-adventure summaries. Python is only appropriate for bulk transformations across many sections simultaneously (e.g. a variable-rename audit).
 
 Regenerate all reports after any change to an adventure JSON file:
 

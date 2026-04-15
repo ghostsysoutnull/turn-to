@@ -37,6 +37,17 @@ A text-based terminal adventure game inspired by the Fighting Fantasy gamebook s
 | [12 - Session Logging](docs/design/12-session-logging.md) | SessionLogger interface, log record types, replay strategy |
 | [13 - OO Design Guidelines](docs/design/13-oo-design-guidelines.md) | Refactoring decision framework: thresholds, patterns, TDD sequence |
 
+### Adventure Analysis Tools
+
+| Tool | Purpose |
+|------|---------|
+| `AdventureReportGenerator` | Structural summary: reachability, section types, chapter coverage |
+| `AdventureStateReport` | State variable map: where each variable is set, read, checked, removed |
+| `AdventureItemReport` | Item lifecycle: GAIN/LOSS/REQUIRED/FORBIDDEN per item |
+| `AdventureGateDigest` | Gate contracts for all chapters in one view |
+| `AdventureSectionDigest` | Compact per-chapter narrative digest |
+| `AdventureSectionInspector` | Targeted queries: read sections, inbound refs, event/condition search, dead ends, state var focus, gate JSON |
+
 ## Agent Workflow
 
 ### Development pipeline
