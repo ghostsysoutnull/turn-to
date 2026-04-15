@@ -34,7 +34,7 @@ The Iron Road was authored before the formal pipeline existed. This run validate
 
 | Chapter | Author review | Chapter Reviewer | Verdict | Notes |
 |---------|---------------|-----------------|---------|-------|
-| ch1 [§1–§40] | ✅ Authored | ⬜ Pending | — | |
+| ch1 [§1–§40] | ✅ Authored | ✅ APPROVED | APPROVED | §29/§33 near-identical cloak descriptions (cosmetic, no fix required). §40 opening line flagged but confirmed intentional. |
 | ch2 [§41–§90] | ✅ Authored | ⬜ Pending | — | Bribe Purse has no ITEM_GAIN — must be added |
 | ch3 [§91–§130] | ✅ Authored | ⬜ Pending | — | |
 | ch4 [§131–§170] | ✅ Authored | ⬜ Pending | — | `satchelOpened` not consumed by ending sections |

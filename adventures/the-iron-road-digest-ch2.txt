@@ -105,7 +105,6 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
 
 [§72] NORMAL          →§89,§45
   The door the colour of old blood is in the third alley past the fish stall, exactly as described....
-  events: +Forged Border Pass
   conds:  [GOLD>=3]→§89:"Commission the standard Forged Border Pass for three gold"  [GOLD>=4]→§89:"Commission the aged and sealed version for four gold"
 
 [§73] NORMAL          →§90,§72
@@ -166,13 +165,13 @@ Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
   conds:  [GOLD>=3]→§89:"Accept the letter and also take a Forged Border Pass (3 gold)"
   hooks:  onEnter
 
-[§89] NORMAL          →§90,§92,§45
+[§89] NORMAL          →§90,§92
   The contact produces a folded card from his coat — dense lines of encoded text, small and close, the cipher's logic visible in the repeated...
-  events: +Forged Border Pass
-  conds:  [GOLD>=3]→§90:"Take both the Spy Ring Cipher and the Forged Border Pass (3 gold)"  [GOLD>=3]→§92:"Take only the Forged Border Pass (3 gold)"
+  events: GOLD-3  +Forged Border Pass
 
 [§90] NORMAL          →§92,§45
   You pocket the Spy Ring Cipher....
   events: +Spy Ring Cipher
   conds:  [HAS:Forged Border Pass]→§92:"Head to the customs gate and cross with your Forged Border Pass"  [LACKS:Forged Border Pass]→§45:"You still need a border pass — return to find one"
+  hooks:  onEnter
 

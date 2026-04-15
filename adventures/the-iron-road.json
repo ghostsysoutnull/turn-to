@@ -1797,12 +1797,7 @@
       "number": 72,
       "type": "NORMAL",
       "narrative": "The door the colour of old blood is in the third alley past the fish stall, exactly as described. You knock twice, pause, then twice more. A bolt draws back.\n\nInside: a small, windowless workshop lit by three oil lamps. Engraving tools laid in neat rows. A drying rack of pressed sheets. The young man from the market — Kallos, you assume — is seated at the work table and does not look up.\n\n\"Merchant's pass. Three gold for standard, four if aged with a use-seal. Show me your face — the name is yours to choose, within reason.\"",
-      "events": [
-        {
-          "type": "ITEM_GAIN",
-          "item": "Forged Border Pass"
-        }
-      ],
+      "events": [],
       "choices": [
         {
           "text": "Commission the standard Forged Border Pass for three gold",
@@ -2163,34 +2158,23 @@
       "narrative": "The contact produces a folded card from his coat — dense lines of encoded text, small and close, the cipher's logic visible in the repeated patterns if you know how to look.\n\n\"The Spy Ring Cipher identifies you to our network. Safe houses open to you, contacts recognise you, routes are shared. In the second kingdom, it will open the noble estate at Goldmere.\" He pauses. \"It will also raise your visibility to anyone who knows what it means and is not on our side. A key and a liability simultaneously.\"\n\nAlongside the cipher, he slides a completed border pass — merchant's classification, clean and convincing.\n\n\"Both available. Choose what serves you.\"",
       "events": [
         {
+          "type": "GOLD_CHANGE",
+          "delta": -3
+        },
+        {
           "type": "ITEM_GAIN",
-          "item": "Forged Border Pass"
+          "item": "Forged Border Pass",
+          "quantity": 1
         }
       ],
       "choices": [
         {
-          "text": "Take both the Spy Ring Cipher and the Forged Border Pass (3 gold)",
-          "targetSection": 90,
-          "condition": {
-            "type": "HAS_GOLD",
-            "amount": 3
-          }
-        },
-        {
-          "text": "Take only the Spy Ring Cipher",
+          "text": "Take the Spy Ring Cipher as well",
           "targetSection": 90
         },
         {
-          "text": "Take only the Forged Border Pass (3 gold)",
-          "targetSection": 92,
-          "condition": {
-            "type": "HAS_GOLD",
-            "amount": 3
-          }
-        },
-        {
-          "text": "Take neither — find your own route",
-          "targetSection": 45
+          "text": "Cross the border — no need for the cipher",
+          "targetSection": 92
         }
       ],
       "scripts": {}
@@ -2223,7 +2207,9 @@
           }
         }
       ],
-      "scripts": {}
+      "scripts": {
+        "onEnter": "state.set('suspicion', state.get('suspicion') + 3)"
+      }
     },
     {
       "number": 91,
