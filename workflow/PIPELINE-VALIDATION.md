@@ -6,7 +6,7 @@ Tracks the status of adventure authoring pipeline runs. Updated after each agent
 
 ## the-iron-road
 
-**Status:** In progress — retrospective pipeline run
+**Status:** ✅ COMPLETE — all phases approved (2026-04-15)
 
 The Iron Road was authored before the formal pipeline existed. This run validates the pipeline against a complete adventure.
 
@@ -37,13 +37,13 @@ The Iron Road was authored before the formal pipeline existed. This run validate
 | ch1 [§1–§40] | ✅ Authored | ✅ APPROVED | APPROVED | §29/§33 near-identical cloak descriptions (cosmetic, no fix required). §40 opening line flagged but confirmed intentional. |
 | ch2 [§41–§90] | ✅ Authored | ✅ APPROVED | APPROVED | FBP event leak fixed (§72/§89). Bribe Purse added at §74 (coin dealer, 5 gold). §90 Spy Ring Cipher +3 suspicion hook added. §88 missing gold guard fixed. Three narrative advisories noted (non-blocking). |
 | ch3 [§91–§130] | ✅ Authored | ✅ APPROVED | APPROVED | §92 dead choice removed. §99 choice 3 retargeted (§108→§106). §104 satchelDeliveredEarly flag added. ch3/ch4 gate contracts updated (Bribe Purse, guardCaptainBribed). |
-| ch4 [§131–§170] | ✅ Authored | 🔄 In progress | — | `satchelOpened` set at §165 but not checked by endings — noted as intentionally incomplete. |
+| ch4 [§131–§170] | ✅ Authored | ✅ APPROVED | APPROVED | §140 Lua syntax fixed (double-quoted showMessage string). §146 misleading "no credentials" choice rephrased to neutral text, LACKS_ITEM condition removed. `satchelOpened` at §165 confirmed intentionally incomplete. |
 
 ### Phase 4: Consistency Check
 
 | Task | Status | Notes |
 |------|--------|-------|
-| Consistency Check Agent | ⬜ Pending | Blocked on chapter reviews |
+| Consistency Check Agent | ✅ APPROVED | All chain integrity checks passed. All 18 validation tests pass. 5 VICTORY sections, 6 INSTANT_DEATH (3.5%). Two intentional incomplete state vars (`satchelDeliveredEarly`, `satchelOpened`) — documented and accepted. |
 
 ---
 
