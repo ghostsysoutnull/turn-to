@@ -147,6 +147,8 @@ public class JsonAdventureLoader implements AdventureLoader {
                 List<Creature> opponents;
                 if (!node.path("enemy").isMissingNode()) {
                     opponents = parseCreatures(node.path("enemy"));
+                } else if (!node.path("enemies").isMissingNode()) {
+                    opponents = parseCreatures(node.path("enemies"));
                 } else {
                     opponents = parseCreatures(node.path("opponents"));
                 }
@@ -527,6 +529,12 @@ public class JsonAdventureLoader implements AdventureLoader {
                             "SKILL_TEST failSection " + e.failSection() + " does not exist");
                 }
             }
+            case NavigateEvent e -> {
+                if (!allSections.contains(e.targetSection())) {
+                    throw new AdventureLoadException(
+                            "NAVIGATE targetSection " + e.targetSection() + " does not exist");
+                }
+            }
             case CombatEvent e -> {
                 for (Creature c : e.opponents()) {
                     if (c.skill() <= 0) {
@@ -544,6 +552,14 @@ public class JsonAdventureLoader implements AdventureLoader {
                                 "CombatEvent participantId '" + pid + "' not found in partyMembers");
                     }
                 }
+                if (e.successSection() > 0 && !allSections.contains(e.successSection())) {
+                    throw new AdventureLoadException(
+                            "COMBAT successSection " + e.successSection() + " does not exist");
+                }
+                if (e.failureSection() > 0 && !allSections.contains(e.failureSection())) {
+                    throw new AdventureLoadException(
+                            "COMBAT failureSection " + e.failureSection() + " does not exist");
+                }
             }
             case ItemEvent e -> {
                 if (!itemNames.contains(e.itemName())) {
@@ -551,7 +567,7 @@ public class JsonAdventureLoader implements AdventureLoader {
                             "Item '" + e.itemName() + "' referenced in event is not in the adventure items list");
                 }
             }
-            default -> { /* StatChangeEvent, GoldChangeEvent, NavigateEvent — no cross-refs */ }
+            default -> { /* StatChangeEvent, GoldChangeEvent — no cross-refs */ }
         }
     }
 

@@ -45,6 +45,8 @@ public class Adventure {
     public int startSection() { return startSection; }
     public int initialProvisions() { return initialProvisions; }
 
+    public List<Section> sections() { return sections; }
+
     public Section getSection(int number) {
         return sections.stream()
             .filter(s -> s.number() == number)
