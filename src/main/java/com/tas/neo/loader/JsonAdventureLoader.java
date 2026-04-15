@@ -163,15 +163,11 @@ public class JsonAdventureLoader implements AdventureLoader {
             }
             case "LUCK_TEST" -> {
                 int success = node.get("successSection").asInt();
-                int fail = node.path("failSection").isMissingNode()
-                        ? node.get("failureSection").asInt() : node.get("failSection").asInt();
-                yield new LuckTestEvent(success, fail);
+                yield new LuckTestEvent(success, failSectionFrom(node));
             }
             case "SKILL_TEST" -> {
                 int success = node.get("successSection").asInt();
-                int fail = node.path("failSection").isMissingNode()
-                        ? node.get("failureSection").asInt() : node.get("failSection").asInt();
-                yield new SkillTestEvent(success, fail);
+                yield new SkillTestEvent(success, failSectionFrom(node));
             }
             case "NAVIGATE" -> {
                 int target = node.get("targetSection").asInt();
@@ -415,6 +411,12 @@ public class JsonAdventureLoader implements AdventureLoader {
             result.put(entry.getKey(), entry.getValue().asText());
         }
         return result;
+    }
+
+    private int failSectionFrom(JsonNode node) throws AdventureLoadException {
+        if (!node.path("failSection").isMissingNode()) return node.get("failSection").asInt();
+        if (!node.path("failureSection").isMissingNode()) return node.get("failureSection").asInt();
+        throw new AdventureLoadException("Missing required field: failSection");
     }
 
     private String itemNameFrom(JsonNode node) throws AdventureLoadException {
