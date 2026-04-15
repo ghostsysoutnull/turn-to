@@ -1,0 +1,219 @@
+{
+  "adventureId": "the-iron-road",
+  "items": [
+    {
+      "name": "Sealed Satchel",
+      "description": "A royal courier's leather satchel sealed with wax. The central quest item. Contains a message someone powerful wants destroyed.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "Courier's Token",
+      "description": "A bronze disc stamped with the royal courier corps insignia. Marks the bearer as an agent — or a target.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "Assassin's Blade",
+      "description": "A slim, balanced knife taken from one of the kill team. A professional's tool. Grants +1 SKILL while equipped.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "Healing Potion",
+      "description": "A small vial of red restorative. Restores 4 STAMINA when drunk. Available in multiple chapters.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "Traveller's Cloak",
+      "description": "A plain, dusty cloak that helps the bearer blend into road traffic. Reduces scrutiny at checkpoints.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "Forged Border Pass",
+      "description": "A convincing forgery of a merchant's border pass. Close inspection may reveal the deception.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "Legitimate Border Pass",
+      "description": "A genuine border pass issued by a Varenmark official. Valid under any scrutiny.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "Bribe Purse",
+      "description": "A purse of mixed coin assembled for greasing palms. Each use depletes it and reduces suspicion by 2.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "Spy Ring Cipher",
+      "description": "A folded card of encoded text from the border spy ring. Proves membership — and implicates the bearer if found. Raises suspicion by 3 on pickup.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "Spymaster's Letter",
+      "description": "A sealed letter from the Spymaster offering safe passage in exchange for the satchel. Reduces the Spymaster's price in ch4.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "Noble's Invitation",
+      "description": "A formal invitation to Goldmere Estate. Provides cover on the second kingdom road.",
+      "introducedInChapter": "ch3"
+    },
+    {
+      "name": "Relay Station Key",
+      "description": "A key to the royal relay station, issued to authorised couriers only. Opens a direct route into the palace district.",
+      "introducedInChapter": "ch3"
+    }
+  ],
+  "characters": [
+    {
+      "name": "The Courier",
+      "description": "A royal courier of middle years, plainly dressed for discretion. Assassinated at the start of the adventure; never speaks.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "The Lead Assassin",
+      "description": "Commander of the kill team. No insignia. Cold and efficient. Will offer the player a chance to walk away — once.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "The Tracker",
+      "description": "A second assassin who pursues the player into the forest. Can be fought, evaded, or briefly spoken with.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "The Spymaster",
+      "description": "Head of the border spy ring. Appears through a proxy in ch2, in person in ch3 and ch4. Offers protection at a price that grows each chapter.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "The Border Guard Captain",
+      "description": "Commands the Varenmark customs gatehouse. Corrupt but not cruel. Bribable; can issue a Legitimate Border Pass. May send a helpful message to ch3 if well-paid.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "The Spy Ring Contact",
+      "description": "A mid-level operative of the border spy ring, operating from the Ironbell Inn. Nervous. Offers the Spy Ring Cipher and assassin intelligence in exchange for the satchel's contents.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "The Forger",
+      "description": "A minor character operating from Varenmark's Back Lanes. Produces the Forged Border Pass for a fee. No faction loyalty.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "The Lord's Agent",
+      "description": "The assassins' handler. First appears at the Crossroads Inn in ch3 posing as a merchant. Polished, unhurried, more dangerous than the killers who work for them. Makes a final threatening offer in ch4.",
+      "introducedInChapter": "ch3"
+    },
+    {
+      "name": "The Courier's Contact",
+      "description": "The intended recipient of the satchel. An elderly official connected to royal intelligence. May be alive, dead, or relocated by the time the player reaches ch3. Present in the palace anteroom in ch4 if alive.",
+      "introducedInChapter": "ch3"
+    },
+    {
+      "name": "The Noble Host",
+      "description": "Owner of Goldmere Estate in the second kingdom. A minor noble with spy ring sympathies. Provides shelter and the Noble's Invitation as road cover.",
+      "introducedInChapter": "ch3"
+    },
+    {
+      "name": "The Relay Station Warden",
+      "description": "A royal courier corps officer at the relay station. Suspicious of outsiders but bound by protocol. Issues the Relay Station Key if the player carries the Courier's Token.",
+      "introducedInChapter": "ch3"
+    },
+    {
+      "name": "The Capital Gate Captain",
+      "description": "Enforces the city gate checkpoint in ch4. Bribable, but the cost scales with the player's suspicion score.",
+      "introducedInChapter": "ch4"
+    }
+  ],
+  "locations": [
+    {
+      "name": "The Iron Road",
+      "description": "The great stone trade highway connecting three kingdoms. Wide enough for two wagons abreast. The adventure's spine.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "The Forest Verge",
+      "description": "Dense mixed woodland directly off the Iron Road at the ambush site. Gullies, a dry streambed, a ruined waystone.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "The Waystation",
+      "description": "A small, partly collapsed stone travellers' shelter a kilometre from the ambush site. Currently unoccupied.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "Varenmark",
+      "description": "The frontier border city straddling the trade route between the first and second kingdoms. Dusty, dense, corrupt.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "The Ironbell Inn",
+      "description": "The principal travellers' inn in Varenmark. Factions meet here. The Spymaster's first contact operates from here.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "The Customs House",
+      "description": "Where border passes are inspected and issued in Varenmark. The Border Guard Captain's domain.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "The Back Lanes",
+      "description": "The alleys and side streets of Varenmark where the spy ring operates. Shortcuts and ambushes.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "The Forger's Workshop",
+      "description": "A hidden workshop in Varenmark's Back Lanes. Source of the Forged Border Pass.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "The Crossroads Inn",
+      "description": "A large roadside inn at the junction to the capital route in the second kingdom. Neutral territory — everyone stops here.",
+      "introducedInChapter": "ch3"
+    },
+    {
+      "name": "Goldmere Estate",
+      "description": "A minor noble's country estate two hours off the main road in the second kingdom. Spy ring safe house.",
+      "introducedInChapter": "ch3"
+    },
+    {
+      "name": "The Relay Station",
+      "description": "A fortified waystation operated by the royal courier corps between the second kingdom and the capital. Where the Courier's Contact may be waiting.",
+      "introducedInChapter": "ch3"
+    },
+    {
+      "name": "The Capital Approach",
+      "description": "The road as it narrows between quarried stone walls entering the capital's outer district. The threshold of the final chapter.",
+      "introducedInChapter": "ch3"
+    },
+    {
+      "name": "The Capital",
+      "description": "The royal capital city. Crowded, layered, and dangerous. Final destination of the Iron Road.",
+      "introducedInChapter": "ch4"
+    },
+    {
+      "name": "The City Gates",
+      "description": "The first checkpoint entering the capital. High-suspicion players face hard choices here.",
+      "introducedInChapter": "ch4"
+    },
+    {
+      "name": "The Market District",
+      "description": "The commercial heart of the capital. Crowds provide cover. The Spymaster's proxy operates from a market stall.",
+      "introducedInChapter": "ch4"
+    },
+    {
+      "name": "The Docks",
+      "description": "A secondary approach to the palace district. Used to avoid main roads. The spy ring has a contact here.",
+      "introducedInChapter": "ch4"
+    },
+    {
+      "name": "The Palace District",
+      "description": "The sealed inner quarter around the royal palace. Requires Relay Station Key, Courier's Token, or Spymaster's Letter to enter directly.",
+      "introducedInChapter": "ch4"
+    },
+    {
+      "name": "The Palace Anteroom",
+      "description": "The delivery point for royal intelligence inside the palace district. The Courier's Contact waits here if alive.",
+      "introducedInChapter": "ch4"
+    }
+  ]
+}
