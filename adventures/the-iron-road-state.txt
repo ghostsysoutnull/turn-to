@@ -1,0 +1,47 @@
+== State Variable Report: the-iron-road ==
+Generated: 2026-04-15  |  Variables: 44
+
+  archivistNoteReceived           set:§119(onEnter)  read:—
+  backRoadTaken                   set:§93(onEnter)  read:—
+  borderCrossed                   set:§91(onEnter), §92(onEnter), §93(onEnter)  read:—
+  borderCrossedVia                set:§91(onEnter), §92(onEnter), §93(onEnter)  read:—
+  borderPassType                  set:§76(onEnter), §79(onEnter), §81(onEnter)  read:—
+  bypassedApproachCheckpoint      set:§126(onEnter)  read:—
+  captainContacted                set:§61(onEnter), §75(onEnter)  read:—
+  captainInformed                 set:§64(onEnter)  read:—
+  captainKnowsToken               set:§75(onEnter)  read:—
+  ch3Complete                     set:§130(onEnter)  read:—
+  cloakWorn                       set:—  read:§41(onEnter)
+  contactAlive                    set:§116(onEnter), §118(onEnter)  read:§116(onEnter), §157(onEnter)
+  contactFound                    set:§116(onEnter), §118(onEnter)  read:—
+  contactInstructed               set:§117(onEnter)  read:—
+  courierTokenRevealed            set:§32(onEnter), §62(onEnter)  read:—
+  forgerLocated                   set:§49(onEnter), §58(onEnter), §66(onEnter), §83(onEnter)  read:—
+  forgerMet                       set:§57(onEnter)  read:—
+  forgerWorkshopFound             set:§58(onEnter), §66(onEnter), §83(onEnter)  read:—
+  guardCaptainBribed              set:§76(onEnter), §79(onEnter), §81(onEnter)  read:—
+  guardCaptainHelpedRoyal         set:§81(onEnter)  read:—
+  guardCaptainSeen                set:§44(onEnter)  read:—
+  hasSatchel                      set:§1(onEnter)  read:—
+  heardAboutLordsAgent            set:§98(onEnter)  read:—
+  inVarenmark                     set:§41(onEnter)  read:—
+  lordAgentNorth                  set:§80(onEnter)  read:—
+  lordKnown                       set:§31(onExit)  read:—
+  lordsAgentMet                   set:§102(onEnter)  read:—
+  refusedLordsAgent               set:§103(onEnter)  read:§120(onEnter)
+  satchelContentsKnown            set:§117(onEnter), §119(onEnter)  read:—
+  satchelDeliveredEarly           set:§104(onEnter)  read:—
+  satchelDestination              set:§104(onEnter), §141(onEnter), §145(onEnter), §151(onEnter), §159(onEnter), §161(onEnter)  read:—
+  satchelOpened                   set:§165(onEnter)  read:—
+  seenLordsAgent                  set:§100(onEnter)  read:—
+  spymasterDebt                   set:§71(onEnter), §88(onEnter)  read:§140(onEnter), §71(onEnter), §88(onEnter)
+  spymasterLetterGiven            set:§88(onEnter)  read:—
+  spymasterMet                    set:§71(onEnter)  read:—
+  spymasterSpotted                set:§55(onEnter)  read:—
+  stalledLordsAgent               set:§105(onEnter)  read:§120(onEnter)
+  suspicion                       set:§41(onEnter), §62(onEnter), §93(onEnter), §97(onEnter), §125(onEnter), §135(onEnter), §136(onEnter), §147(onEnter), §154(onEnter), §162(onEnter), §168(onEnter)  read:§122(onEnter), §125(onEnter), §131(onEnter), §135(onEnter), §136(onEnter), §138(onEnter), §147(onEnter), §154(onEnter), §162(onEnter), §168(onEnter), §41(onEnter), §62(onEnter), §93(onEnter), §97(onEnter)
+  threeFactionsBriefed            set:§80(onEnter)  read:—
+  tokenAvailable                  set:§13(onEnter)  read:—
+  trackerWarned                   set:§18(onExit), §31(onExit)  read:—
+  visitedGoldmere                 set:§109(onEnter)  read:—
+  wardenMet                       set:§114(onEnter)  read:—

@@ -1,0 +1,143 @@
+== Section Digest: the-iron-road / ch1 ==
+Generated: 2026-04-15  |  Range: §1–§40  |  Entry: §1
+
+[§1] NORMAL          →§3,§2
+  The Iron Road runs wide and straight through the forest, paved in pale grey stone worn smooth by a thousand years of trade....
+  events: +Sealed Satchel
+  hooks:  onEnter
+
+[§2] NORMAL          →§4,§3,§5
+  You hold the satchel and you do not move....
+
+[§3] NORMAL          →§6,§7,§8
+  You break left, off the stone road and into the forest verge, crashing through undergrowth with the satchel clutched under your arm....
+  events: STAMINA-1
+
+[§4] INSTANT_DEATH 
+  You set the satchel down on the road between you....
+
+[§5] NORMAL          →§4,§3
+  "Who do you work for?...
+
+[§6] NORMAL          →§9,§10,§11
+  The streambed runs north-east, cutting between stands of beech and old hawthorn....
+
+[§7] NORMAL          →§12,§13,§14
+  You scramble up the gully bank on hands and knees, loose earth crumbling under your grip....
+
+[§8] NORMAL        
+  You press yourself flat under the cut bank, the root-threaded earth inches above your face, the satchel clamped against your chest....
+  events: LUCK→§15/§16
+
+[§9] NORMAL          →§25,§24
+  The path beyond the waystone is old and faint — a deer trail, perhaps, or a charcoal burner's route from another era....
+
+[§10] NORMAL          →§17,§11
+  You run. The streambed bends east and you follow it, lungs burning, the satchel jouncing against your side....
+  events: STAMINA-1
+
+[§11] NORMAL          →§18,§19,§20
+  You stop. You turn. You put your back to the waystone's bulk and you wait....
+
+[§12] NORMAL          →§21,§22,§9
+  The pine stand runs for a good half kilometre....
+
+[§13] NORMAL          →§23,§36
+  You circle back along the high bank, moving low and careful, angling to put both voices ahead of you....
+  hooks:  onEnter
+
+[§14] NORMAL        
+  You move east, toward where the forest thins near the road....
+  events: COMBAT→§21/§40
+
+[§15] NORMAL          →§25
+  The tracker passes and does not double back....
+
+[§16] NORMAL          →§4,§30,§19
+  Your cover holds for twenty minutes....
+
+[§17] NORMAL          →§22,§26
+  You vault the fallen tree and land badly, your ankle twisting on a hidden stone....
+  events: STAMINA-1
+
+[§18] NORMAL          →§9,§31
+  You set the satchel on the ground between you....
+  hooks:  onExit
+
+[§19] NORMAL        
+  The tracker is fast but you have surprise....
+  events: COMBAT→§27/§40
+
+[§20] NORMAL          →§9,§26
+  You fake left, the tracker shifts his weight to cut you off, and you go right — hard — shoulder past his outstretched arm and into the trees...
+  events: STAMINA-1
+
+[§21] NORMAL          →§36,§35
+  The cart track brings you out onto the Iron Road half a kilometre north of the ambush site....
+
+[§22] NORMAL          →§25,§24
+  The deeper forest is darker and quieter....
+
+[§23] NORMAL          →§32,§36
+  The courier's body lies face down on the road's verge....
+
+[§24] NORMAL          →§25,§28
+  You circle the waystation from the north, keeping to the trees, watching....
+
+[§25] NORMAL          →§29,§33,§34,§36
+  The waystation smells of old ash and damp stone....
+
+[§26] NORMAL        
+  You squeeze back into a dense mat of bramble pressed against the old stone wall, thorns catching at your hands and face....
+  events: LUCK→§37/§16
+
+[§27] NORMAL          →§38,§9
+  The tracker is down. You stand over him, breathing hard, and the forest is quiet....
+
+[§28] NORMAL          →§25,§36
+  You wait. The waystation stays silent....
+
+[§29] NORMAL          →§36
+  The cloak is plain and dusty — exactly right for the road, which requires nothing so much as ordinariness....
+  events: +Traveller's Cloak  +Healing Potion
+
+[§30] NORMAL          →§31,§19,§4
+  The tracker's expression shifts....
+
+[§31] NORMAL          →§9
+  The tracker's eyes flick away for a fraction of a second — the tell of someone deciding how much to say....
+  hooks:  onExit
+
+[§32] NORMAL          →§36
+  The token fits in your palm — heavier than it looks, the brass worn at the edges from years of handling....
+  events: +Courier's Token
+  hooks:  onEnter
+
+[§33] NORMAL          →§36
+  The cloak is plain and dusty — exactly the right kind of nothing....
+  events: +Traveller's Cloak
+
+[§34] NORMAL          →§36
+  The vial is small and heavy, the liquid inside red-dark and thick....
+  events: +Healing Potion
+
+[§35] NORMAL          →§25,§39
+  Wise. You move along the verge, keeping trees between you and the open road surface where possible, pausing at gaps to scan ahead....
+
+[§36] NORMAL          →§25,§39
+  The Iron Road north of the ambush site is wide and grey and empty in both directions....
+
+[§37] NORMAL          →§22
+  Whoever it was, they pass....
+
+[§38] NORMAL          →§9
+  You pick up the knife....
+  events: +Assassin's Blade
+
+[§39] NORMAL          →§41
+  You do not stop. The waystation passes on your left, set back from the road, its shuttered windows blank as closed eyes....
+  events: STAMINA-1
+
+[§40] INSTANT_DEATH 
+  You are faster than you thought you were....
+

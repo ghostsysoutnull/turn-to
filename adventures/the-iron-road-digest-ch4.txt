@@ -1,0 +1,158 @@
+== Section Digest: the-iron-road / ch4 ==
+Generated: 2026-04-15  |  Range: §131–§170  |  Entry: §131
+
+[§131] NORMAL        
+  The city gates rise ahead of you — two towers of dressed stone flanking an iron-banded arch wide enough for three coaches abreast....
+  hooks:  onEnter
+
+[§132] NORMAL          →§138,§143,§146
+  The guard glances at you, nods, and waves you through without asking for papers....
+
+[§133] NORMAL          →§132,§135,§136
+  The guard at the head of the queue holds up a hand....
+  conds:  [HAS:Courier's Token]→§132:"Show your Courier's Token"  [HAS:Relay Station Key]→§132:"Show your Relay Station Key"  [HAS:Noble's Invitation]→§132:"Show your Noble's Invitation"  [HAS:Bribe Purse]→§135:"Offer a bribe"
+
+[§134] NORMAL          →§136,§153,§149,§137
+  The queue has barely moved before a hand closes on your arm....
+  conds:  [HAS:Assassin's Blade]→§153:"Reach for your Assassin's Blade"
+
+[§135] NORMAL          →§138,§143,§146
+  The Captain's eyes go to your hand, to the purse, and back to your face....
+  events: -Bribe Purse
+  hooks:  onEnter
+
+[§136] NORMAL          →§138,§143
+  You push into the crowd at the gate — a press of bodies, cursing porters, a cartload of feed grain blocking the arch....
+  hooks:  onEnter
+
+[§137] INSTANT_DEATH 
+  It is the wrong instinct....
+
+[§138] NORMAL          →§139,§149,§146,§143
+  The market district spreads across the capital's central quarter — a roofed arcade of stalls giving way to open squares, then to covered hal...
+  hooks:  onEnter
+
+[§139] NORMAL          →§140,§142
+  The south arcade is where the capital's lesser merchants sell medicines, dyes, and curiousities....
+  hooks:  onChoices
+
+[§140] NORMAL          →§141,§142,§169
+  The Spymaster receives you in a room above the arcade that smells of cedar and old paper....
+  conds:  [HAS:Sealed Satchel]→§141:"Hand over the Sealed Satchel"
+  hooks:  onEnter
+
+[§141] VICTORY       
+  You set the Sealed Satchel on the cedar table....
+  events: -Sealed Satchel
+  hooks:  onEnter
+
+[§142] NORMAL          →§146,§143,§140,§149
+  You leave the arcade without the satchel changing hands....
+
+[§143] NORMAL          →§148,§144,§147,§138
+  The docks run along the river that backs the palace district — a working waterfront of grain barges, fishing skiffs, and the occasional unma...
+  conds:  [HAS:Sealed Satchel]→§144:"Light the brazier and burn the satchel"
+
+[§144] NORMAL          →§145,§165
+  You hold the satchel over the brazier....
+
+[§145] VICTORY       
+  The ash falls into the river....
+  events: -Sealed Satchel
+  hooks:  onEnter
+
+[§146] NORMAL          →§155,§156,§164,§147,§138
+  The palace district begins where the main city ends: a gatehouse checkpoint staffed by royal household guards in formal livery, not the city...
+  conds:  [HAS:Courier's Token]→§155:"Present your Courier's Token at the checkpoint"  [HAS:Relay Station Key]→§156:"Present your Relay Station Key at the checkpoint"  [HAS:Spymaster's Letter]→§164:"Show the Spymaster's Letter — you have a prearranged contact inside"  [LACKS:Courier's Token]→§138:"You have no credentials — you need another route"
+
+[§147] NORMAL          →§157
+  The river approach is the route the palace district's servants and suppliers use when the main gate is closed: a series of stone steps cut i...
+  hooks:  onEnter
+
+[§148] NORMAL          →§147,§144,§146
+  The spy ring contact is where they were supposed to be — a grey-haired woman mending nets at the end of the third dock, who looks at you wit...
+  conds:  [HAS:Sealed Satchel]→§144:"You're not delivering — burn the satchel instead"
+
+[§149] NORMAL          →§150,§152
+  The Lord's Agent finds you before you find them — or it is the other way round, and the distinction no longer matters....
+
+[§150] NORMAL          →§151,§152,§153
+  "Two hundred gold," the Lord's Agent says....
+  conds:  [HAS:Sealed Satchel]→§151:"Take the coin — hand over the Sealed Satchel"  [HAS:Assassin's Blade]→§153:"Refuse and draw the Assassin's Blade"
+
+[§151] VICTORY       
+  You take the coin. The satchel changes hands under the table, smooth as any market transaction....
+  events: -Sealed Satchel  GOLD+200
+  hooks:  onEnter
+
+[§152] NORMAL          →§146,§139,§143
+  You stand. The Lord's Agent watches you with the same patient expression, neither surprised nor offended....
+
+[§153] NORMAL          →§154
+  The blade comes out. The Lord's Agent's eyes widen — not with fear, with something colder....
+  events: COMBAT
+
+[§154] NORMAL          →§143,§146
+  You run. The Lord's Agent does not give immediate chase — too public, too much noise already from the fight — but you hear shouting behind y...
+  hooks:  onEnter
+
+[§155] NORMAL          →§157
+  You hold up the Courier's Token — the bronze disc bearing the royal courier corps insignia....
+
+[§156] NORMAL          →§157
+  The Relay Station Key has the same effect as credentials should have: immediate, definite, and wordless....
+
+[§157] NORMAL        
+  The palace district is quieter than the city outside it — less crowd, more guard, less noise of commerce and more the particular hush of pow...
+  hooks:  onEnter
+
+[§158] NORMAL          →§159,§170
+  The Courier's Contact is an elderly person of indeterminate rank, dressed in the quiet grey of a senior official, who rises when you enter w...
+  conds:  [HAS:Sealed Satchel]→§159:"Hand over the Sealed Satchel"  [LACKS:Sealed Satchel]→§170:"Tell them the satchel no longer exists"
+
+[§159] VICTORY       
+  You place the Sealed Satchel on the table between you....
+  events: -Sealed Satchel
+  hooks:  onEnter
+
+[§160] NORMAL          →§161,§170,§162
+  The Contact is not there....
+  conds:  [HAS:Sealed Satchel]→§161:"Hand over the Sealed Satchel to the intelligence officer"  [LACKS:Sealed Satchel]→§170:"Tell him the satchel no longer exists"
+
+[§161] VICTORY       
+  You hand over the satchel....
+  events: -Sealed Satchel
+  hooks:  onEnter
+
+[§162] NORMAL          →§163,§161
+  The anteroom door is still open behind you....
+  conds:  [HAS:Sealed Satchel]→§161:"Go back — surrender the satchel on your terms"
+  hooks:  onEnter
+
+[§163] INSTANT_DEATH 
+  The palace guards are not the city watch....
+
+[§164] NORMAL          →§157
+  The Spymaster's Letter, presented to a particular household guard at a postern gate on the palace district's east wall, produces a result yo...
+
+[§165] NORMAL          →§146,§139,§145
+  Your hand goes back into the brazier....
+  hooks:  onEnter
+
+[§166] INSTANT_DEATH 
+  You have been standing still for too long in the wrong part of the market....
+
+[§167] INSTANT_DEATH 
+  The Lord's Agent is fast and thoroughly trained and has, you realise too late, backup two tables away....
+
+[§168] NORMAL          →§146,§143
+  The Lord's Agent goes down hard and stays down....
+  hooks:  onEnter
+
+[§169] NORMAL          →§141,§142
+  The Spymaster considers the question....
+  conds:  [HAS:Sealed Satchel]→§141:"Give the satchel to the Spymaster"
+
+[§170] NORMAL          →§145
+  You tell them the satchel is gone — burned, sold, or gone by whatever route you chose....
+

@@ -1,0 +1,104 @@
+== Gate Contract Digest: the-iron-road ==
+Generated: 2026-04-15  |  Chapters: 4
+
+CH1  [§1–§40]
+  IN   (adventure start — no entry contract)
+  OUT  §41
+       guaranteed:  Player carries 'Sealed Satchel'
+       possible:    Player may carry 'Courier's Token'
+                    Player may carry 'Assassin's Blade'
+                    Player may carry 'Healing Potion'
+                    Player may carry 'Traveller's Cloak'
+       forbidden:   Player must not carry 'Forged Border Pass'
+                    Player must not carry 'Legitimate Border Pass'
+
+CH2  [§41–§90]
+  IN   §41
+       required:    Player carries 'Sealed Satchel'
+       possible:    Player may carry 'Courier's Token'
+                    Player may carry 'Assassin's Blade'
+                    Player may carry 'Healing Potion'
+                    Player may carry 'Traveller's Cloak'
+       state:       state.suspicion is an integer >= 0
+                    state.satchelOpened is false or true (player may have attempted to open it in ch1)
+  OUT  §91
+       guaranteed:  Player carries 'Sealed Satchel'
+                    Player carries 'Legitimate Border Pass'
+       possible:    Player may carry 'Courier's Token'
+                    Player may carry 'Assassin's Blade'
+                    Player may carry 'Traveller's Cloak'
+                    Player may carry 'Healing Potion'
+                    Player may carry 'Bribe Purse'
+                    Player may carry 'Spymaster's Letter'
+                    Player may carry 'Spy Ring Cipher'
+       forbidden:   Player must not carry 'Forged Border Pass' (only one pass type carried)
+  OUT  §92
+       guaranteed:  Player carries 'Sealed Satchel'
+                    Player carries 'Forged Border Pass'
+       possible:    Player may carry 'Courier's Token'
+                    Player may carry 'Assassin's Blade'
+                    Player may carry 'Traveller's Cloak'
+                    Player may carry 'Healing Potion'
+                    Player may carry 'Bribe Purse'
+                    Player may carry 'Spymaster's Letter'
+                    Player may carry 'Spy Ring Cipher'
+       forbidden:   Player must not carry 'Legitimate Border Pass'
+  OUT  §93
+       guaranteed:  Player carries 'Sealed Satchel'
+       possible:    Player may carry 'Courier's Token'
+                    Player may carry 'Assassin's Blade'
+                    Player may carry 'Traveller's Cloak'
+                    Player may carry 'Healing Potion'
+                    Player may carry 'Bribe Purse'
+                    Player may carry 'Spymaster's Letter'
+                    Player may carry 'Spy Ring Cipher'
+       forbidden:   Player must not carry 'Legitimate Border Pass'
+                    Player must not carry 'Forged Border Pass'
+
+CH3  [§91–§130]
+  IN   §91
+       required:    Player carries 'Sealed Satchel'
+       possible:    Player may carry 'Legitimate Border Pass'
+                    Player may carry 'Forged Border Pass'
+                    Player may carry 'Courier's Token'
+                    Player may carry 'Assassin's Blade'
+                    Player may carry 'Traveller's Cloak'
+                    Player may carry 'Healing Potion'
+                    Player may carry 'Bribe Purse'
+                    Player may carry 'Spymaster's Letter'
+                    Player may carry 'Spy Ring Cipher'
+       state:       state.suspicion is an integer >= 0
+                    state.borderPassType is 'legitimate', 'forged', or 'none'
+                    state.backRoadTaken may be true (if entry via section 93)
+       branch §91
+       branch §92
+       branch §93
+  OUT  §131
+       possible:    Player may carry 'Sealed Satchel' (unless state.satchelDeliveredEarly == true)
+                    Player may carry 'Courier's Token'
+                    Player may carry 'Assassin's Blade'
+                    Player may carry 'Traveller's Cloak'
+                    Player may carry 'Healing Potion'
+                    Player may carry 'Spymaster's Letter'
+                    Player may carry 'Spy Ring Cipher'
+                    Player may carry 'Noble's Invitation'
+                    Player may carry 'Relay Station Key'
+
+CH4  [§131–§170]
+  IN   §131
+       possible:    Player may carry 'Sealed Satchel'
+                    Player may carry 'Courier's Token'
+                    Player may carry 'Assassin's Blade'
+                    Player may carry 'Traveller's Cloak'
+                    Player may carry 'Healing Potion'
+                    Player may carry 'Spymaster's Letter'
+                    Player may carry 'Spy Ring Cipher'
+                    Player may carry 'Noble's Invitation'
+                    Player may carry 'Relay Station Key'
+       state:       state.suspicion is an integer (0 = unsuspected; 5–9 = known; 10+ = actively hunted)
+                    state.satchelOpened may be true or false
+                    state.guardCaptainBribed may be true
+                    state.contactAlive may be true or false
+                    state.spymasterDebt is an integer >= 0
+                    state.satchelDeliveredEarly is false (if true, player was routed to an early ending in ch3)
+  OUT  (final chapter — no exit contract)

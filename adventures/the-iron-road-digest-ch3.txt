@@ -1,0 +1,151 @@
+== Section Digest: the-iron-road / ch3 ==
+Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
+
+[§91] NORMAL          →§94
+  The customs gatehouse is bright with morning light....
+  hooks:  onEnter
+
+[§92] NORMAL          →§94
+  The clerk at the customs gatehouse is a thin man with ink-stained fingers and a methodical air....
+  events: SKILL_TEST→§94/§97
+  hooks:  onEnter
+
+[§93] NORMAL          →§94
+  The back road is a shepherd's track that hairpins through a shallow gulch before emerging in a stand of birch trees a kilometre north of the...
+  hooks:  onEnter
+
+[§94] NORMAL          →§95,§96
+  The Iron Road in the second kingdom is wider than you remembered, or perhaps Varenmark simply made everything feel narrow....
+
+[§95] NORMAL          →§99,§98
+  You fall in behind a merchant caravan — six wagons, a dozen guards, and twice that many workers....
+
+[§96] NORMAL          →§99,§98
+  The field route is slower and wetter than you anticipated....
+
+[§97] NORMAL          →§94
+  The clerk sets down the pass and calls over a senior guard....
+  hooks:  onEnter
+
+[§98] NORMAL          →§99
+  You find a quiet table at a roadside alehouse — not the Crossroads Inn, a timber-framed place where local farmers drink and no one cares abo...
+  hooks:  onEnter
+
+[§99] NORMAL          →§100,§101,§108
+  The Crossroads Inn is everything the road promises: large, busy, and neutral by reputation if not by practice....
+
+[§100] NORMAL          →§101,§102
+  The common room is a long, low-ceilinged space with trestle tables and a fire that has been burning all day....
+  hooks:  onEnter
+
+[§101] NORMAL          →§102,§105
+  You get a drink, find a seat, and watch....
+
+[§102] NORMAL          →§105,§104,§103
+  "I represent the lord who ordered the courier's removal," he says, with no inflection on the word ordered, as if it were the most ordinary p...
+  hooks:  onEnter
+
+[§103] NORMAL          →§106
+  He receives your refusal with a small nod, as if it confirms something he expected....
+  hooks:  onEnter
+
+[§104] NORMAL          →§130
+  He takes the satchel without ceremony....
+  hooks:  onEnter
+
+[§105] NORMAL          →§106,§103
+  You tell him you need time to consider....
+  hooks:  onEnter
+
+[§106] NORMAL          →§107,§108,§113
+  Morning at the Crossroads Inn comes with the smell of bread and horses and the particular tension of a busy road establishment pretending to...
+  conds:  [HAS:Spy Ring Cipher]→§108:"Go to Goldmere Estate — the spy ring may have cover or information"  [HAS:Spymaster's Letter]→§108:"Go to Goldmere Estate — the Spymaster's Letter may open the estate"  [HAS:Courier's Token]→§113:"Head to the Relay Station — the Courier's Contact may be there"
+
+[§107] NORMAL          →§121,§120
+  The main road north of the Crossroads Inn is straight and well-maintained, flanked by drainage ditches and poplars that give no cover to any...
+
+[§108] NORMAL          →§109
+  The track to Goldmere Estate branches east from the main road at a marker stone carved with a stylised G....
+
+[§109] NORMAL          →§110,§111
+  The Noble Host meets you in the estate's formal sitting room — a room used for practical discussions dressed up as formal ones....
+  hooks:  onEnter
+
+[§110] NORMAL          →§111
+  "A route into the palace district that doesn't go through the main gates," the Noble Host says....
+  events: +Noble's Invitation
+
+[§111] NORMAL          →§112
+  The Noble Host walks you to the estate gate personally....
+
+[§112] NORMAL          →§121
+  You leave Goldmere Estate as the afternoon light lengthens....
+
+[§113] NORMAL          →§114,§115
+  The Relay Station sits back from the Iron Road behind a low stone wall, its gate marked by a royal courier corps flag — blue with a bronze t...
+  conds:  [HAS:Courier's Token]→§114:"Present the Courier's Token"
+
+[§114] NORMAL          →§116,§115
+  The sentry examines the token with the focused attention of someone who knows exactly what she is looking at....
+  hooks:  onEnter
+
+[§115] NORMAL          →§116
+  The warden listens without interrupting....
+
+[§116] NORMAL          →§117
+  The warden leads you to a side room off the station's main corridor — a room set up for long occupation: a cot, a desk with papers, a cold m...
+  hooks:  onEnter
+
+[§117] NORMAL          →§121
+  He listens to everything....
+  events: +Relay Station Key
+  hooks:  onEnter
+
+[§118] NORMAL          →§119,§121
+  The side room is empty....
+  hooks:  onEnter
+
+[§119] NORMAL          →§121
+  The warden tells you what he knows, which is less than you hoped: the Contact was carrying orders to the palace archivist, the satchel Marde...
+  hooks:  onEnter
+
+[§120] NORMAL          →§121
+  You stop at a roadside wayshrine — a small stone alcove with a faded relief of a road deity and a good view in both directions....
+  hooks:  onEnter
+
+[§121] NORMAL          →§122,§126
+  The land rises. The poplars give way to quarried stone walls that rise on either side of the road as it enters the cutting leading to the ca...
+
+[§122] NORMAL          →§124
+  The checkpoint guards check papers for everyone, not selectively....
+  hooks:  onEnter
+
+[§123] NORMAL          →§129
+  The guard takes your papers, examines them for approximately three seconds, and hands them back....
+
+[§124] NORMAL          →§125
+  The guard takes your papers and takes his time with them....
+  conds:  [HAS:Bribe Purse]→§125:"Offer a Bribe Purse to smooth things over"  [HAS:Noble's Invitation]→§125:"Present the Noble's Invitation as cover"
+
+[§125] NORMAL          →§129
+  The guard returns. He hands back your papers....
+  hooks:  onEnter
+
+[§126] NORMAL          →§127
+  There is a drainage cut on the east side of the road, following the base of the quarried wall....
+  hooks:  onEnter
+
+[§127] NORMAL          →§128,§129
+  Two figures step out of the shadow of the quarry wall....
+
+[§128] NORMAL          →§129
+  The fight is short and violent and goes better than it has any right to....
+  events: STAMINA-2
+
+[§129] NORMAL          →§130
+  The Capital Approach....
+
+[§130] NORMAL          →§131
+  You stand at the threshold of the capital....
+  hooks:  onEnter
+

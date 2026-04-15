@@ -1,0 +1,192 @@
+== Section Digest: the-iron-road / ch2 ==
+Generated: 2026-04-15  |  Range: §41–§90  |  Entry: §41
+
+[§41] NORMAL          →§42,§43,§44,§45
+  A day and a half of road, and at last Varenmark rises from the dust....
+  hooks:  onEnter
+
+[§42] NORMAL          →§46,§47
+  The Ironbell Inn occupies a wide, low building on the market square, its sign — a cast iron bell — hanging motionless over the door....
+
+[§43] NORMAL          →§48,§49,§42,§50
+  The market square is dense and loud, stalls packed tight under canvas awnings....
+  conds:  [GOLD>=3]→§48:"Buy a Healing Potion at the herbalist's stall (costs 3 gold)"
+
+[§44] NORMAL          →§51,§42,§52
+  The Customs House stands at the northern end of Varenmark, where the Iron Road narrows to pass through a stone gatehouse....
+  hooks:  onEnter
+
+[§45] NORMAL          →§42,§53,§50,§84
+  You keep your eyes forward and your pace steady — the gait of someone who has somewhere to be and is not interested in conversation....
+
+[§46] NORMAL          →§54,§55,§45
+  The man at your table is quiet for a moment....
+
+[§47] NORMAL          →§54,§56,§45
+  The man holds your gaze without flinching....
+
+[§48] NORMAL          →§42,§49,§50
+  The herbalist — a short woman who could be any age between forty and seventy — slides the vial across the counter without looking at it....
+  events: GOLD-3  +Healing Potion
+
+[§49] NORMAL          →§57,§58,§45
+  You approach directly....
+  hooks:  onEnter
+
+[§50] NORMAL          →§51,§52,§59
+  The Customs House at close range is a solid stone building with a sealed front door and a separate hatch for public business....
+
+[§51] NORMAL          →§60,§61,§62
+  You join the queue. It moves with grinding slowness....
+  conds:  [HAS:Courier's Token]→§62:"Produce the Courier's Token and say nothing else"
+
+[§52] NORMAL          →§63,§64,§65
+  One of the guards near the Customs House door accepts your coin with the practised disinterest of a man who does this regularly....
+  conds:  [HAS:Courier's Token]→§65:"Show the Courier's Token and say you are on urgent royal business"
+
+[§53] NORMAL          →§66,§67,§45
+  The back lanes of Varenmark run behind the market, a tangle of alleys between high stone walls, dark even at midday....
+
+[§54] NORMAL          →§68,§69,§70,§45
+  The card room is small and windowless, a round table with two chairs and a candle stub that has been burning for some time....
+
+[§55] NORMAL          →§54,§71,§45
+  You wait. The contact moves to the bar and orders a drink, exchanging two words with the landlord....
+  hooks:  onEnter
+
+[§56] NORMAL          →§54,§45
+  The contact looks at you steadily....
+
+[§57] NORMAL          →§72,§42,§50
+  The young man's expression closes....
+  hooks:  onEnter
+
+[§58] NORMAL          →§73,§45
+  You browse, watching from the corner of your eye....
+  hooks:  onEnter
+
+[§59] NORMAL          →§74,§52
+  A side passage beside the Customs House leads to a small courtyard....
+
+[§60] NORMAL          →§45,§52
+  The clerk stares at you with the weary contempt of a man who has heard every story....
+
+[§61] NORMAL          →§64,§63
+  The clerk's eyes move — a small but definite shift....
+  hooks:  onEnter
+
+[§62] NORMAL          →§75,§45
+  You produce the Courier's Token and set it on the inspection table....
+  hooks:  onEnter
+
+[§63] NORMAL          →§76,§77,§78,§79
+  The Captain looks at you for a long moment....
+  conds:  [GOLD>=10]→§76:"Pay the ten gold documentation fee"  [GOLD>=5]→§77:"Offer five gold and see if he negotiates"  [HAS:Bribe Purse]→§79:"Produce a Bribe Purse"
+
+[§64] NORMAL          →§63,§78,§80
+  The Captain is silent for longer than is comfortable....
+  hooks:  onEnter
+
+[§65] NORMAL          →§81,§82,§63
+  The Captain looks at the Token in your hand for three full seconds....
+
+[§66] NORMAL          →§72,§42
+  The grain seller, without pausing her work, says: "Kallos....
+  hooks:  onEnter
+
+[§67] NORMAL          →§83,§85,§43
+  The back lanes at midday are quieter than the market but not empty....
+
+[§68] NORMAL          →§71,§70,§45
+  The contact sits back....
+
+[§69] NORMAL          →§68,§71,§45
+  The contact studies you....
+
+[§70] NORMAL          →§72,§68,§45
+  "Forged," the contact says flatly....
+  conds:  [GOLD>=3]→§72:"Accept — take the Forged Border Pass for three gold"
+
+[§71] NORMAL          →§87,§88
+  The older man at the corner table watches you approach....
+  hooks:  onEnter
+
+[§72] NORMAL          →§89,§45
+  The door the colour of old blood is in the third alley past the fish stall, exactly as described....
+  events: +Forged Border Pass
+  conds:  [GOLD>=3]→§89:"Commission the standard Forged Border Pass for three gold"  [GOLD>=4]→§89:"Commission the aged and sealed version for four gold"
+
+[§73] NORMAL          →§90,§72
+  The knock pattern works....
+
+[§74] NORMAL          →§52,§50
+  You slip through the side door into a corridor that smells of paper and old ink....
+
+[§75] NORMAL          →§81,§80
+  The Captain arrives in three minutes....
+  hooks:  onEnter
+
+[§76] NORMAL          →§91
+  You count out ten gold and set it on the desk....
+  events: GOLD-10  +Legitimate Border Pass
+  hooks:  onEnter
+
+[§77] NORMAL          →§76,§78,§45
+  The Captain considers the five gold in your palm....
+  conds:  [GOLD>=8]→§76:"Pay the eight gold"
+
+[§78] NORMAL          →§64,§60,§65
+  The Captain sits back and looks at you with the focused attention of someone revising their first impression....
+  conds:  [HAS:Courier's Token]→§65:"Show him the Courier's Token"
+
+[§79] NORMAL          →§91
+  The Bribe Purse has weight to it....
+  events: -Bribe Purse  +Legitimate Border Pass
+  hooks:  onEnter
+
+[§80] NORMAL          →§63,§64
+  The Captain looks at you for a long moment....
+  hooks:  onEnter
+
+[§81] NORMAL          →§91
+  The Captain studies you....
+  events: +Legitimate Border Pass
+  hooks:  onEnter
+
+[§82] NORMAL          →§81,§63
+  The Captain leans back and looks at the Courier's Token without touching it....
+
+[§83] NORMAL          →§72,§85
+  The man with the pipe looks at you with detached interest....
+  hooks:  onEnter
+
+[§84] NORMAL          →§93,§45
+  The back road around Varenmark is local knowledge — a drover's track running east along the river bank, bypassing the gatehouse entirely and...
+  events: STAMINA-1
+
+[§85] NORMAL          →§86,§43,§87
+  Deeper into the back lanes, the buildings press closer....
+
+[§86] NORMAL        
+  Two against one in a confined alley....
+  events: COMBAT→§43/§88
+
+[§87] NORMAL          →§88
+  The Spymaster gives a small, measured smile....
+
+[§88] NORMAL          →§89,§45
+  "Trust is the wrong word," the Spymaster says....
+  events: +Spymaster's Letter
+  conds:  [GOLD>=3]→§89:"Accept the letter and also take a Forged Border Pass (3 gold)"
+  hooks:  onEnter
+
+[§89] NORMAL          →§90,§92,§45
+  The contact produces a folded card from his coat — dense lines of encoded text, small and close, the cipher's logic visible in the repeated...
+  events: +Forged Border Pass
+  conds:  [GOLD>=3]→§90:"Take both the Spy Ring Cipher and the Forged Border Pass (3 gold)"  [GOLD>=3]→§92:"Take only the Forged Border Pass (3 gold)"
+
+[§90] NORMAL          →§92,§45
+  You pocket the Spy Ring Cipher....
+  events: +Spy Ring Cipher
+  conds:  [HAS:Forged Border Pass]→§92:"Head to the customs gate and cross with your Forged Border Pass"  [LACKS:Forged Border Pass]→§45:"You still need a border pass — return to find one"
+
