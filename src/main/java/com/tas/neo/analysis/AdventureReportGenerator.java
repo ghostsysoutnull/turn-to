@@ -175,16 +175,7 @@ public class AdventureReportGenerator {
             if (from < 0 || to < 0) continue;
 
             int entry = ch.path("gates").path("entryGate").path("entrySection").asInt(from);
-
-            Set<Integer> allEntries = new LinkedHashSet<>();
-            allEntries.add(entry);
-            JsonNode entryBranches = ch.path("gates").path("entryGate").path("branches");
-            if (entryBranches.isArray()) {
-                for (JsonNode br : entryBranches) {
-                    int brEntry = br.path("entrySection").asInt(-1);
-                    if (brEntry > 0) allEntries.add(brEntry);
-                }
-            }
+            Set<Integer> allEntries = allEntrySections(ch, entry);
 
             List<Integer> exits = new ArrayList<>();
             JsonNode exitGates = ch.path("gates").path("exitGates");
@@ -252,16 +243,7 @@ public class AdventureReportGenerator {
                 if (from < 0 || to < 0) continue;
 
                 int entry = ch.path("gates").path("entryGate").path("entrySection").asInt(from);
-                Set<Integer> allEntries = new LinkedHashSet<>();
-                allEntries.add(entry);
-                JsonNode issueBranches = ch.path("gates").path("entryGate").path("branches");
-                if (issueBranches.isArray()) {
-                    for (JsonNode br : issueBranches) {
-                        int brEntry = br.path("entrySection").asInt(-1);
-                        if (brEntry > 0) allEntries.add(brEntry);
-                    }
-                }
-                Set<Integer> reachable = graph.reachableFrom(allEntries, from, to);
+                Set<Integer> reachable = graph.reachableFrom(allEntrySections(ch, entry), from, to);
 
                 // Coverage
                 for (Section s : adventure.sections()) {
@@ -292,5 +274,22 @@ public class AdventureReportGenerator {
             errors.forEach(e -> sb.append("  \u2717 ").append(e).append("\n"));
             warnings.forEach(w -> sb.append("  \u26a0 ").append(w).append("\n"));
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
+
+    private static Set<Integer> allEntrySections(JsonNode ch, int primaryEntry) {
+        Set<Integer> entries = new LinkedHashSet<>();
+        entries.add(primaryEntry);
+        JsonNode branches = ch.path("gates").path("entryGate").path("branches");
+        if (branches.isArray()) {
+            for (JsonNode br : branches) {
+                int brEntry = br.path("entrySection").asInt(-1);
+                if (brEntry > 0) entries.add(brEntry);
+            }
+        }
+        return entries;
     }
 }
