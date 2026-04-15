@@ -5,7 +5,7 @@
   "startSection": 1,
   "initialProvisions": 10,
   "scripts": {
-    "onLoad": "state.set('suspicion', 0); state.set('satchelOpened', false); state.set('borderPassType', 'none'); state.set('courierTokenRevealed', false); state.set('spymasterDebt', 0); state.set('guardCaptainBribed', false); state.set('contactAlive', true); state.set('satchelDestination', 'undelivered')",
+    "onLoad": "state.set('suspicion', 0); state.set('satchelOpened', false); state.set('spymasterDebt', 0); state.set('contactAlive', true)",
     "onStart": "ctx.showMessage('The Iron Road stretches before you — three kingdoms, countless enemies, and a sealed satchel whose contents could end you.')"
   },
   "items": [

@@ -28,14 +28,14 @@ The Iron Road was authored before the formal pipeline existed. This run validate
 
 | Task | Status | Notes |
 |------|--------|-------|
-| Scaffold review | ⬜ Pending | |
+| Scaffold review | ✅ APPROVED | Load check PASS. All structural and gate contract checks passed. Two advisories fixed: `onLoad` cleaned of 4 dead variables; Bribe Purse GAIN gap logged for ch2 review. |
 
 ### Phase 3: Per-Chapter Review
 
 | Chapter | Author review | Chapter Reviewer | Verdict | Notes |
 |---------|---------------|-----------------|---------|-------|
 | ch1 [§1–§40] | ✅ Authored | ⬜ Pending | — | |
-| ch2 [§41–§90] | ✅ Authored | ⬜ Pending | — | |
+| ch2 [§41–§90] | ✅ Authored | ⬜ Pending | — | Bribe Purse has no ITEM_GAIN — must be added |
 | ch3 [§91–§130] | ✅ Authored | ⬜ Pending | — | |
 | ch4 [§131–§170] | ✅ Authored | ⬜ Pending | — | `satchelOpened` not consumed by ending sections |
 
