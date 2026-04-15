@@ -154,22 +154,26 @@ Each chapter is allocated a non-overlapping section number range by the Architec
 
 ---
 
-## Phase 4: Cross-Adventure Consistency Check (optional)
+## Phase 4: Cross-Adventure Consistency Check
 
-Per-chapter structural and gate checks are handled by the Chapter Reviewer Agent during Phase 3. This optional phase addresses issues that only become visible when all chapters exist together.
+Per-chapter structural and gate checks are handled by the Chapter Reviewer Agent during Phase 3. This phase addresses issues that only become visible when all chapters exist together: chain integrity, item lifecycle continuity, and cross-chapter state variable handoff.
 
-A consistency checker agent reads all authored sections and the final manifest. It focuses on:
+**Agent:** [`workflow/agents/consistency-check-agent.md`](agents/consistency-check-agent.md)
 
-| Check | What it looks for |
-|-------|------------------|
-| Cross-chapter narrative consistency | Characters or locations that appear inconsistently across chapter boundaries |
-| Tone and pacing | Narrative drift — chapters that feel tonally disconnected from each other |
-| State variable naming | Variables set in early chapters and read in later chapters use consistent names |
-| Unused manifest entries | Items, characters, or locations declared in the manifest but never referenced in any section |
+**Steps:**
 
-Structural checks (dangling references, orphaned sections, gate fulfilment) are already enforced by `AdventureValidationTest` and `ChapterValidationTest` and do not need repeating here. Run `mvn test` to confirm all automated checks pass before invoking this agent.
+1. Regenerate all four report files to ensure they reflect the latest JSON:
+   ```
+   mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureReportGenerator -Dexec.args="adventures/<id>.json"
+   mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureStateReport    -Dexec.args="adventures/<id>.json"
+   mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureItemReport      -Dexec.args="adventures/<id>.json"
+   mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureGateDigest      -Dexec.args="adventures/<id>.json"
+   ```
+2. Invoke the Consistency Check Agent with the adventure ID.
+3. If **APPROVED**: proceed to Phase 5.
+4. If **NEEDS FIXES**: route each finding to the Adventure Author Agent for the responsible chapter. After fixes, re-run the Chapter Reviewer Agent for that chapter, then re-run the Consistency Check Agent.
 
-The consistency checker reports issues but does not fix them. Issues are routed back to the relevant chapter author for correction.
+The agent reads the four report files and the manifest. It does not open the raw adventure JSON unless a specific prose check requires it.
 
 ---
 

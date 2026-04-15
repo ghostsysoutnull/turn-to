@@ -60,6 +60,7 @@ See [`workflow/ADVENTURE-AUTHORING-PIPELINE.md`](workflow/ADVENTURE-AUTHORING-PI
 | Adventure Reviewer | Reviews scaffold before authoring begins | [`workflow/agents/adventure-reviewer-agent.md`](workflow/agents/adventure-reviewer-agent.md) |
 | Adventure Author | Authors one chapter per invocation | [`workflow/agents/adventure-author-agent.md`](workflow/agents/adventure-author-agent.md) |
 | Chapter Reviewer | Reviews each chapter immediately after authoring | [`workflow/agents/chapter-reviewer-agent.md`](workflow/agents/chapter-reviewer-agent.md) |
+| Consistency Check | Cross-chapter chain integrity after all chapters are approved | [`workflow/agents/consistency-check-agent.md`](workflow/agents/consistency-check-agent.md) |
 
 ## Tech Stack
 
