@@ -21,16 +21,27 @@ User review of scaffold
 Load check gate             — JsonAdventureLoader.load() against the skeleton
  │  fails fast on format mismatches before any content is written
  ▼
-Adventure Author Agents     — one run per chapter, parallel where possible
-Grid Agents                 — one run per grid, parallel where possible
- │  Author: produces chapter sections JSON, manifest additions
- │  Grid:   produces grid cells JSON, manifest additions
+┌─────────────────────────────────────────────────────────────────┐
+│  For each chapter (in dependency order):                        │
+│                                                                 │
+│  Adventure Author Agent    — one run per chapter                │
+│   │  produces: chapter sections JSON, manifest additions        │
+│   ▼                                                             │
+│  Chapter Reviewer Agent    — one run per chapter                │
+│   │  runs: mvn test -Dtest=ChapterValidationTest                │
+│   │  checks: range, references, gate contracts, reachability    │
+│   │  APPROVED → proceed    NEEDS FIXES → back to Author Agent   │
+│   ▼                                                             │
+│  Manifest merge            — add any new manifest entries       │
+└─────────────────────────────────────────────────────────────────┘
+ │
  ▼
-Manifest merge              — collect manifest additions from all agents
+Grid Agents                 — one run per grid, parallel where possible
+ │  produces: grid cells JSON, manifest additions
  ▼
 (optional) Consistency Check Agent
  │  reads: all sections, all grids, manifest
- │  reports: continuity issues, dangling references, unreachable cells
+ │  reports: cross-chapter continuity issues, narrative drift
  ▼
 Final assembly              — merge sections and grids into adventure JSON
  ▼
@@ -94,19 +105,33 @@ If the skeleton fails to load, fix it before proceeding. Item definitions, chapt
 
 ## Phase 3: Adventure Author Agents and Grid Agents
 
-**Invocation**: one run per chapter (Author Agent) or per grid (Grid Agent). Units with no incoming manifest dependencies can run in parallel. Author Agents and Grid Agents may run concurrently with each other.
+**Invocation**: one Author Agent run per chapter, in dependency order. Grid Agents run per grid. Units with no incoming manifest dependencies can run in parallel with each other. Author Agents and Grid Agents may run concurrently.
+
+### Per-chapter review loop
+
+Each chapter goes through a tight author → review loop before the next chapter begins:
+
+1. **Author Agent** writes the chapter sections JSON and structured summary.
+2. **Chapter Reviewer Agent** runs immediately after:
+   - Executes `mvn test -Dtest=AdventureValidationTest,ChapterValidationTest`
+   - Reviews gate contracts, reference integrity, reachability, and narrative alignment.
+   - Returns **APPROVED** or **NEEDS FIXES** with section-level detail.
+3. If **NEEDS FIXES**: route the review report back to the Author Agent. Repeat from step 1.
+4. If **APPROVED**: update the manifest (step below), then proceed to the next chapter.
+
+This loop catches problems before downstream chapters are authored against a broken gate. A gate contract error found in chapter 2 review costs one rewrite; the same error found after all four chapters are written costs four.
 
 ### Dependency order
 
-A chapter or grid may be authored in parallel with another unit if and only if:
-- Its gate/arrival contract does not reference any item, character, or state introduced by a unit that has not yet been authored.
-- Its manifest dependencies (items it references) are already declared in the manifest.
+A chapter may be authored once all chapters it depends on have been **APPROVED**:
+- Its gate-in contract does not assume state introduced by a chapter that is not yet approved.
+- Its manifest dependencies are already declared in the manifest.
 
-The Architect's structured summary includes a "Ready for Authoring" list identifying which units can start immediately and which must wait.
+The Architect's structured summary includes a "Ready for Authoring" list identifying which chapters can start immediately and which must wait.
 
 ### Manifest update protocol
 
-After each chapter author completes:
+After each chapter is **APPROVED** by the Chapter Reviewer:
 
 1. Collect the `## Manifest Updates` section from the author's structured summary.
 2. Add any new items, characters, or locations to `adventures/<id>-manifest.json`.
@@ -120,17 +145,20 @@ Each chapter is allocated a non-overlapping section number range by the Architec
 
 ---
 
-## Phase 4: Consistency Check (optional)
+## Phase 4: Cross-Adventure Consistency Check (optional)
 
-A consistency checker agent reads all authored sections and the final manifest. It checks for:
+Per-chapter structural and gate checks are handled by the Chapter Reviewer Agent during Phase 3. This optional phase addresses issues that only become visible when all chapters exist together.
+
+A consistency checker agent reads all authored sections and the final manifest. It focuses on:
 
 | Check | What it looks for |
 |-------|------------------|
-| Dangling references | `targetSection` values that do not exist in any chapter's sections |
-| Orphaned sections | Sections that are never the target of any choice or navigation event |
-| Item continuity | Items referenced in sections that are not in the manifest or `items` list |
-| Gate fulfilment | Exit sections that do not satisfy their chapter's out-contract conditions |
-| Narrative consistency | Characters or locations that appear inconsistently across chapters |
+| Cross-chapter narrative consistency | Characters or locations that appear inconsistently across chapter boundaries |
+| Tone and pacing | Narrative drift — chapters that feel tonally disconnected from each other |
+| State variable naming | Variables set in early chapters and read in later chapters use consistent names |
+| Unused manifest entries | Items, characters, or locations declared in the manifest but never referenced in any section |
+
+Structural checks (dangling references, orphaned sections, gate fulfilment) are already enforced by `AdventureValidationTest` and `ChapterValidationTest` and do not need repeating here. Run `mvn test` to confirm all automated checks pass before invoking this agent.
 
 The consistency checker reports issues but does not fix them. Issues are routed back to the relevant chapter author for correction.
 
@@ -177,6 +205,7 @@ The target range per chapter is **30–60 sections**. An agent authoring more th
 |-------|----------------|
 | Adventure Architect | `workflow/agents/adventure-architect-agent.md` |
 | Adventure Author | `workflow/agents/adventure-author-agent.md` |
+| Chapter Reviewer | `workflow/agents/chapter-reviewer-agent.md` |
 | Grid Agent | `workflow/agents/grid-agent.md` |
 
 ---
@@ -205,6 +234,20 @@ Task: Write all sections for chapter <id> of adventure <adventure-id>.
 - Manifest: adventures/<adventure-id>-manifest.json
 - Your chapter id: <id>
 - Your section range: <from>–<to>
+```
+
+## How to Invoke a Chapter Reviewer Agent
+
+```
+You are the Chapter Reviewer Agent for TAS Neo. Your role, responsibilities,
+and boundaries are defined in workflow/agents/chapter-reviewer-agent.md — read it first.
+
+Task: Review chapter <id> of adventure <adventure-id>, which was just authored.
+
+- Adventure file: adventures/<adventure-id>.json
+- Manifest: adventures/<adventure-id>-manifest.json
+- Chapter id under review: <id>
+- Section range: <from>–<to>
 ```
 
 ## How to Invoke a Grid Agent
