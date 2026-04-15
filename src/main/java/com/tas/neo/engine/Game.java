@@ -118,7 +118,7 @@ public class Game {
         if (state.isTerminal()) return;
 
         for (SectionEvent event : section.events()) {
-            hooks.processEvent(event);
+            hooks.processEvent(event, adventure);
             if (state.isTerminal()) return;
         }
 
@@ -193,7 +193,7 @@ public class Game {
         if (state.isTerminal()) return;
 
         for (SectionEvent event : cell.events()) {
-            hooks.processEvent(event);
+            hooks.processEvent(event, adventure);
             if (state.isTerminal()) return;
         }
 

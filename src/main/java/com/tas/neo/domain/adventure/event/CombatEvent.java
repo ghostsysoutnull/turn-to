@@ -11,5 +11,7 @@ public record CombatEvent(
     List<Creature> opponents,
     boolean simultaneous,
     Map<String, Object> params,
-    ScriptBlock scripts
+    ScriptBlock scripts,
+    int successSection,
+    int failureSection
 ) implements SectionEvent {}

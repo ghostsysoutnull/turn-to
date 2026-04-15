@@ -100,12 +100,12 @@ public class HookDispatcher {
         // stub — item hook dispatch handled when item layer is implemented
     }
 
-    public CombatOutcome processCombatEvent(CombatEvent event) {
-        // stub
-        return null;
+    /** Convenience overload for tests and contexts where navigation is not needed. */
+    public void processEvent(SectionEvent event) {
+        processEvent(event, null);
     }
 
-    public void processEvent(SectionEvent event) {
+    public void processEvent(SectionEvent event, Adventure adventure) {
         switch (event) {
             case StatChangeEvent e -> {
                 state.player().modifyAttribute(e.attribute(), e.delta());
@@ -122,18 +122,46 @@ public class HookDispatcher {
                     state.player().getInventory().remove(e.itemName(), e.quantity());
                 }
             }
-            case NavigateEvent e -> {
-                // Navigation will be resolved by Game loop; record intent by setting state if needed.
-                // The Game loop checks for state.isTerminal() after each event.
-                // NavigateEvent is a signal to the game loop — handled there.
-            }
+            case NavigateEvent e -> navigateTo(adventure, e.targetSection());
             case LuckTestEvent e -> {
-                // Luck test outcome resolved by mechanics layer; stub for now.
+                int roll = dice.roll2d6();
+                int luck = state.player().getLuck();
+                state.player().modifyAttribute(AttributeType.LUCK, -1);
+                navigateTo(adventure, roll <= luck ? e.successSection() : e.failSection());
             }
             case SkillTestEvent e -> {
-                // Skill test outcome resolved by mechanics layer; stub for now.
+                int roll = dice.roll2d6();
+                int skill = state.player().getSkill();
+                navigateTo(adventure, roll <= skill ? e.successSection() : e.failSection());
             }
-            case CombatEvent e -> processCombatEvent(e);
+            case CombatEvent e -> {
+                CombatOutcome outcome = combatRegistry.get(e.system()).run(
+                    state.player(), state.activePartyMembers(),
+                    e.opponents(), e.params(),
+                    combatRegistry, this, input, output, dice);
+                if (outcome.navigateTo().isPresent()) {
+                    navigateTo(adventure, outcome.navigateTo().get());
+                } else if (outcome.type() == com.tas.neo.domain.combat.CombatOutcomeType.DEFEAT) {
+                    if (e.failureSection() > 0) {
+                        navigateTo(adventure, e.failureSection());
+                    } else {
+                        state.setGameOver();
+                    }
+                } else if (e.successSection() > 0
+                           && outcome.type() == com.tas.neo.domain.combat.CombatOutcomeType.VICTORY) {
+                    navigateTo(adventure, e.successSection());
+                }
+                if (!state.player().isAlive()) state.setGameOver();
+            }
+        }
+    }
+
+    private void navigateTo(Adventure adventure, int sectionNumber) {
+        if (adventure == null) return;
+        try {
+            state.navigateTo(adventure.getSection(sectionNumber));
+        } catch (IllegalArgumentException e) {
+            state.setGameOver();
         }
     }
 

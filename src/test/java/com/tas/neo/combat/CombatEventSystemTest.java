@@ -76,7 +76,7 @@ class CombatEventSystemTest {
             List.of(new Creature("Goblin", 5, 2)),
             false,
             Map.of(),
-            new ScriptBlock(Map.of())
+            new ScriptBlock(Map.of()), 0, 0
         );
 
         assertThat(event.system())
@@ -96,7 +96,7 @@ class CombatEventSystemTest {
             List.of(new Creature("Goblin", 5, 2)),
             false,
             Map.of(),
-            new ScriptBlock(Map.of())
+            new ScriptBlock(Map.of()), 0, 0
         );
 
         // The system field is null — the loader has not normalised it yet.
@@ -118,7 +118,7 @@ class CombatEventSystemTest {
 
         CombatEvent event = new CombatEvent(
             "personal", List.of(), List.of(new Creature("Goblin", 5, 2)),
-            false, Map.of(), new ScriptBlock(Map.of())
+            false, Map.of(), new ScriptBlock(Map.of()), 0, 0
         );
 
         assertThat(registry.has(event.system()))
@@ -147,7 +147,7 @@ class CombatEventSystemTest {
             List.of(new Creature("Goblin", 5, 2)),
             false,
             Map.of(),
-            new ScriptBlock(Map.of())
+            new ScriptBlock(Map.of()), 0, 0
         );
 
         // The participant id in the event must match the party member id —
@@ -168,7 +168,7 @@ class CombatEventSystemTest {
             List.of(),
             false,
             Map.of(),
-            new ScriptBlock(Map.of())
+            new ScriptBlock(Map.of()), 0, 0
         );
 
         assertThat(event.participantIds())
@@ -197,7 +197,7 @@ class CombatEventSystemTest {
             List.of(new Creature("Goblin", 5, 2)),
             false,
             Map.of(),
-            new ScriptBlock(Map.of())
+            new ScriptBlock(Map.of()), 0, 0
         );
 
         List<PartyMember> resolved = event.participantIds().stream()
@@ -217,7 +217,7 @@ class CombatEventSystemTest {
     void combat_event_exposes_opponents_list() {
         Creature goblin = new Creature("Goblin", 5, 2);
         CombatEvent event = new CombatEvent(
-            "personal", List.of(), List.of(goblin), false, Map.of(), new ScriptBlock(Map.of())
+            "personal", List.of(), List.of(goblin), false, Map.of(), new ScriptBlock(Map.of()), 0, 0
         );
 
         assertThat(event.opponents())
@@ -229,7 +229,7 @@ class CombatEventSystemTest {
     void combat_event_exposes_params_map() {
         CombatEvent event = new CombatEvent(
             "naval", List.of(), List.of(), false,
-            Map.of("enemyCrew", 12), new ScriptBlock(Map.of())
+            Map.of("enemyCrew", 12), new ScriptBlock(Map.of()), 0, 0
         );
 
         assertThat(event.params())
@@ -240,9 +240,9 @@ class CombatEventSystemTest {
     @Test
     void combat_event_simultaneous_flag_is_exposed() {
         CombatEvent sequential = new CombatEvent(
-            "personal", List.of(), List.of(), false, Map.of(), new ScriptBlock(Map.of()));
+            "personal", List.of(), List.of(), false, Map.of(), new ScriptBlock(Map.of()), 0, 0);
         CombatEvent simultaneous = new CombatEvent(
-            "personal", List.of(), List.of(), true, Map.of(), new ScriptBlock(Map.of()));
+            "personal", List.of(), List.of(), true, Map.of(), new ScriptBlock(Map.of()), 0, 0);
 
         assertThat(sequential.simultaneous())
             .as("non-simultaneous CombatEvent must expose simultaneous = false")
@@ -268,7 +268,7 @@ class CombatEventSystemTest {
         Player player = strongPlayer();
         CombatEvent event = new CombatEvent(
             "personal", List.of(), List.of(new Creature("Goblin", 5, 2)),
-            false, Map.of(), new ScriptBlock(Map.of())
+            false, Map.of(), new ScriptBlock(Map.of()), 0, 0
         );
 
         CombatSystem system = registry.get(event.system());

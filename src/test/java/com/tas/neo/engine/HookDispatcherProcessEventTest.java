@@ -224,12 +224,43 @@ class HookDispatcherProcessEventTest {
 
     @Test
     void processEvent_CombatEvent_does_not_throw() {
+        // Wire a minimal combat registry that returns VICTORY with no navigation.
+        CombatSystemRegistry registry = new CombatSystemRegistry() {
+            @Override
+            public com.tas.neo.combat.CombatSystem get(String id) {
+                return new com.tas.neo.combat.CombatSystem() {
+                    @Override public String id() { return id; }
+                    @Override
+                    public com.tas.neo.domain.combat.CombatOutcome run(
+                            com.tas.neo.domain.player.Player player,
+                            java.util.List<com.tas.neo.domain.party.PartyMember> participants,
+                            java.util.List<com.tas.neo.domain.combat.Creature> opponents,
+                            java.util.Map<String, Object> params,
+                            com.tas.neo.combat.CombatSystemRegistry reg,
+                            com.tas.neo.engine.HookDispatcher hooks,
+                            com.tas.neo.io.GameInput inp,
+                            com.tas.neo.io.GameOutput out,
+                            com.tas.neo.mechanics.Dice dice) {
+                        return new com.tas.neo.domain.combat.CombatOutcome(
+                            com.tas.neo.domain.combat.CombatOutcomeType.VICTORY,
+                            java.util.Optional.empty());
+                    }
+                };
+            }
+            @Override public boolean has(String id) { return true; }
+        };
+        HookDispatcher d = new HookDispatcher(
+            new com.tas.neo.scripting.NoOpScriptEngine(),
+            new com.tas.neo.io.ScriptedInput(), output, state,
+            new com.tas.neo.scripting.AdventureScriptState(),
+            registry, new com.tas.neo.mechanics.FixedDice(3));
+
         CombatEvent event = new CombatEvent(
             "personal", List.of(), List.of(),
-            false, Map.of(), ScriptBlock.empty()
+            false, Map.of(), ScriptBlock.empty(), 0, 0
         );
 
-        // Must not throw (combat may not be fully resolved in stub form, but must not crash)
-        dispatcher.processEvent(event);
+        // Must not throw
+        d.processEvent(event);
     }
 }

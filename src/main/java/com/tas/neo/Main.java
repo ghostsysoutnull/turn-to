@@ -23,16 +23,17 @@ import java.nio.file.Path;
 public class Main {
 
     public static void main(String[] args) {
+        String adventureId = args.length > 0 ? args[0] : "the-warlock-of-firetop-mountain";
         Dice dice                           = new RandomDice();
         GameInput input                     = new TerminalInput(System.in, System.out);
         GameOutput output                   = new TerminalOutput(System.out);
-        GameLogger logger                   = new FileGameLogger("the-warlock-of-firetop-mountain", Path.of("sessions"));
+        GameLogger logger                   = new FileGameLogger(adventureId, Path.of("sessions"));
         ScriptEngine scriptEngine           = new LuaScriptEngine();
         AdventureLoader loader              = new JsonAdventureLoader(Path.of("adventures"));
         CombatSystemRegistry combatRegistry = new DefaultCombatSystemRegistry(
             new PersonalCombatSystem(new CombatEngine(dice, input, output))
         );
         Game game = new Game(input, output, loader, dice, scriptEngine, combatRegistry, logger);
-        game.run("the-warlock-of-firetop-mountain");
+        game.run(adventureId);
     }
 }

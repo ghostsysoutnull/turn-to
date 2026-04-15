@@ -127,24 +127,48 @@ public class JsonAdventureLoader implements AdventureLoader {
                 int qty = node.path("quantity").asInt(1);
                 yield new ItemEvent(itemName, action, qty);
             }
+            case "ITEM_GAIN" -> {
+                String itemName = node.path("itemName").isMissingNode()
+                        ? requireText(node, "item") : requireText(node, "itemName");
+                int qty = node.path("quantity").asInt(1);
+                yield new ItemEvent(itemName, ItemAction.GAIN, qty);
+            }
+            case "ITEM_LOSS" -> {
+                String itemName = node.path("itemName").isMissingNode()
+                        ? requireText(node, "item") : requireText(node, "itemName");
+                int qty = node.path("quantity").asInt(1);
+                yield new ItemEvent(itemName, ItemAction.LOSS, qty);
+            }
             case "COMBAT" -> {
                 String system = node.path("system").isMissingNode() || node.path("system").isNull()
                         ? "personal" : node.path("system").asText("personal");
                 boolean simultaneous = node.path("simultaneous").asBoolean(false);
                 List<String> participants = parseStringList(node.path("participants"));
-                List<Creature> opponents = parseCreatures(node.path("opponents"));
+                List<Creature> opponents;
+                if (!node.path("enemy").isMissingNode()) {
+                    opponents = parseCreatures(node.path("enemy"));
+                } else {
+                    opponents = parseCreatures(node.path("opponents"));
+                }
                 Map<String, Object> params = parseParams(node.path("params"));
                 ScriptBlock scripts = parseScriptBlock(node.path("scripts"));
-                yield new CombatEvent(system, participants, opponents, simultaneous, params, scripts);
+                int successSection = node.path("successSection").asInt(0);
+                int failureSection = node.path("failureSection").isMissingNode()
+                        ? node.path("failSection").asInt(0)
+                        : node.path("failureSection").asInt(0);
+                yield new CombatEvent(system, participants, opponents, simultaneous, params, scripts,
+                        successSection, failureSection);
             }
             case "LUCK_TEST" -> {
                 int success = node.get("successSection").asInt();
-                int fail = node.get("failSection").asInt();
+                int fail = node.path("failSection").isMissingNode()
+                        ? node.get("failureSection").asInt() : node.get("failSection").asInt();
                 yield new LuckTestEvent(success, fail);
             }
             case "SKILL_TEST" -> {
                 int success = node.get("successSection").asInt();
-                int fail = node.get("failSection").asInt();
+                int fail = node.path("failSection").isMissingNode()
+                        ? node.get("failureSection").asInt() : node.get("failSection").asInt();
                 yield new SkillTestEvent(success, fail);
             }
             case "NAVIGATE" -> {
@@ -172,6 +196,10 @@ public class JsonAdventureLoader implements AdventureLoader {
 
     private List<Creature> parseCreatures(JsonNode node) {
         if (node.isMissingNode() || node.isNull()) return List.of();
+        if (node.isObject()) {
+            return List.of(new Creature(node.path("name").asText(),
+                    node.path("skill").asInt(), node.path("stamina").asInt()));
+        }
         List<Creature> result = new ArrayList<>();
         for (JsonNode cn : node) {
             result.add(new Creature(cn.path("name").asText(), cn.path("skill").asInt(), cn.path("stamina").asInt()));
@@ -204,13 +232,17 @@ public class JsonAdventureLoader implements AdventureLoader {
     private Condition parseCondition(JsonNode node) throws AdventureLoadException {
         String type = requireText(node, "type");
         return switch (type) {
-            case "HAS_ITEM" -> new HasItemCondition(requireText(node, "itemName"));
-            case "LACKS_ITEM" -> new LacksItemCondition(requireText(node, "itemName"));
+            case "HAS_ITEM" -> new HasItemCondition(itemNameFrom(node));
+            case "LACKS_ITEM" -> new LacksItemCondition(itemNameFrom(node));
             case "STAT" -> new StatCondition(
                     AttributeType.valueOf(requireText(node, "attribute")),
                     ComparisonType.valueOf(requireText(node, "comparison")),
                     node.get("threshold").asInt());
-            case "GOLD" -> new GoldCondition(node.get("minimum").asInt());
+            case "GOLD", "HAS_GOLD" -> {
+                int minimum = node.path("minimum").isMissingNode()
+                        ? node.get("amount").asInt() : node.get("minimum").asInt();
+                yield new GoldCondition(minimum);
+            }
             case "PARTY_STAT" -> new PartyStatCondition(
                     requireText(node, "memberId"), requireText(node, "statName"),
                     ComparisonType.valueOf(requireText(node, "comparison")),
@@ -383,6 +415,12 @@ public class JsonAdventureLoader implements AdventureLoader {
         return result;
     }
 
+    private String itemNameFrom(JsonNode node) throws AdventureLoadException {
+        if (node.has("itemName") && !node.get("itemName").isNull()) return node.get("itemName").asText();
+        if (node.has("item") && !node.get("item").isNull()) return node.get("item").asText();
+        throw new AdventureLoadException("Missing required field: itemName");
+    }
+
     private String requireText(JsonNode node, String field) throws AdventureLoadException {
         if (!node.has(field) || node.get(field).isNull()) {
             throw new AdventureLoadException("Missing required field: " + field);
@@ -451,7 +489,11 @@ public class JsonAdventureLoader implements AdventureLoader {
         if (section.type == SectionType.NORMAL) {
             boolean hasChoices = !section.choices.isEmpty();
             boolean hasNavigateEvent = section.events.stream()
-                    .anyMatch(e -> e.event instanceof NavigateEvent);
+                    .anyMatch(e -> e.event instanceof NavigateEvent
+                               || e.event instanceof LuckTestEvent
+                               || e.event instanceof SkillTestEvent
+                               || (e.event instanceof CombatEvent ce
+                                   && (ce.successSection() > 0 || ce.failureSection() > 0)));
             boolean hasOnEnterScript = section.scripts.get("onEnter").isPresent();
             if (!hasChoices && !hasNavigateEvent && !hasOnEnterScript) {
                 throw new AdventureLoadException(

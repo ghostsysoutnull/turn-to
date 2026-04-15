@@ -71,7 +71,8 @@ class SectionEventTest {
             List.of(goblin),
             false,
             params,
-            scripts
+            scripts,
+            0, 0
         );
 
         assertThat(e.system()).isEqualTo("personal");
@@ -91,7 +92,7 @@ class SectionEventTest {
             new SkillTestEvent(1, 2),
             new NavigateEvent(3),
             new GoldChangeEvent(10),
-            new CombatEvent("personal", List.of(), List.of(), false, Map.of(), ScriptBlock.empty())
+            new CombatEvent("personal", List.of(), List.of(), false, Map.of(), ScriptBlock.empty(), 0, 0)
         };
 
         assertThat(events).hasSize(7);
