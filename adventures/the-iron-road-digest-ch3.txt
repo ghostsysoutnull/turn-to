@@ -44,9 +44,9 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
   He receives your refusal with a small nod, as if it confirms something he expected....
   hooks:  onEnter
 
-[§104] NORMAL          →§130
+[§104] VICTORY       
   He takes the satchel without ceremony....
-  hooks:  onEnter
+  events: -Sealed Satchel  GOLD+20
 
 [§105] NORMAL          →§106,§103
   You tell him you need time to consider....

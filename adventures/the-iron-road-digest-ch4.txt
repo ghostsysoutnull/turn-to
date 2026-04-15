@@ -106,6 +106,7 @@ Generated: 2026-04-15  |  Range: §131–§170  |  Entry: §131
 [§158] NORMAL          →§159,§170
   The Courier's Contact is an elderly person of indeterminate rank, dressed in the quiet grey of a senior official, who rises when you enter w...
   conds:  [HAS:Sealed Satchel]→§159:"Hand over the Sealed Satchel"  [LACKS:Sealed Satchel]→§170:"Tell them the satchel no longer exists"
+  hooks:  onEnter
 
 [§159] VICTORY       
   You place the Sealed Satchel on the table between you....
@@ -114,6 +115,7 @@ Generated: 2026-04-15  |  Range: §131–§170  |  Entry: §131
 [§160] NORMAL          →§161,§170,§162
   The Contact is not there....
   conds:  [HAS:Sealed Satchel]→§161:"Hand over the Sealed Satchel to the intelligence officer"  [LACKS:Sealed Satchel]→§170:"Tell him the satchel no longer exists"
+  hooks:  onEnter
 
 [§161] VICTORY       
   You hand over the satchel....
