@@ -2,7 +2,10 @@ package com.tas.neo.engine;
 
 import com.tas.neo.combat.CombatSystem;
 import com.tas.neo.combat.CombatSystemRegistry;
+import com.tas.neo.domain.adventure.Adventure;
 import com.tas.neo.domain.adventure.ScriptBlock;
+import com.tas.neo.domain.adventure.Section;
+import com.tas.neo.domain.adventure.SectionType;
 import com.tas.neo.domain.adventure.event.CombatEvent;
 import com.tas.neo.domain.adventure.event.GoldChangeEvent;
 import com.tas.neo.domain.adventure.event.ItemAction;
@@ -12,6 +15,8 @@ import com.tas.neo.domain.adventure.event.NavigateEvent;
 import com.tas.neo.domain.adventure.event.SectionEvent;
 import com.tas.neo.domain.adventure.event.SkillTestEvent;
 import com.tas.neo.domain.adventure.event.StatChangeEvent;
+import com.tas.neo.domain.combat.CombatOutcome;
+import com.tas.neo.domain.combat.CombatOutcomeType;
 import com.tas.neo.domain.item.Inventory;
 import com.tas.neo.domain.item.Item;
 import com.tas.neo.domain.item.ItemCategory;
@@ -29,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -78,6 +84,53 @@ class HookDispatcherProcessEventTest {
         attrs.put(AttributeType.SKILL, new Attribute(AttributeType.SKILL, 10, 10));
         attrs.put(AttributeType.LUCK, new Attribute(AttributeType.LUCK, 10, 10));
         return new Player(attrs, new Inventory(), 5, 3);
+    }
+
+    /**
+     * Builds a minimal Adventure containing the given sections with id "test".
+     * Start section is always the number of the first section in the list.
+     */
+    private static Adventure adventureWithSections(Section... sections) {
+        return new Adventure(
+            "test", "Test Adventure", "", sections[0].number(), 0,
+            List.of(sections), List.of(), List.of(), List.of(), List.of(),
+            ScriptBlock.empty()
+        );
+    }
+
+    private static Section normalSection(int number) {
+        return new Section(number, ".", List.of(), List.of(),
+                           SectionType.NORMAL, ScriptBlock.empty());
+    }
+
+    private static Section victorySection(int number) {
+        return new Section(number, "You win.", List.of(), List.of(),
+                           SectionType.VICTORY, ScriptBlock.empty());
+    }
+
+    /**
+     * Builds a HookDispatcher that uses the given dice and the shared
+     * {@code state} and {@code output} fields, with a no-op combat registry.
+     */
+    private HookDispatcher dispatcherWithDice(FixedDice dice) {
+        CombatSystemRegistry noCombat = new CombatSystemRegistry() {
+            @Override public CombatSystem get(String id) {
+                throw new IllegalArgumentException("No combat in this test");
+            }
+            @Override public boolean has(String id) { return false; }
+        };
+        return new HookDispatcher(
+            new NoOpScriptEngine(), new ScriptedInput(), output, state,
+            new AdventureScriptState(), noCombat, dice);
+    }
+
+    /**
+     * Builds a HookDispatcher with the given combat registry and shared state/output.
+     */
+    private HookDispatcher dispatcherWithCombatRegistry(CombatSystemRegistry registry) {
+        return new HookDispatcher(
+            new NoOpScriptEngine(), new ScriptedInput(), output, state,
+            new AdventureScriptState(), registry, new FixedDice(3));
     }
 
     // -----------------------------------------------------------------------
@@ -185,82 +238,165 @@ class HookDispatcherProcessEventTest {
     }
 
     // -----------------------------------------------------------------------
-    // NavigateEvent
+    // NavigateEvent — behavioral: navigates state to target section
     // -----------------------------------------------------------------------
 
     @Test
-    void processEvent_NavigateEvent_does_not_throw() {
-        // NavigateEvent causes immediate section navigation; the event must be handled
-        // without throwing. Correctness of navigation is verified in GameTest.
+    void processEvent_NavigateEvent_navigates_state_to_target_section() {
+        Adventure adventure = adventureWithSections(normalSection(1), normalSection(5));
+        state.navigateTo(adventure.getSection(1));
         NavigateEvent event = new NavigateEvent(5);
 
-        // Must not throw
-        dispatcher.processEvent(event);
+        dispatcherWithDice(new FixedDice(3)).processEvent(event, adventure);
+
+        assertThat(state.currentSection().number())
+            .as("processEvent(NavigateEvent(5)) must navigate state to section 5")
+            .isEqualTo(5);
     }
 
     // -----------------------------------------------------------------------
-    // LuckTestEvent and SkillTestEvent
+    // LuckTestEvent — passing roll: FixedDice(1) → 2d6=2, LUCK=10 → success
     // -----------------------------------------------------------------------
 
     @Test
-    void processEvent_LuckTestEvent_does_not_throw() {
-        LuckTestEvent event = new LuckTestEvent(10, 20);
+    void processEvent_LuckTestEvent_passing_roll_navigates_to_successSection() {
+        // FixedDice(1) → roll2d6() = 1+1 = 2; LUCK=10; 2 <= 10 → success
+        Adventure adventure = adventureWithSections(
+            normalSection(1), victorySection(10), normalSection(20));
+        state.navigateTo(adventure.getSection(1));
 
-        // Must not throw
-        dispatcher.processEvent(event);
+        dispatcherWithDice(new FixedDice(1)).processEvent(new LuckTestEvent(10, 20), adventure);
+
+        assertThat(state.currentSection().number())
+            .as("LuckTestEvent passing roll (2d6=2 <= LUCK=10) must navigate to successSection 10")
+            .isEqualTo(10);
     }
 
     @Test
-    void processEvent_SkillTestEvent_does_not_throw() {
-        SkillTestEvent event = new SkillTestEvent(10, 20);
+    void processEvent_LuckTestEvent_passing_roll_decreases_luck_by_one() {
+        // LUCK starts at 10; after test it must be 9 regardless of outcome
+        Adventure adventure = adventureWithSections(
+            normalSection(1), victorySection(10), normalSection(20));
+        state.navigateTo(adventure.getSection(1));
+        int luckBefore = state.player().getLuck();
 
-        // Must not throw
-        dispatcher.processEvent(event);
+        dispatcherWithDice(new FixedDice(1)).processEvent(new LuckTestEvent(10, 20), adventure);
+
+        assertThat(state.player().getLuck())
+            .as("LuckTestEvent must always decrease LUCK by 1 after the test")
+            .isEqualTo(luckBefore - 1);
     }
 
     // -----------------------------------------------------------------------
-    // CombatEvent
+    // LuckTestEvent — failing roll: FixedDice(6) → 2d6=12, LUCK=10 → failure
     // -----------------------------------------------------------------------
 
     @Test
-    void processEvent_CombatEvent_does_not_throw() {
-        // Wire a minimal combat registry that returns VICTORY with no navigation.
-        CombatSystemRegistry registry = new CombatSystemRegistry() {
+    void processEvent_LuckTestEvent_failing_roll_navigates_to_failSection() {
+        // FixedDice(6) → roll2d6() = 6+6 = 12; LUCK=10; 12 > 10 → failure
+        Adventure adventure = adventureWithSections(
+            normalSection(1), victorySection(10), normalSection(20));
+        state.navigateTo(adventure.getSection(1));
+
+        dispatcherWithDice(new FixedDice(6)).processEvent(new LuckTestEvent(10, 20), adventure);
+
+        assertThat(state.currentSection().number())
+            .as("LuckTestEvent failing roll (2d6=12 > LUCK=10) must navigate to failSection 20")
+            .isEqualTo(20);
+    }
+
+    @Test
+    void processEvent_LuckTestEvent_failing_roll_decreases_luck_by_one() {
+        Adventure adventure = adventureWithSections(
+            normalSection(1), victorySection(10), normalSection(20));
+        state.navigateTo(adventure.getSection(1));
+        int luckBefore = state.player().getLuck();
+
+        dispatcherWithDice(new FixedDice(6)).processEvent(new LuckTestEvent(10, 20), adventure);
+
+        assertThat(state.player().getLuck())
+            .as("LuckTestEvent must always decrease LUCK by 1 even on a failing roll")
+            .isEqualTo(luckBefore - 1);
+    }
+
+    // -----------------------------------------------------------------------
+    // SkillTestEvent — passing roll: FixedDice(1) → 2d6=2, SKILL=10 → success
+    // -----------------------------------------------------------------------
+
+    @Test
+    void processEvent_SkillTestEvent_passing_roll_navigates_to_successSection() {
+        // FixedDice(1) → roll2d6() = 2; SKILL=10; 2 <= 10 → success
+        Adventure adventure = adventureWithSections(
+            normalSection(1), victorySection(10), normalSection(20));
+        state.navigateTo(adventure.getSection(1));
+
+        dispatcherWithDice(new FixedDice(1)).processEvent(new SkillTestEvent(10, 20), adventure);
+
+        assertThat(state.currentSection().number())
+            .as("SkillTestEvent passing roll (2d6=2 <= SKILL=10) must navigate to successSection 10")
+            .isEqualTo(10);
+    }
+
+    // -----------------------------------------------------------------------
+    // SkillTestEvent — failing roll: FixedDice(6) → 2d6=12, SKILL=10 → failure
+    // -----------------------------------------------------------------------
+
+    @Test
+    void processEvent_SkillTestEvent_failing_roll_navigates_to_failSection() {
+        // FixedDice(6) → roll2d6() = 12; SKILL=10; 12 > 10 → failure
+        Adventure adventure = adventureWithSections(
+            normalSection(1), victorySection(10), normalSection(20));
+        state.navigateTo(adventure.getSection(1));
+
+        dispatcherWithDice(new FixedDice(6)).processEvent(new SkillTestEvent(10, 20), adventure);
+
+        assertThat(state.currentSection().number())
+            .as("SkillTestEvent failing roll (2d6=12 > SKILL=10) must navigate to failSection 20")
+            .isEqualTo(20);
+    }
+
+    // -----------------------------------------------------------------------
+    // CombatEvent — victory with successSection navigates to that section
+    // -----------------------------------------------------------------------
+
+    @Test
+    void processEvent_CombatEvent_victory_navigates_to_successSection() {
+        CombatSystemRegistry victoryRegistry = new CombatSystemRegistry() {
             @Override
-            public com.tas.neo.combat.CombatSystem get(String id) {
-                return new com.tas.neo.combat.CombatSystem() {
+            public CombatSystem get(String id) {
+                return new CombatSystem() {
                     @Override public String id() { return id; }
                     @Override
-                    public com.tas.neo.domain.combat.CombatOutcome run(
-                            com.tas.neo.domain.player.Player player,
+                    public CombatOutcome run(
+                            Player player,
                             java.util.List<com.tas.neo.domain.party.PartyMember> participants,
                             java.util.List<com.tas.neo.domain.combat.Creature> opponents,
                             java.util.Map<String, Object> params,
-                            com.tas.neo.combat.CombatSystemRegistry reg,
-                            com.tas.neo.engine.HookDispatcher hooks,
+                            CombatSystemRegistry reg,
+                            HookDispatcher hooks,
                             com.tas.neo.io.GameInput inp,
                             com.tas.neo.io.GameOutput out,
                             com.tas.neo.mechanics.Dice dice) {
-                        return new com.tas.neo.domain.combat.CombatOutcome(
-                            com.tas.neo.domain.combat.CombatOutcomeType.VICTORY,
-                            java.util.Optional.empty());
+                        return new CombatOutcome(CombatOutcomeType.VICTORY, Optional.empty());
                     }
                 };
             }
             @Override public boolean has(String id) { return true; }
         };
-        HookDispatcher d = new HookDispatcher(
-            new com.tas.neo.scripting.NoOpScriptEngine(),
-            new com.tas.neo.io.ScriptedInput(), output, state,
-            new com.tas.neo.scripting.AdventureScriptState(),
-            registry, new com.tas.neo.mechanics.FixedDice(3));
+
+        Adventure adventure = adventureWithSections(
+            normalSection(1), victorySection(30), normalSection(40));
+        state.navigateTo(adventure.getSection(1));
 
         CombatEvent event = new CombatEvent(
             "personal", List.of(), List.of(),
-            false, Map.of(), ScriptBlock.empty(), 0, 0
+            false, Map.of(), ScriptBlock.empty(), 30, 40
         );
 
-        // Must not throw
-        d.processEvent(event);
+        dispatcherWithCombatRegistry(victoryRegistry).processEvent(event, adventure);
+
+        assertThat(state.currentSection().number())
+            .as("processEvent(CombatEvent) with VICTORY outcome and successSection=30 must navigate to section 30")
+            .isEqualTo(30);
     }
 }

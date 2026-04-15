@@ -1,0 +1,138 @@
+{
+  "id": "all-event-types",
+  "title": "All Event Types",
+  "description": "Fixture exercising every event type and condition type with their alias field names.",
+  "startSection": 1,
+  "items": [
+    { "name": "Sword", "description": "A sharp sword.", "category": "PASSIVE", "countable": false },
+    { "name": "Shield", "description": "A sturdy shield.", "category": "PASSIVE", "countable": false }
+  ],
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "ITEM_GAIN section — you find a sword.",
+      "events": [
+        { "type": "ITEM_GAIN", "item": "Sword" }
+      ],
+      "choices": [
+        { "text": "Proceed to ITEM_LOSS", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "NORMAL",
+      "narrative": "ITEM_LOSS section — you drop the sword.",
+      "events": [
+        { "type": "ITEM_LOSS", "item": "Sword" }
+      ],
+      "choices": [
+        { "text": "Proceed to COMBAT", "targetSection": 3 }
+      ]
+    },
+    {
+      "number": 3,
+      "type": "NORMAL",
+      "narrative": "COMBAT section.",
+      "events": [
+        {
+          "type": "COMBAT",
+          "enemy": { "name": "Goblin", "skill": 6, "stamina": 4 },
+          "successSection": 10,
+          "failureSection": 20
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "type": "NORMAL",
+      "narrative": "LUCK_TEST section.",
+      "events": [
+        { "type": "LUCK_TEST", "successSection": 10, "failureSection": 20 }
+      ]
+    },
+    {
+      "number": 5,
+      "type": "NORMAL",
+      "narrative": "SKILL_TEST section.",
+      "events": [
+        { "type": "SKILL_TEST", "successSection": 10, "failureSection": 20 }
+      ]
+    },
+    {
+      "number": 6,
+      "type": "NORMAL",
+      "narrative": "NAVIGATE section.",
+      "events": [
+        { "type": "NAVIGATE", "targetSection": 10 }
+      ]
+    },
+    {
+      "number": 7,
+      "type": "NORMAL",
+      "narrative": "STAT_CHANGE section.",
+      "events": [
+        { "type": "STAT_CHANGE", "attribute": "STAMINA", "delta": -2 }
+      ],
+      "choices": [
+        { "text": "Go to victory", "targetSection": 10 }
+      ]
+    },
+    {
+      "number": 8,
+      "type": "NORMAL",
+      "narrative": "GOLD_CHANGE section.",
+      "events": [
+        { "type": "GOLD_CHANGE", "delta": 5 }
+      ],
+      "choices": [
+        { "text": "Go to victory", "targetSection": 10 }
+      ]
+    },
+    {
+      "number": 9,
+      "type": "NORMAL",
+      "narrative": "Choices with every condition type.",
+      "choices": [
+        {
+          "text": "HAS_ITEM choice (alias: item field)",
+          "targetSection": 10,
+          "condition": { "type": "HAS_ITEM", "item": "Shield" }
+        },
+        {
+          "text": "LACKS_ITEM choice (alias: item field)",
+          "targetSection": 10,
+          "condition": { "type": "LACKS_ITEM", "item": "Shield" }
+        },
+        {
+          "text": "HAS_GOLD choice (alias: amount field)",
+          "targetSection": 10,
+          "condition": { "type": "HAS_GOLD", "amount": 10 }
+        },
+        {
+          "text": "STAT choice",
+          "targetSection": 10,
+          "condition": { "type": "STAT", "attribute": "SKILL", "comparison": "AT_LEAST", "threshold": 5 }
+        },
+        {
+          "text": "STATE_EQUALS choice",
+          "targetSection": 10,
+          "condition": { "type": "STATE_EQUALS", "key": "questPhase", "value": "started" }
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "type": "VICTORY",
+      "narrative": "You have won!"
+    },
+    {
+      "number": 20,
+      "type": "NORMAL",
+      "narrative": "Failure section.",
+      "choices": [
+        { "text": "Try again", "targetSection": 10 }
+      ]
+    }
+  ]
+}

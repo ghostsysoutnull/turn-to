@@ -18,6 +18,9 @@ Adventure Architect Agent   — one run, whole adventure
 User review of scaffold
  │  (approve or revise chapter plan, gate contracts, grid briefs, manifest)
  ▼
+Load check gate             — JsonAdventureLoader.load() against the skeleton
+ │  fails fast on format mismatches before any content is written
+ ▼
 Adventure Author Agents     — one run per chapter, parallel where possible
 Grid Agents                 — one run per grid, parallel where possible
  │  Author: produces chapter sections JSON, manifest additions
@@ -72,6 +75,20 @@ The user provides a design brief before invoking the Architect agent. The brief 
 - Structured summary: chapter plan table, cross-chapter item list, authoring dependency order.
 
 **User review gate**: the user reviews the scaffold before any chapter authoring begins. Changes to gate contracts or section allocations after authoring has started are expensive — a gate change may require rewriting sections in the affected chapters.
+
+**Load check gate**: before any chapter authoring begins, run `JsonAdventureLoader` against the skeleton JSON and verify it loads without error:
+
+```
+mvn exec:java -Dexec.mainClass=com.tas.neo.loader.JsonAdventureLoader \
+  -Dexec.args="adventures/<id>.json" 2>&1 | grep -i "error\|fail\|exception"
+```
+
+Or from a test:
+```java
+new JsonAdventureLoader(Path.of("adventures")).load("<id>");
+```
+
+If the skeleton fails to load, fix it before proceeding. Item definitions, chapter structure, and script stubs must all parse cleanly. This catches format mismatches between the Architect's output and the loader's expectations before any content is written.
 
 ---
 
