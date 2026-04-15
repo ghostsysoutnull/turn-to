@@ -2,10 +2,10 @@ package com.tas.neo.domain.log;
 
 import java.util.List;
 
-public record SessionLog<E>(
+public record SessionLog(
     String adventureId,
     List<NavigationEntry> path,
-    List<E> events,
+    List<Object> events,
     List<GameError> errors,
     String result,
     int stepsCount

@@ -59,6 +59,21 @@ public interface ScriptContext {
 
 `ctx.hideChoice(id)` removes the choice with the matching `id` from the mutable list. No-op if the id is not found or was already removed by a declarative condition.
 
+`DefaultScriptContext` is constructed via static factory methods — never directly:
+
+```java
+public class DefaultScriptContext implements ScriptContext {
+    public static DefaultScriptContext forSection(Player player, GameState state,
+                                                   GameOutput output, List<Choice> choices);
+    public static DefaultScriptContext forChoices(Player player, GameState state,
+                                                   GameOutput output, List<Choice> choices);
+    public static DefaultScriptContext forCell(Player player, GameState state,
+                                               GameOutput output, List<Choice> choices);
+}
+```
+
+`forChoices` produces a context where `navigateTo` throws `UnsupportedOperationException` and `addChoice`/`hideChoice` are permitted. `forSection` and `forCell` permit `navigateTo` but block `addChoice`. `forCell` sets `currentSection()` to return `-1`.
+
 ---
 
 ## AdventureScriptState
@@ -92,6 +107,18 @@ Carried by `Adventure`, `Section`, `Item`, and `CombatEvent`. A missing hook ent
 
 ---
 
+## Hook Enums
+
+```java
+public enum AdventureHook { ON_LOAD, ON_START, ON_VICTORY }
+public enum SectionHook   { ON_ENTER, ON_CHOICES, ON_EXIT }
+public enum CombatHook    { ON_COMBAT_START, ON_COMBAT_END }
+```
+
+These live in `com.tas.neo.engine`. The string key stored in `ScriptBlock.hooks` matches the enum name in lower-snake-case: `ON_ENTER` → `"onEnter"`, `ON_COMBAT_START` → `"onCombatStart"`. `HookDispatcher` converts enum to key via a small private helper.
+
+---
+
 ## HookDispatcher
 
 Single point of contact between the engine and the scripting layer. Builds the correct `ScriptContext` for each hook point and calls `ScriptEngine.execute`.
@@ -122,6 +149,9 @@ A thin wrapper returned to scripts via `ctx.getPartyMember(id)`. Exposes a Lua-f
 
 ```java
 public class PartyMemberProxy {
+    public static PartyMemberProxy of(PartyMember member);   // wraps a known member
+    public static PartyMemberProxy unknown(String id);       // no-op proxy for absent member
+
     public void modifyStat(String name, int delta);
     public int getStat(String name);
     public int getMaxStat(String name);
@@ -130,7 +160,7 @@ public class PartyMemberProxy {
 }
 ```
 
-If the requested id is unknown, the proxy silently no-ops all mutation calls, returns `false` for boolean queries, and returns `0` for numeric queries.
+`PartyMemberProxy.unknown(id)` silently no-ops all mutation calls, returns `false` for boolean queries, and returns `0` for numeric queries. `DefaultScriptContext.getPartyMember(id)` returns `PartyMemberProxy.unknown(id)` when the id is not in `GameState`.
 
 ---
 

@@ -52,6 +52,8 @@ public record PlayerSnapshot(
 
 `of(GameState)` is a factory that reads the current state. `inventory` contains item names only (no quantities) — sufficient for error diagnosis.
 
+**Layer note:** `PlayerSnapshot` lives in `domain.log` but its `of(GameState)` factory references `engine.GameState`. This is an accepted one-directional exception: `PlayerSnapshot` is a pure data record that captures state; the factory is the only engine dependency and is small enough to justify keeping it co-located with the record rather than adding an adapter layer.
+
 ---
 
 ## GameError
@@ -74,10 +76,10 @@ public record GameError(
 The complete in-memory record of a run.
 
 ```java
-public record SessionLog<E>(
+public record SessionLog(
     String adventureId,
     List<NavigationEntry> path,
-    List<E> events,
+    List<Object> events,
     List<GameError> errors,
     String result,
     int stepsCount
@@ -86,7 +88,7 @@ public record SessionLog<E>(
 
 `result` is `"VICTORY"`, `"GAME_OVER"`, or `"ABANDONED"`.
 
-`SessionLog` is generic on the event type to avoid a dependency from `domain.log` onto `io.OutputEvent`. `FileGameLogger` and `RecordingGameLogger` use `SessionLog<OutputEvent>`; tests that have no interest in events use the raw type or `SessionLog<Object>`.
+`events` is typed as `List<Object>` to avoid a dependency from `domain.log` onto `io.OutputEvent`. `FileGameLogger` and `RecordingGameLogger` add `OutputEvent` instances; callers that inspect events cast at the call site.
 
 ---
 

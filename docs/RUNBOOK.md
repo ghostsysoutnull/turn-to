@@ -12,12 +12,12 @@ reports. No manual copying or agent selection required.
 ## Current Position
 
 ```
-Phase : 3 — Scripting + I/O
-Step  : 3.1 + 3.2 — Test Agents (parallel)
+Phase : 4 — Combat systems
+Step  : 4.1 — Test Agent
 Status: TODO
 ```
 
-**Next action:** Dispatch Step 3.1 and Step 3.2 in parallel per the parallel execution rules.
+**Next action:** Invoke Test Agent with the prompt in § Phase 4 › Step 4.1.
 
 ---
 
@@ -28,7 +28,7 @@ Status: TODO
 | 0 | Scaffolding | 0.1 Code | ✅ |
 | 1 | Domain | 1.1 Test · 1.2 Code | ✅ ✅ |
 | 2 | Mechanics | 2.1 Test · 2.2 Code | ✅ ✅ |
-| 3 | Scripting + I/O (parallel) | 3.1 Test-S · 3.2 Test-IO · 3.3 Code-S · 3.4 Code-IO | ⬜ ⬜ ⬜ ⬜ |
+| 3 | Scripting + I/O (parallel) | 3.1 Test-S · 3.2 Test-IO · 3.3 Code-S · 3.4 Code-IO | ✅ ✅ ✅ ✅ |
 | 4 | Combat systems | 4.1 Test · 4.2 Code | ⬜ ⬜ |
 | 5 | Loader | 5.1 Test · 5.2 Code | ⬜ ⬜ |
 | 6 | Engine | 6.1 Test · 6.2 Code | ⬜ ⬜ |

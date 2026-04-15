@@ -267,7 +267,7 @@ public interface CombatSystemRegistry {
 
 ```java
 Dice dice                           = new RandomDice();
-GameInput input                     = new TerminalInput(System.in);
+GameInput input                     = new TerminalInput(System.in, System.out);
 GameOutput output                   = new TerminalOutput(System.out);
 GameLogger logger                   = new FileGameLogger("the-warlock-of-firetop-mountain", Path.of("sessions"));
 ScriptEngine scriptEngine           = new LuaScriptEngine();
