@@ -240,6 +240,22 @@ class SectionGraphTest {
     }
 
     @Test
+    void reachableFrom_multi_start_unions_reachable_sets() {
+        // Sections 1 and 10 are parallel entry points; 2 is only reachable from 1,
+        // 11 is only reachable from 10. Both must appear when seeded from {1, 10}.
+        Section s1  = section(1,  List.of(), List.of(choiceTo(2)),  ScriptBlock.empty());
+        Section s2  = leaf(2);
+        Section s10 = section(10, List.of(), List.of(choiceTo(11)), ScriptBlock.empty());
+        Section s11 = leaf(11);
+        Adventure adv = adventureWith(s1, s2, s10, s11);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        assertThat(graph.reachableFrom(Set.of(1, 10), 1, 11))
+            .as("multi-start BFS must include sections reachable from either start")
+            .containsExactlyInAnyOrder(1, 2, 10, 11);
+    }
+
+    @Test
     void reachableFrom_range_records_exit_targets_in_visited_set() {
         // section 3 in range [1,3] exits to section 10 (outside range)
         Section s1 = section(1, List.of(), List.of(choiceTo(2)), ScriptBlock.empty());

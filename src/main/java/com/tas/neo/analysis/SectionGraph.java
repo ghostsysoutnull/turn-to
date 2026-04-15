@@ -10,6 +10,7 @@ import com.tas.neo.domain.adventure.event.SectionEvent;
 import com.tas.neo.domain.adventure.event.SkillTestEvent;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedHashSet;
@@ -77,18 +78,25 @@ public class SectionGraph {
 
     /** BFS from {@code start} — unbounded, visits all reachable section numbers. */
     public Set<Integer> reachableFrom(int start) {
-        return bfs(start, -1, -1);
+        return bfs(Set.of(start), -1, -1);
     }
 
     /**
      * BFS from {@code start} — stops traversing at sections outside
-     * [{@code rangeFrom}, {@code rangeTo}]. Sections inside the range that are
-     * reachable (including the start even if it lies outside the range) are returned.
-     * Exit targets just beyond the range boundary are recorded in the visited set but
-     * their own successors are not followed.
+     * [{@code rangeFrom}, {@code rangeTo}]. Exit targets just beyond the range
+     * boundary are recorded in the visited set but their successors are not followed.
      */
     public Set<Integer> reachableFrom(int start, int rangeFrom, int rangeTo) {
-        return bfs(start, rangeFrom, rangeTo);
+        return bfs(Set.of(start), rangeFrom, rangeTo);
+    }
+
+    /**
+     * BFS seeded from all sections in {@code starts} simultaneously, bounded to
+     * [{@code rangeFrom}, {@code rangeTo}]. Use this when a chapter has multiple
+     * valid entry points (e.g. branching gate entries).
+     */
+    public Set<Integer> reachableFrom(Set<Integer> starts, int rangeFrom, int rangeTo) {
+        return bfs(starts, rangeFrom, rangeTo);
     }
 
     /** All section numbers present in the adventure. */
@@ -128,11 +136,10 @@ public class SectionGraph {
 
     // -------------------------------------------------------------------------
 
-    private Set<Integer> bfs(int start, int rangeFrom, int rangeTo) {
+    private Set<Integer> bfs(Collection<Integer> starts, int rangeFrom, int rangeTo) {
         boolean bounded = rangeFrom >= 0;
         Set<Integer> visited = new LinkedHashSet<>();
-        Deque<Integer> queue = new ArrayDeque<>();
-        queue.add(start);
+        Deque<Integer> queue = new ArrayDeque<>(starts);
 
         while (!queue.isEmpty()) {
             int current = queue.poll();

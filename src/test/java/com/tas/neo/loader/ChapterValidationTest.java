@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -45,7 +46,8 @@ class ChapterValidationTest {
 
     record ChapterCase(String adventureId, String chapterId,
                        int rangeFrom, int rangeTo,
-                       int entrySection, List<Integer> exitEntrySections) {
+                       int entrySection, Set<Integer> allEntrySections,
+                       List<Integer> exitEntrySections) {
         @Override public String toString() {
             return adventureId + "/" + chapterId + " [" + rangeFrom + "–" + rangeTo + "]";
         }
@@ -70,8 +72,19 @@ class ChapterValidationTest {
                 int to = ch.path("sectionRange").path("to").asInt(-1);
                 if (from < 0 || to < 0) continue;
 
-                // Entry section: from entryGate or first section in range
+                // Primary entry section
                 int entrySection = ch.path("gates").path("entryGate").path("entrySection").asInt(from);
+
+                // All entry sections: primary + any branch entries
+                Set<Integer> allEntries = new LinkedHashSet<>();
+                allEntries.add(entrySection);
+                JsonNode branches = ch.path("gates").path("entryGate").path("branches");
+                if (branches.isArray()) {
+                    for (JsonNode br : branches) {
+                        int brEntry = br.path("entrySection").asInt(-1);
+                        if (brEntry > 0) allEntries.add(brEntry);
+                    }
+                }
 
                 // Exit entry sections from exitGates
                 List<Integer> exits = new ArrayList<>();
@@ -83,7 +96,7 @@ class ChapterValidationTest {
                     }
                 }
 
-                cases.add(new ChapterCase(adventureId, chId, from, to, entrySection, exits));
+                cases.add(new ChapterCase(adventureId, chId, from, to, entrySection, allEntries, exits));
             }
         }
         return cases.stream();
@@ -189,7 +202,7 @@ class ChapterValidationTest {
 
         Adventure adventure = load(ch.adventureId());
         Set<Integer> reachable = SectionGraph.of(adventure)
-                .reachableFrom(ch.entrySection(), ch.rangeFrom(), ch.rangeTo());
+                .reachableFrom(ch.allEntrySections(), ch.rangeFrom(), ch.rangeTo());
 
         List<Integer> unreachableExits = ch.exitEntrySections().stream()
                 .filter(exit -> !reachable.contains(exit))
@@ -197,8 +210,8 @@ class ChapterValidationTest {
                 .toList();
 
         assertThat(unreachableExits)
-                .as("Chapter %s/%s: exit entry sections unreachable from section %d: %s",
-                        ch.adventureId(), ch.chapterId(), ch.entrySection(), unreachableExits)
+                .as("Chapter %s/%s: exit entry sections unreachable from entries %s: %s",
+                        ch.adventureId(), ch.chapterId(), ch.allEntrySections(), unreachableExits)
                 .isEmpty();
     }
 

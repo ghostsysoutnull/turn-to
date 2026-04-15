@@ -15,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -176,6 +176,16 @@ public class AdventureReportGenerator {
 
             int entry = ch.path("gates").path("entryGate").path("entrySection").asInt(from);
 
+            Set<Integer> allEntries = new LinkedHashSet<>();
+            allEntries.add(entry);
+            JsonNode entryBranches = ch.path("gates").path("entryGate").path("branches");
+            if (entryBranches.isArray()) {
+                for (JsonNode br : entryBranches) {
+                    int brEntry = br.path("entrySection").asInt(-1);
+                    if (brEntry > 0) allEntries.add(brEntry);
+                }
+            }
+
             List<Integer> exits = new ArrayList<>();
             JsonNode exitGates = ch.path("gates").path("exitGates");
             if (exitGates.isArray()) {
@@ -185,7 +195,7 @@ public class AdventureReportGenerator {
                 }
             }
 
-            Set<Integer> reachable = graph.reachableFrom(entry, from, to);
+            Set<Integer> reachable = graph.reachableFrom(allEntries, from, to);
             long inRangeCount = reachable.stream().filter(n -> n >= from && n <= to).count();
             int rangeSize = to - from + 1;
 
@@ -242,7 +252,16 @@ public class AdventureReportGenerator {
                 if (from < 0 || to < 0) continue;
 
                 int entry = ch.path("gates").path("entryGate").path("entrySection").asInt(from);
-                Set<Integer> reachable = graph.reachableFrom(entry, from, to);
+                Set<Integer> allEntries = new LinkedHashSet<>();
+                allEntries.add(entry);
+                JsonNode issueBranches = ch.path("gates").path("entryGate").path("branches");
+                if (issueBranches.isArray()) {
+                    for (JsonNode br : issueBranches) {
+                        int brEntry = br.path("entrySection").asInt(-1);
+                        if (brEntry > 0) allEntries.add(brEntry);
+                    }
+                }
+                Set<Integer> reachable = graph.reachableFrom(allEntries, from, to);
 
                 // Coverage
                 for (Section s : adventure.sections()) {
