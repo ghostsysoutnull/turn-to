@@ -13,7 +13,9 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,6 +37,7 @@ public class SectionGraph {
     private static final Pattern NAVIGATE_TO = Pattern.compile("navigateTo\\((\\d+)\\)");
 
     private final Adventure adventure;
+    private Map<Integer, Set<Integer>> predecessorIndex; // lazily initialised
 
     private SectionGraph(Adventure adventure) {
         this.adventure = adventure;
@@ -99,6 +102,23 @@ public class SectionGraph {
         return bfs(starts, rangeFrom, rangeTo);
     }
 
+    /**
+     * All section numbers that have a direct edge TO {@code sectionNumber} — the
+     * inverse of {@link #successors(int)}.
+     *
+     * <p>The predecessor map is built lazily on first call and cached. This is safe
+     * because {@link Adventure} is immutable after construction and {@link SectionGraph}
+     * is used in single-threaded CLI and test contexts only.
+     *
+     * @return an unmodifiable set; empty if no sections link to {@code sectionNumber}
+     */
+    public Set<Integer> predecessors(int sectionNumber) {
+        if (predecessorIndex == null) {
+            predecessorIndex = buildPredecessorIndex();
+        }
+        return predecessorIndex.getOrDefault(sectionNumber, Set.of());
+    }
+
     /** All section numbers present in the adventure. */
     public Set<Integer> allSectionNumbers() {
         Set<Integer> all = new LinkedHashSet<>();
@@ -135,6 +155,16 @@ public class SectionGraph {
     }
 
     // -------------------------------------------------------------------------
+
+    private Map<Integer, Set<Integer>> buildPredecessorIndex() {
+        Map<Integer, Set<Integer>> index = new LinkedHashMap<>();
+        for (Section s : adventure.sections()) {
+            for (int succ : successors(s.number())) {
+                index.computeIfAbsent(succ, k -> new LinkedHashSet<>()).add(s.number());
+            }
+        }
+        return index;
+    }
 
     private Set<Integer> bfs(Collection<Integer> starts, int rangeFrom, int rangeTo) {
         boolean bounded = rangeFrom >= 0;

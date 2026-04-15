@@ -255,6 +255,55 @@ class SectionGraphTest {
             .containsExactlyInAnyOrder(1, 2, 10, 11);
     }
 
+    // -------------------------------------------------------------------------
+    // predecessors
+    // -------------------------------------------------------------------------
+
+    @Test
+    void predecessors_single_inbound_choice_edge() {
+        // 1 → 2; predecessors(2) must contain 1
+        Section s1 = section(1, List.of(), List.of(choiceTo(2)), ScriptBlock.empty());
+        SectionGraph graph = SectionGraph.of(adventureWith(s1, leaf(2)));
+
+        assertThat(graph.predecessors(2))
+            .as("predecessors(2) must include section 1 which has a choice targeting 2")
+            .containsExactly(1);
+    }
+
+    @Test
+    void predecessors_multiple_inbound_edges() {
+        // 1 → 3, 2 → 3; predecessors(3) must contain both 1 and 2
+        Section s1 = section(1, List.of(), List.of(choiceTo(3)), ScriptBlock.empty());
+        Section s2 = section(2, List.of(), List.of(choiceTo(3)), ScriptBlock.empty());
+        SectionGraph graph = SectionGraph.of(adventureWith(s1, s2, leaf(3)));
+
+        assertThat(graph.predecessors(3))
+            .as("predecessors(3) must include all sections that link to 3")
+            .containsExactlyInAnyOrder(1, 2);
+    }
+
+    @Test
+    void predecessors_no_inbound_edges_returns_empty() {
+        // section 99 exists but nothing links to it
+        Section s1 = section(1, List.of(), List.of(choiceTo(2)), ScriptBlock.empty());
+        SectionGraph graph = SectionGraph.of(adventureWith(s1, leaf(2), leaf(99)));
+
+        assertThat(graph.predecessors(99))
+            .as("section 99 with no incoming edges must have empty predecessors set")
+            .isEmpty();
+    }
+
+    @Test
+    void predecessors_via_navigate_event() {
+        // section 1 has a NavigateEvent to section 5; predecessors(5) must contain 1
+        Section s1 = section(1, List.of(new NavigateEvent(5)), List.of(), ScriptBlock.empty());
+        SectionGraph graph = SectionGraph.of(adventureWith(s1, leaf(5)));
+
+        assertThat(graph.predecessors(5))
+            .as("NavigateEvent must be counted as an inbound edge for predecessor tracking")
+            .containsExactly(1);
+    }
+
     @Test
     void reachableFrom_range_records_exit_targets_in_visited_set() {
         // section 3 in range [1,3] exits to section 10 (outside range)
