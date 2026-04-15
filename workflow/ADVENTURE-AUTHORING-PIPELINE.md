@@ -15,13 +15,17 @@ Adventure Architect Agent   — one run, whole adventure
  │            chapter briefs, gate contracts, section allocations,
  │            grid spatial briefs, grid dimensions and entry/exit mapping
  ▼
-User review of scaffold
- │  (approve or revise chapter plan, gate contracts, grid briefs, manifest)
+Adventure Reviewer Agent    — one run, whole scaffold
+ │  checks: loader parses skeleton, section ranges contiguous,
+ │           gate contract symmetry, brief sufficiency, dep order,
+ │           scale sanity
+ │  APPROVED → proceed    NEEDS FIXES → back to Architect Agent
  ▼
-Load check gate             — JsonAdventureLoader.load() against the skeleton
- │  fails fast on format mismatches before any content is written
+User review of verdict
+ │  (optionally override advisory flags; approve or request revision)
  ▼
 ┌─────────────────────────────────────────────────────────────────┐
+
 │  For each chapter (in dependency order):                        │
 │                                                                 │
 │  Adventure Author Agent    — one run per chapter                │
@@ -85,21 +89,18 @@ The user provides a design brief before invoking the Architect agent. The brief 
 - `adventures/<id>-manifest.json` — adventure manifest with all planned items, characters, and locations.
 - Structured summary: chapter plan table, cross-chapter item list, authoring dependency order.
 
-**User review gate**: the user reviews the scaffold before any chapter authoring begins. Changes to gate contracts or section allocations after authoring has started are expensive — a gate change may require rewriting sections in the affected chapters.
+**Adventure Reviewer gate**: after the Architect produces its output, the Adventure Reviewer Agent runs before any chapter authoring begins. It checks:
 
-**Load check gate**: before any chapter authoring begins, run `JsonAdventureLoader` against the skeleton JSON and verify it loads without error:
+- Loader parses the skeleton without error (`mvn test -Dtest=AdventureValidationTest`)
+- Section ranges are contiguous, non-overlapping, and cover the total budget
+- Gate contracts are symmetric (every item in `out` appears in the corresponding `in`)
+- Chapter briefs are sufficient to anchor an author
+- Dependency order is correct
+- Scale is appropriate for the stated adventure length
 
-```
-mvn exec:java -Dexec.mainClass=com.tas.neo.loader.JsonAdventureLoader \
-  -Dexec.args="adventures/<id>.json" 2>&1 | grep -i "error\|fail\|exception"
-```
+The Reviewer returns **APPROVED** or **NEEDS FIXES**. Fixes go back to the Architect Agent. The pipeline does not proceed to authoring until the Reviewer approves.
 
-Or from a test:
-```java
-new JsonAdventureLoader(Path.of("adventures")).load("<id>");
-```
-
-If the skeleton fails to load, fix it before proceeding. Item definitions, chapter structure, and script stubs must all parse cleanly. This catches format mismatches between the Architect's output and the loader's expectations before any content is written.
+**User review**: the user reviews the Reviewer's verdict before authoring begins. The user may override advisory flags (e.g. accept a thin brief) but must not override structural or gate contract failures — those are load-time or reference integrity errors that will cause authoring to fail or produce a broken adventure.
 
 ---
 
@@ -204,6 +205,7 @@ The target range per chapter is **30–60 sections**. An agent authoring more th
 | Agent | Role definition |
 |-------|----------------|
 | Adventure Architect | `workflow/agents/adventure-architect-agent.md` |
+| Adventure Reviewer | `workflow/agents/adventure-reviewer-agent.md` |
 | Adventure Author | `workflow/agents/adventure-author-agent.md` |
 | Chapter Reviewer | `workflow/agents/chapter-reviewer-agent.md` |
 | Grid Agent | `workflow/agents/grid-agent.md` |
@@ -220,6 +222,18 @@ Task: Scaffold a new adventure from the following design brief.
 
 Design brief:
 [paste brief here]
+```
+
+## How to Invoke the Adventure Reviewer Agent
+
+```
+You are the Adventure Reviewer Agent for TAS Neo. Your role, responsibilities,
+and boundaries are defined in workflow/agents/adventure-reviewer-agent.md — read it first.
+
+Task: Review the scaffold for adventure <adventure-id> produced by the Architect Agent.
+
+- Adventure file: adventures/<adventure-id>.json
+- Manifest: adventures/<adventure-id>-manifest.json
 ```
 
 ## How to Invoke a Chapter Author Agent
