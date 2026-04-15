@@ -15,6 +15,9 @@ A text-based terminal adventure game inspired by the Fighting Fantasy gamebook s
 | [05 - Scripting](docs/specs/05-scripting.md) | Lua scripting system, lifecycle hook points, ScriptContext API |
 | [06 - Items](docs/specs/06-items.md) | Item categories, inventory rules, item lifecycle hooks |
 | [07 - Party Members](docs/specs/07-party-members.md) | Configurable companion entities: ships, companions, crews — fixed and dice-formula stats |
+| [08 - Adventure Authoring](docs/specs/08-adventure-authoring.md) | Chapters, gates, briefs, and the adventure manifest |
+| [09 - Location Networks](docs/specs/09-location-networks.md) | Location graph, travel events, region-based navigation |
+| [10 - Session Logging](docs/specs/10-session-logging.md) | Session log format, event recording, replay |
 
 ### Technical Design
 
@@ -30,10 +33,15 @@ A text-based terminal adventure game inspired by the Fighting Fantasy gamebook s
 | [08 - Item Model](docs/design/08-item-model.md) | Item, Inventory, equip system, combat integration |
 | [09 - Party Member Model](docs/design/09-party-member-model.md) | PartyMember, StatDefinition, DiceFormula, defeat consequences |
 | [10 - Combat Systems](docs/design/10-combat-systems.md) | Pluggable CombatSystem interface, registry, PersonalCombatSystem, system composition |
+| [11 - Location Networks](docs/design/11-location-networks.md) | Location graph, travel event types, region data model |
+| [12 - Session Logging](docs/design/12-session-logging.md) | SessionLogger interface, log record types, replay strategy |
+| [13 - OO Design Guidelines](docs/design/13-oo-design-guidelines.md) | Refactoring decision framework: thresholds, patterns, TDD sequence |
 
 ## Agent Workflow
 
-This project uses a four-agent pipeline. See [`workflow/WORKFLOW.md`](workflow/WORKFLOW.md) for the full process.
+### Development pipeline
+
+Spec → Design → Test → Code. See [`workflow/WORKFLOW.md`](workflow/WORKFLOW.md) for the full process.
 
 | Agent | Role | Definition |
 |-------|------|------------|
@@ -41,6 +49,17 @@ This project uses a four-agent pipeline. See [`workflow/WORKFLOW.md`](workflow/W
 | Design | Writes technical design | [`workflow/agents/design-agent.md`](workflow/agents/design-agent.md) |
 | Test | Writes failing tests from design strategy tables | [`workflow/agents/test-agent.md`](workflow/agents/test-agent.md) |
 | Code | Implements to make tests pass | [`workflow/agents/code-agent.md`](workflow/agents/code-agent.md) |
+
+### Adventure authoring pipeline
+
+See [`workflow/ADVENTURE-AUTHORING-PIPELINE.md`](workflow/ADVENTURE-AUTHORING-PIPELINE.md) for the full process.
+
+| Agent | Role | Definition |
+|-------|------|------------|
+| Adventure Architect | Designs chapter scaffold, manifest, gate contracts, and chapter briefs | [`workflow/agents/adventure-architect-agent.md`](workflow/agents/adventure-architect-agent.md) |
+| Adventure Reviewer | Reviews scaffold before authoring begins | [`workflow/agents/adventure-reviewer-agent.md`](workflow/agents/adventure-reviewer-agent.md) |
+| Adventure Author | Authors one chapter per invocation | [`workflow/agents/adventure-author-agent.md`](workflow/agents/adventure-author-agent.md) |
+| Chapter Reviewer | Reviews each chapter immediately after authoring | [`workflow/agents/chapter-reviewer-agent.md`](workflow/agents/chapter-reviewer-agent.md) |
 
 ## Tech Stack
 
