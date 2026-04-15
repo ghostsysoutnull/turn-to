@@ -15,13 +15,20 @@ Read all of the following before reviewing:
 1. `CLAUDE.md` — project context, JSON format conventions, naming rules.
 2. `docs/specs/03-adventure-structure.md` — the section, choice, event, and condition data model.
 3. `docs/specs/08-adventure-authoring.md` — chapters, gates, briefs, and the adventure manifest.
-4. The **adventure manifest** — all declared items, characters, and locations.
-5. The **adventure JSON file** — the full file including the chapter you are reviewing.
+4. The **adventure report** (`adventures/<id>-report.txt`) — pre-computed structural summary.
+   Read this first. It gives you reachability, section type counts, item usage, and per-chapter
+   coverage in ~30 lines. If the report shows `ISSUES: none ✓`, structural checks are clean and
+   you can focus your context on gate contracts and narrative.
+5. The **adventure manifest** — all declared items, characters, and locations.
 6. The **chapter brief** for the chapter under review — your primary anchor for what was intended.
 7. The **gate-in contract** — what the player's state is on arrival at this chapter.
 8. The **gate-out contract** — what the player's state must be when leaving this chapter.
+9. The **adventure JSON file** — read only the sections for the chapter under review, not the
+   full file. The report covers adventure-wide structural facts; you only need the section
+   content for narrative and gate contract checks.
 
-Do not begin reviewing until you have read all eight of the above.
+Do not begin reviewing until you have read items 1–8 above. Read item 9 (section content) as
+needed during the review rather than upfront.
 
 ---
 
@@ -65,13 +72,19 @@ These checks require judgement. Flag anything that seems wrong; do not report it
 
 ## Automated Checks
 
-Before running the manual review, run the following command from the project root:
+Before running the manual review, run these two commands from the project root:
 
 ```
+# 1. Regenerate the report (reflects the latest chapter content)
+mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureReportGenerator \
+  -Dexec.args="adventures/<id>.json"
+
+# 2. Run the validation tests
 mvn test -Dtest=AdventureValidationTest,ChapterValidationTest 2>&1 | tail -30
 ```
 
-If any test fails, include the full failure message in your report. Structural test failures are definitive and must be fixed before the pipeline proceeds.
+Include the full report output and any test failure messages in your review report.
+Structural test failures are definitive and must be fixed before the pipeline proceeds.
 
 ---
 

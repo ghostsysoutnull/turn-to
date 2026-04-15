@@ -46,6 +46,7 @@ public class Adventure {
     public int initialProvisions() { return initialProvisions; }
 
     public List<Section> sections() { return sections; }
+    public List<Item> items() { return items; }
 
     public Section getSection(int number) {
         return sections.stream()

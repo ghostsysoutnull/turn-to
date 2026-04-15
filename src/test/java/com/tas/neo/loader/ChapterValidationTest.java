@@ -2,28 +2,21 @@ package com.tas.neo.loader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tas.neo.analysis.SectionGraph;
 import com.tas.neo.domain.adventure.Adventure;
 import com.tas.neo.domain.adventure.Section;
-import com.tas.neo.domain.adventure.event.CombatEvent;
-import com.tas.neo.domain.adventure.event.LuckTestEvent;
-import com.tas.neo.domain.adventure.event.NavigateEvent;
 import com.tas.neo.domain.adventure.event.SectionEvent;
-import com.tas.neo.domain.adventure.event.SkillTestEvent;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -167,7 +160,7 @@ class ChapterValidationTest {
             }
 
             for (SectionEvent event : section.events()) {
-                for (int target : eventTargets(event)) {
+                for (int target : SectionGraph.eventSuccessors(event)) {
                     if (!inRange(target, ch) && !allowedExternal.contains(target)) {
                         violations.add("Section " + section.number()
                             + " event → " + target
@@ -195,7 +188,8 @@ class ChapterValidationTest {
         if (ch.exitEntrySections().isEmpty()) return; // final chapter — no exits expected
 
         Adventure adventure = load(ch.adventureId());
-        Set<Integer> reachable = reachableWithinChapter(adventure, ch);
+        Set<Integer> reachable = SectionGraph.of(adventure)
+                .reachableFrom(ch.entrySection(), ch.rangeFrom(), ch.rangeTo());
 
         List<Integer> unreachableExits = ch.exitEntrySections().stream()
                 .filter(exit -> !reachable.contains(exit))
@@ -224,76 +218,4 @@ class ChapterValidationTest {
         }
     }
 
-    /**
-     * BFS within chapter range — also follows exit targets so we can assert they
-     * are reachable. Stops at sections outside the chapter range.
-     */
-    private static Set<Integer> reachableWithinChapter(Adventure adventure, ChapterCase ch) {
-        Set<Integer> visited = new HashSet<>();
-        Deque<Integer> queue = new ArrayDeque<>();
-        queue.add(ch.entrySection());
-
-        while (!queue.isEmpty()) {
-            int current = queue.poll();
-            if (!visited.add(current)) continue;
-
-            // Only traverse sections within this chapter's range
-            if (current < ch.rangeFrom() || current > ch.rangeTo()) continue;
-
-            Section section;
-            try {
-                section = adventure.getSection(current);
-            } catch (IllegalArgumentException e) {
-                continue;
-            }
-
-            for (var choice : section.choices()) {
-                if (choice.target() instanceof com.tas.neo.domain.adventure.SectionTarget st) {
-                    int t = st.sectionNumber();
-                    if (!visited.contains(t)) queue.add(t);
-                }
-            }
-
-            for (SectionEvent event : section.events()) {
-                for (int t : eventTargets(event)) {
-                    if (!visited.contains(t)) queue.add(t);
-                }
-            }
-
-            section.scripts().get("onEnter").ifPresent(script ->
-                extractNavigateToCalls(script).forEach(t -> {
-                    if (!visited.contains(t)) queue.add(t);
-                })
-            );
-        }
-
-        return visited;
-    }
-
-    private static List<Integer> eventTargets(SectionEvent event) {
-        List<Integer> targets = new ArrayList<>();
-        switch (event) {
-            case NavigateEvent e -> targets.add(e.targetSection());
-            case LuckTestEvent e -> { targets.add(e.successSection()); targets.add(e.failSection()); }
-            case SkillTestEvent e -> { targets.add(e.successSection()); targets.add(e.failSection()); }
-            case CombatEvent e -> {
-                if (e.successSection() > 0) targets.add(e.successSection());
-                if (e.failureSection() > 0) targets.add(e.failureSection());
-                e.scripts().hooks().values()
-                        .forEach(script -> targets.addAll(extractNavigateToCalls(script)));
-            }
-            default -> {}
-        }
-        return targets;
-    }
-
-    private static List<Integer> extractNavigateToCalls(String script) {
-        List<Integer> targets = new ArrayList<>();
-        java.util.regex.Matcher m =
-            java.util.regex.Pattern.compile("navigateTo\\((\\d+)\\)").matcher(script);
-        while (m.find()) {
-            targets.add(Integer.parseInt(m.group(1)));
-        }
-        return targets;
-    }
 }

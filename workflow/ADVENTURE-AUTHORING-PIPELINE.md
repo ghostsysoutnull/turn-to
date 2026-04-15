@@ -113,12 +113,20 @@ The Reviewer returns **APPROVED** or **NEEDS FIXES**. Fixes go back to the Archi
 Each chapter goes through a tight author → review loop before the next chapter begins:
 
 1. **Author Agent** writes the chapter sections JSON and structured summary.
-2. **Chapter Reviewer Agent** runs immediately after:
+2. **Regenerate the adventure report**:
+   ```
+   mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureReportGenerator \
+     -Dexec.args="adventures/<id>.json"
+   ```
+   This writes `adventures/<id>-report.txt` — a compact summary the Chapter Reviewer Agent
+   reads instead of the full JSON.
+3. **Chapter Reviewer Agent** runs immediately after:
+   - Reads `adventures/<id>-report.txt` first for structural facts
    - Executes `mvn test -Dtest=AdventureValidationTest,ChapterValidationTest`
    - Reviews gate contracts, reference integrity, reachability, and narrative alignment.
    - Returns **APPROVED** or **NEEDS FIXES** with section-level detail.
-3. If **NEEDS FIXES**: route the review report back to the Author Agent. Repeat from step 1.
-4. If **APPROVED**: update the manifest (step below), then proceed to the next chapter.
+4. If **NEEDS FIXES**: route the review report back to the Author Agent. Repeat from step 1.
+5. If **APPROVED**: update the manifest (step below), then proceed to the next chapter.
 
 This loop catches problems before downstream chapters are authored against a broken gate. A gate contract error found in chapter 2 review costs one rewrite; the same error found after all four chapters are written costs four.
 

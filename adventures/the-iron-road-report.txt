@@ -1,0 +1,22 @@
+== Adventure Report: the-iron-road ==
+Generated: 2026-04-15  |  Title: The Iron Road  |  Sections: 170  |  Items: 12
+
+REACHABILITY
+  All 170 sections reachable from start (1) ✓
+
+SECTION TYPES
+  NORMAL: 159  VICTORY: 5  INSTANT_DEATH: 6
+
+ITEMS  (12 defined)
+  All items referenced in sections ✓
+
+CHAPTERS  (4)
+  ch1    [   1–  40]  entry:1     exits:[41]  coverage:40/40 ✓  exits-reachable:✓
+  ch2    [  41–  90]  entry:41    exits:[91 92 93]  coverage:50/50 ✓  exits-reachable:✓
+  ch3    [  91– 130]  entry:91    exits:[131]  coverage:37/40 ✗  exits-reachable:✓
+  ch4    [ 131– 170]  entry:131   exits:[]  coverage:40/40 ✓  exits-reachable:n/a (final)
+
+ISSUES
+  ✗ CH-CH3  section 92 not reachable from chapter entry 91
+  ✗ CH-CH3  section 93 not reachable from chapter entry 91
+  ✗ CH-CH3  section 97 not reachable from chapter entry 91
