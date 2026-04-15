@@ -3122,7 +3122,7 @@
       "narrative": "The Spymaster receives you in a room above the arcade that smells of cedar and old paper. They are not what you expected — quieter, older, with the patient manner of someone who has been doing this long enough that urgency has left them entirely.\n\nThey look at the satchel — or its absence — for a long moment.\n\n\"You've come further than I thought you would,\" they say. \"Most people in your position are dead by Varenmark. The offer still stands. Give me the satchel and I will see you out of the capital tonight with a new name and enough coin to begin somewhere else.\"\n\nThen, if you carry the Spymaster's Letter: \"The letter reduces the price. I respect that you kept it intact.\"\n\nTheir price, with or without the letter, is the same thing: the satchel. Nothing else will do.",
       "events": [],
       "scripts": {
-        "onEnter": "local debt = state.get('spymasterDebt'); if ctx.hasItem('Spymaster\\'s Letter') then ctx.showMessage('The Spymaster notes the intact letter. \\'I reduce nothing from the price,\\' they say, \\'but I will remember you kept your word.\\' state.set(\\'spymasterDebt\\', math.max(0, debt - 1)) end"
+        "onEnter": "local debt = state.get('spymasterDebt'); if ctx.hasItem('Spymaster\\'s Letter') then ctx.showMessage(\"The Spymaster notes the intact letter. 'I reduce nothing from the price,' they say, 'but I will remember you kept your word.'\"); state.set('spymasterDebt', math.max(0, debt - 1)); end"
       },
       "choices": [
         {
@@ -3276,12 +3276,8 @@
           "targetSection": 147
         },
         {
-          "text": "You have no credentials — you need another route",
-          "targetSection": 138,
-          "condition": {
-            "type": "LACKS_ITEM",
-            "item": "Courier's Token"
-          }
+          "text": "Look for a way in that avoids the guards",
+          "targetSection": 138
         }
       ]
     },

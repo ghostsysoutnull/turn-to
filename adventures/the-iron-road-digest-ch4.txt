@@ -61,7 +61,7 @@ Generated: 2026-04-15  |  Range: §131–§170  |  Entry: §131
 
 [§146] NORMAL          →§155,§156,§164,§147,§138
   The palace district begins where the main city ends: a gatehouse checkpoint staffed by royal household guards in formal livery, not the city...
-  conds:  [HAS:Courier's Token]→§155:"Present your Courier's Token at the checkpoint"  [HAS:Relay Station Key]→§156:"Present your Relay Station Key at the checkpoint"  [HAS:Spymaster's Letter]→§164:"Show the Spymaster's Letter — you have a prearranged contact inside"  [LACKS:Courier's Token]→§138:"You have no credentials — you need another route"
+  conds:  [HAS:Courier's Token]→§155:"Present your Courier's Token at the checkpoint"  [HAS:Relay Station Key]→§156:"Present your Relay Station Key at the checkpoint"  [HAS:Spymaster's Letter]→§164:"Show the Spymaster's Letter — you have a prearranged contact inside"
 
 [§147] NORMAL          →§157
   The river approach is the route the palace district's servants and suppliers use when the main gate is closed: a series of stone steps cut i...
