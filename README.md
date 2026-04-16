@@ -49,6 +49,7 @@ A text-based terminal adventure game inspired by the Fighting Fantasy gamebook s
 | `AdventureSectionDigest` | Compact per-chapter narrative digest |
 | `AdventureSectionInspector` | Targeted queries: read sections, inbound refs, event/condition search, dead ends, state var focus, gate JSON |
 | `AdventureRunner` | Batch simulation: N runs with configurable strategy, coverage report, unreached sections, never-selected choices |
+| `GamePlaybackRunner` | Terminal UI verification: runs a planned section path through real `TerminalOutput`, writes captured output to file |
 
 ## Agent Workflow
 
