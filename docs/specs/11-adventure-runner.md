@@ -167,51 +167,62 @@ A run batch is configured with:
 
 ## Report Format
 
-The runner produces a single structured text report after all runs complete. The report is designed for agent consumption: compact, labelled, and free of prose padding.
+The runner produces a single structured text report after all runs complete. The report is designed for agent consumption: compact, labelled, and free of prose padding. Section narrative text is never included.
 
 ```
 == Adventure Run Report: <adventure-id> ==
 Generated: <date>  |  Runs: <N>  |  Strategy: <strategy>  |  Dice: <mode>  |  Seed: <seed>
 
 ENDINGS  (<N> runs)
-  VICTORY        §<n>  <section first line, truncated to 60 chars>    <count> (<pct>%)
-  ...
-  INSTANT_DEATH  §<n>  <section first line, truncated to 60 chars>    <count> (<pct>%)
-  ...
-  STUCK          §<n>  <section first line>                            <count> (<pct>%)
-  CYCLE          §<n>  <section first line>                            <count> (<pct>%)
-  Unreached endings: §<n>, §<n>  [or "none ✓"]
+  VICTORY       §<n>   <count> (<pct>%)
+  VICTORY       §<n>   <count> (<pct>%)
+  INSTANT_DEATH §<n>   <count> (<pct>%)
+  STUCK         §<n>   <count> (<pct>%)
+  CYCLE         §<n>   <count> (<pct>%)
+  Unreached VICTORY: none ✓  [or: §<n>, §<n>]
+  Unreached INSTANT_DEATH: none ✓  [or: §<n>, §<n>]
 
 COVERAGE  (<N> runs)
   Sections reached: <M>/<total> (<pct>%)
-  Never reached: §<n>, §<n>, ...  [or "none ✓"]
 
-ITEM FLOW AT CHAPTER BOUNDARIES  (% of runs carrying item on exit)
-  ch<id> → ch<id>:  <item>:<pct>%  <item>:<pct>%  ...
+ITEM FLOW AT CHAPTER BOUNDARIES  (% of runs carrying item when entering chapter)
+                         <ch→ch>  <ch→ch>  <ch→ch>
+  <item name>              <pct>%   <pct>%   <pct>%
+  <item name>                 —     <pct>%   <pct>%
+  [only items with at least one non-zero entry are shown]
 
 STATE DISTRIBUTION AT CHAPTER BOUNDARIES
-  <variableName> at ch<id> entry: avg <val>  range <min>–<max>  [or: true:<pct>% false:<pct>%]
+  <variableName> at <ch> entry: avg <val>  range <min>–<max>
+  <variableName> at <ch> entry: true:<pct>%  false:<pct>%
+  [only variables with a set: entry in *-state.txt are shown]
 
 GATING
-  Choices never selected (condition never met in any run): §<n> choice "<text>"  [or "none ✓"]
-  Choices selected in < 5% of runs: §<n> choice "<text>" (<pct>%)
+  Choices with condition never met in any run: none ✓  [or: §<n> "<text>"]
 
 ISSUES
   <issue description>  [or "none ✓"]
 ```
 
+### Formatting rules
+
+- Section numbers appear as `§<n>` throughout.
+- No section narrative text appears anywhere in the report.
+- ITEM FLOW columns are right-aligned percentage values. A `—` indicates the item was not carried by any run at that boundary (e.g. not yet obtainable). Columns are the chapter-to-chapter transitions in adventure order.
+- STATE DISTRIBUTION shows numeric variables as `avg / range`; boolean variables as `true/false` percentages. Variables that were never set in any run are omitted.
+- COVERAGE never-reached section list is omitted from the report body; unreached sections of type VICTORY or INSTANT_DEATH appear in ENDINGS, and unreached NORMAL sections appear only in ISSUES if they are structural problems.
+- GATING reports only choices whose condition was **never** satisfied in any run — a hard zero, not a low percentage. Low selection rates are not reported; they are a function of probability, not a structural problem.
+
 ### Issue types reported
 
-| Issue | Description |
-|-------|-------------|
-| Unreached VICTORY | A declared VICTORY section was never reached in any run |
-| Unreached INSTANT_DEATH | An INSTANT_DEATH section was never reached in any run |
-| STUCK run | A run ended in a NORMAL section with no available choices |
-| CYCLE run | A run terminated due to cycle detection |
-| Unsupported script operation | An `onEnter` or `onChoices` script called an operation the runner does not support |
-| Gated choice never triggered | A choice with a condition was never selected because the condition was never met |
-
-Unreached INSTANT_DEATH sections are flagged as warnings, not errors — they may be intentionally hard to reach. Unreached VICTORY sections are flagged as errors.
+| Issue | Severity | Description |
+|-------|----------|-------------|
+| Unreached VICTORY | ✗ Error | A VICTORY section was never reached in any run |
+| STUCK run | ✗ Error | A run ended at a NORMAL section with no available choices |
+| CYCLE run | ✗ Error | A run terminated due to cycle detection |
+| Gated choice never triggered | ✗ Error | A conditioned choice was never selectable in any run |
+| Unreached INSTANT_DEATH | ⚠ Warning | An INSTANT_DEATH section was never reached — may be intentionally rare |
+| Unreached NORMAL section | ⚠ Warning | A NORMAL section was never visited — may indicate a dead branch |
+| Unsupported script operation | ⚠ Warning | An `onEnter` or `onChoices` script called an operation the runner does not simulate |
 
 ---
 

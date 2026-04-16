@@ -326,7 +326,7 @@ public class RunReportGenerator {
 }
 ```
 
-Produces the report format defined in the spec. Truncates section narrative to 60 characters for the ENDINGS table. Reads chapter definitions from `rawJson.path("chapters")` (same pattern as other report generators).
+Produces the report format defined in the spec. No section narrative text appears in the report. The ITEM FLOW grid is built by iterating chapter boundary transitions in order; items with all-zero entries across all boundaries are omitted. Reads chapter definitions from `rawJson.path("chapters")` (same pattern as other report generators).
 
 ---
 
