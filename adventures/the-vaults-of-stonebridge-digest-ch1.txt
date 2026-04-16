@@ -1,0 +1,55 @@
+== Section Digest: the-vaults-of-stonebridge / ch1 ==
+Generated: 2026-04-16  |  Range: §1–§15  |  Entry: §1
+
+[§1] NORMAL          →§2,§7
+  The mountain road narrows as Stonebridge comes into view — a dwarven settlement carved into the living rock, its squat towers now hung with...
+
+[§2] NORMAL          →§3,§6,§8
+  The Broken Pick is low-ceilinged and smoky, every beam dark with years of tallow and pipe-weed....
+  conds:  [GOLD>=3]→§6:"Buy a Healing Potion from the innkeeper's shelf (costs 3 Gold)"
+
+[§3] NORMAL          →§4,§5
+  He introduces himself as Dorian....
+
+[§4] NORMAL          →§8
+  Dorian nods once. No handshake, no ceremony....
+  hooks:  onEnter
+
+[§5] NORMAL          →§8
+  Dorian holds your gaze for a moment, then shrugs — the shrug of a man who expected no better....
+
+[§6] NORMAL          →§3,§8
+  The innkeeper reaches under the counter and produces a small glass vial of deep red liquid....
+  events: GOLD-3  +Healing Potion
+
+[§7] NORMAL        
+  You slip away from the main road and work your way along the edge of the lower quarter, keeping to the shadows between the stone buildings....
+  events: LUCK→§8/§9
+
+[§8] NORMAL          →§10,§11
+  The checkpoint at the lower quarter gate is a squat stone arch reinforced with iron bars, a guardhouse bolted to one side....
+
+[§9] NORMAL          →§8
+  Your boot scrapes stone at exactly the wrong moment....
+  events: STAMINA-1
+
+[§10] NORMAL          →§13
+  The Gate Guard straightens at your approach, one hand already moving to the axe at his belt....
+  events: COMBAT  +Guard's Pass
+
+[§11] NORMAL        
+  While the seated guard's attention drifts to a passing cat, you move low and fast toward the gate....
+  events: LUCK→§12/§10
+
+[§12] NORMAL          →§13
+  The seated guard sneezes, swears, fumbles for a cloth....
+
+[§13] NORMAL          →§14,§15
+  Beyond the gate the dwarven stonework changes — older, heavier, the walls carved with geometric patterns worn smooth by centuries....
+
+[§14] NORMAL          →§15
+  The cabinet holds the detritus of bored guards — dice, a chipped mug, a damp blanket....
+
+[§15] NORMAL        
+  The passage opens onto a broad landing cut directly into the bedrock....
+

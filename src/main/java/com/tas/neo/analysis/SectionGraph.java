@@ -8,6 +8,8 @@ import com.tas.neo.domain.adventure.event.LuckTestEvent;
 import com.tas.neo.domain.adventure.event.NavigateEvent;
 import com.tas.neo.domain.adventure.event.SectionEvent;
 import com.tas.neo.domain.adventure.event.SkillTestEvent;
+import com.tas.neo.domain.location.Grid;
+import com.tas.neo.domain.location.Passage;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -37,14 +39,35 @@ public class SectionGraph {
     private static final Pattern NAVIGATE_TO = Pattern.compile("navigateTo\\((\\d+)\\)");
 
     private final Adventure adventure;
+    /** Section numbers that grid passage exits lead to, as additional reachability seeds. */
+    private final Set<Integer> gridExitTargets;
     private Map<Integer, Set<Integer>> predecessorIndex; // lazily initialised
 
     private SectionGraph(Adventure adventure) {
         this.adventure = adventure;
+        this.gridExitTargets = buildGridExitTargets(adventure);
     }
 
     public static SectionGraph of(Adventure adventure) {
         return new SectionGraph(adventure);
+    }
+
+    /**
+     * Collects all {@code toSection} values from grid cell passages across all grids.
+     * These are sections reachable by exiting a grid — they are not reachable via
+     * section-to-section edges alone and must be treated as additional BFS seeds
+     * when computing whole-adventure reachability.
+     */
+    private static Set<Integer> buildGridExitTargets(Adventure adventure) {
+        Set<Integer> targets = new LinkedHashSet<>();
+        for (Grid grid : adventure.grids()) {
+            for (var cell : grid.cells()) {
+                for (Passage passage : cell.passages().values()) {
+                    passage.toSection().ifPresent(targets::add);
+                }
+            }
+        }
+        return Collections.unmodifiableSet(targets);
     }
 
     /**
@@ -79,9 +102,16 @@ public class SectionGraph {
         return Collections.unmodifiableSet(result);
     }
 
-    /** BFS from {@code start} — unbounded, visits all reachable section numbers. */
+    /**
+     * BFS from {@code start} — unbounded, visits all reachable section numbers.
+     * Grid passage exits (toSection values) are treated as additional seeds so that
+     * sections reachable only via a grid are not reported as orphaned.
+     */
     public Set<Integer> reachableFrom(int start) {
-        return bfs(Set.of(start), -1, -1);
+        Set<Integer> seeds = new LinkedHashSet<>();
+        seeds.add(start);
+        seeds.addAll(gridExitTargets);
+        return bfs(seeds, -1, -1);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.tas.neo.analysis;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tas.neo.domain.adventure.Adventure;
+import com.tas.neo.domain.adventure.GridTarget;
 import com.tas.neo.domain.adventure.Section;
 import com.tas.neo.domain.adventure.SectionType;
 import com.tas.neo.domain.adventure.event.ItemEvent;
@@ -145,6 +146,12 @@ public class AdventureReportGenerator {
             .filter(e -> e instanceof ItemEvent)
             .map(e -> ((ItemEvent) e).itemName())
             .collect(Collectors.toSet());
+        adventure.grids().forEach(grid ->
+            grid.cells().forEach(cell ->
+                cell.events().stream()
+                    .filter(e -> e instanceof ItemEvent)
+                    .map(e -> ((ItemEvent) e).itemName())
+                    .forEach(referenced::add)));
 
         List<String> unreferenced = adventure.items().stream()
             .map(Item::name)
@@ -154,7 +161,7 @@ public class AdventureReportGenerator {
 
         sb.append("ITEMS  (").append(adventure.items().size()).append(" defined)\n");
         if (unreferenced.isEmpty()) {
-            sb.append("  All items referenced in sections \u2713\n");
+            sb.append("  All items referenced in sections or grids \u2713\n");
         } else {
             sb.append("  Unreferenced: ").append(unreferenced).append(" \u26a0\n");
         }
@@ -191,7 +198,9 @@ public class AdventureReportGenerator {
             int rangeSize = to - from + 1;
 
             boolean allReachable = inRangeCount == rangeSize;
-            boolean exitsReachable = exits.isEmpty() || exits.stream().allMatch(reachable::contains);
+            Set<Integer> gridBridged = gridBridgedExitSections(adventure, reachable);
+            boolean exitsReachable = exits.isEmpty()
+                    || exits.stream().allMatch(e -> reachable.contains(e) || gridBridged.contains(e));
 
             sb.append(String.format("  %-6s [%4d–%4d]  entry:%-4d  exits:[%s]  coverage:%d/%d %s  exits-reachable:%s%n",
                 id,
@@ -218,19 +227,25 @@ public class AdventureReportGenerator {
                 + " — never reachable from start section " + adventure.startSection());
         }
 
-        // Unreferenced items
+        // Unreferenced items — check both section events and grid cell events
         Set<String> referenced = adventure.sections().stream()
             .flatMap(s -> s.events().stream())
             .filter(e -> e instanceof ItemEvent)
             .map(e -> ((ItemEvent) e).itemName())
             .collect(Collectors.toSet());
+        adventure.grids().forEach(grid ->
+            grid.cells().forEach(cell ->
+                cell.events().stream()
+                    .filter(e -> e instanceof ItemEvent)
+                    .map(e -> ((ItemEvent) e).itemName())
+                    .forEach(referenced::add)));
         List<String> unreferenced = adventure.items().stream()
             .map(Item::name)
             .filter(name -> !referenced.contains(name))
             .sorted()
             .toList();
         if (!unreferenced.isEmpty()) {
-            warnings.add("ITEM      " + unreferenced + " defined but never referenced in a section event");
+            warnings.add("ITEM      " + unreferenced + " defined but never referenced in a section or grid event");
         }
 
         // Chapter-level issues
@@ -254,11 +269,12 @@ public class AdventureReportGenerator {
                 }
 
                 // Exit reachability
+                Set<Integer> chGridBridged = gridBridgedExitSections(adventure, reachable);
                 JsonNode exitGates = ch.path("gates").path("exitGates");
                 if (exitGates.isArray()) {
                     for (JsonNode eg : exitGates) {
                         int es = eg.path("entrySection").asInt(-1);
-                        if (es > 0 && !reachable.contains(es)) {
+                        if (es > 0 && !reachable.contains(es) && !chGridBridged.contains(es)) {
                             errors.add("CH-" + id.toUpperCase() + "  exit section " + es
                                 + " not reachable from chapter entry " + entry);
                         }
@@ -279,6 +295,35 @@ public class AdventureReportGenerator {
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
+
+    /**
+     * Returns section numbers reachable by exiting a grid whose entry cell is reachable.
+     * Mirrors the same helper in {@code ChapterValidationTest}.
+     */
+    private static Set<Integer> gridBridgedExitSections(Adventure adventure, Set<Integer> reachable) {
+        Set<String> reachableGridIds = new LinkedHashSet<>();
+        for (int sectionNum : reachable) {
+            try {
+                Section s = adventure.getSection(sectionNum);
+                for (var choice : s.choices()) {
+                    if (choice.target() instanceof GridTarget gt) {
+                        reachableGridIds.add(gt.gridId());
+                    }
+                }
+            } catch (IllegalArgumentException ignored) {}
+        }
+        Set<Integer> exits = new LinkedHashSet<>();
+        for (String gridId : reachableGridIds) {
+            adventure.getGrid(gridId).ifPresent(grid -> {
+                for (var cell : grid.cells()) {
+                    for (var passage : cell.passages().values()) {
+                        passage.toSection().ifPresent(exits::add);
+                    }
+                }
+            });
+        }
+        return exits;
+    }
 
     private static Set<Integer> allEntrySections(JsonNode ch, int primaryEntry) {
         Set<Integer> entries = new LinkedHashSet<>();

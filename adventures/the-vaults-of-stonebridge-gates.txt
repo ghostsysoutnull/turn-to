@@ -1,0 +1,19 @@
+== Gate Contract Digest: the-vaults-of-stonebridge ==
+Generated: 2026-04-16  |  Chapters: 2
+
+CH1  [§1–§15]
+  IN   (adventure start — no entry contract)
+  OUT  §20
+       possible:    Player may have Dorian as an ACTIVE party member (recruited in sections 3–5)
+                    Player may carry 'Guard's Pass' (taken from Gate Guard after combat)
+                    Player may carry 'Healing Potion' (purchased or found in inn)
+       forbidden:   Player must not carry 'Vault Key' — it has not yet been found
+
+CH2  [§16–§30]
+  IN   §20
+       possible:    Player may carry 'Vault Key' (found inside the vault dungeon grid)
+                    Player may carry 'Guard's Pass'
+                    Player may carry 'Healing Potion'
+                    Dorian may be ACTIVE (if recruited in ch1 and not defeated in the grid)
+       state:       state.companionSurvived has not yet been set to a meaningful value — set it at section 20 onEnter
+  OUT  (final chapter — no exit contract)

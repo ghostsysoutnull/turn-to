@@ -552,8 +552,12 @@
           ],
           "scripts": {
             "onCombatStart": "ctx.showMessage('The Gate Guard lunges, axe swinging. This is a fight to the finish.')",
-            "onCombatEnd": "ctx.addItem('Guard\\'s Pass'); ctx.showMessage('The guard falls. You search him quickly and find a worn token bearing Vordan\\'s sigil \u2014 a Guard\\'s Pass. It may be useful deeper in.')"
+            "onCombatEnd": "ctx.showMessage('The guard falls. You search him quickly and find a worn token bearing Vordan\\'s sigil \u2014 a Guard\\'s Pass. It may be useful deeper in.')"
           }
+        },
+        {
+          "type": "ITEM_GAIN",
+          "itemName": "Guard's Pass"
         }
       ],
       "choices": [
@@ -628,6 +632,220 @@
           "toCell": "entrance"
         }
       ]
+    },
+    {
+      "number": 16,
+      "type": "INSTANT_DEATH",
+      "narrative": "You fell down the shaft. The darkness swallows you before you can cry out. This section is unreachable in normal play.",
+      "events": [],
+      "choices": []
+    },
+    {
+      "number": 17,
+      "type": "NORMAL",
+      "narrative": "The carved arch at the foot of the spiral stair opens into a low vaulted passage. Vordan's sigils are everywhere \u2014 scratched into the mortar, painted in fading ochre above every door lintel. The work of someone marking territory, not decorating it. The air is still and cold and carries a faint trace of something astringent, like burnt copper.\n\nThe passage runs south and east. South, the floor rises slightly toward what sounds like a larger space. East, the passage narrows and the sigils grow denser.",
+      "events": [],
+      "scripts": {},
+      "choices": [
+        {
+          "text": "Head south toward the larger space",
+          "targetSection": 21
+        },
+        {
+          "text": "Press east through the sigil-marked passage",
+          "targetSection": 19
+        },
+        {
+          "text": "Risk the old shaft to reach the lower level faster",
+          "targetSection": 16
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "type": "NORMAL",
+      "narrative": "The passage opens into a low hall \u2014 a guardroom, once, to judge by the stone benches built into the walls. The benches are bare now. An overturned brazier has left a black burn across the flags. The southern wall holds a single heavy door, iron-bound and set with a ring handle. No lock. No visible trap.\n\nBeyond the door, faintly, you hear a sound. A slow, deliberate scraping. Something moving in a large space.",
+      "events": [],
+      "scripts": {},
+      "choices": [
+        {
+          "text": "Open the iron door and pass through",
+          "targetSection": 22
+        },
+        {
+          "text": "Return north and take the eastern passage instead",
+          "targetSection": 19
+        }
+      ]
+    },
+    {
+      "number": 19,
+      "type": "NORMAL",
+      "narrative": "The eastern passage runs straight for thirty feet before curving south. The sigils here are fresh \u2014 carved within days rather than weeks, the stone-dust still settled at their bases. Vordan was here recently. The passage curves and descends a shallow ramp, then terminates at a junction. West leads back toward the guardroom. Straight ahead, the passage continues south.",
+      "events": [],
+      "scripts": {},
+      "choices": [
+        {
+          "text": "Continue south along the passage",
+          "targetSection": 18
+        },
+        {
+          "text": "Return west to the guardroom",
+          "targetSection": 18
+        }
+      ]
+    },
+    {
+      "number": 20,
+      "type": "NORMAL",
+      "narrative": "You descend the last worn step of the spiral stair and pass under the carved arch into the upper sanctum. The dwarven stonework here is older than anything above \u2014 the walls perfectly fitted without mortar, every stone edge sharp despite the centuries. Vordan has been at it with a chisel. His spiralling sigil mars every third block, a proprietary scrawl laid over craftsmanship he could not hope to replicate.\n\nYou pause and take stock. The dungeon grid is behind you now. What lies ahead is the sorcerer's own ground.\n\nA passage leads north into the sanctum interior.",
+      "events": [],
+      "scripts": {
+        "onEnter": "state.set('companionSurvived', ctx.isPartyMemberActive('dorian'))"
+      },
+      "choices": [
+        {
+          "text": "Move north into the sanctum passages",
+          "targetSection": 17
+        }
+      ]
+    },
+    {
+      "number": 21,
+      "type": "NORMAL",
+      "narrative": "The passage opens into a small anteroom. A stone shelf runs along one wall, empty except for the stub of a candle burned down to nothing. Beside it, a scrap of parchment \u2014 Vordan's cramped handwriting, barely legible. A list of provisions. At the bottom, underlined twice: *the key remains with the warden. retrieve it if the passage south is needed.*\n\nThe warden is dead. You have the key \u2014 or you do not. The difference will matter shortly.\n\nThe door ahead is sealed.",
+      "events": [],
+      "scripts": {},
+      "choices": [
+        {
+          "text": "Approach the sealed door",
+          "targetSection": 22
+        }
+      ]
+    },
+    {
+      "number": 22,
+      "type": "NORMAL",
+      "narrative": "The antechamber is a low-ceilinged room not much larger than a stable. The south wall is occupied entirely by a single door of black iron, its surface covered in interlocking dwarf-runes that glow with a faint, cold light. There is no handle. There is a keyhole \u2014 deep, precise, shaped for a single specific key.\n\nThe runes pulse once as you approach, as if acknowledging your presence. Or warning you.\n\nYou hear nothing from the other side.",
+      "events": [],
+      "scripts": {},
+      "choices": [
+        {
+          "text": "Use the Vault Key to unlock the sealed door",
+          "targetSection": 24,
+          "condition": {
+            "type": "HAS_ITEM",
+            "itemName": "Vault Key"
+          }
+        },
+        {
+          "text": "You have no key. Search the antechamber for another way through.",
+          "targetSection": 23,
+          "condition": {
+            "type": "LACKS_ITEM",
+            "itemName": "Vault Key"
+          }
+        }
+      ]
+    },
+    {
+      "number": 23,
+      "type": "INSTANT_DEATH",
+      "narrative": "There is no other way through. The door is sealed by dwarven rune-craft older than the sorcerer who claimed this place \u2014 older than anything you could force or trick or pick. You search every inch of the antechamber. Every stone is mortared solid. The floor is bare flags with no trapdoor. The ceiling holds no escape hatch.\n\nYou try the door one last time. The runes flare white. The force of it throws you across the room and into the far wall. By the time you hit the floor, you are already dead.",
+      "events": [],
+      "choices": []
+    },
+    {
+      "number": 24,
+      "type": "NORMAL",
+      "narrative": "The Vault Key turns in the lock with a sound like a bell struck underwater \u2014 a deep, resonant tone that travels up through your hand and into your teeth. The runes on the door extinguish one by one, from the outermost ring inward, until the iron surface is dark and plain. Then the door swings open on counterweighted hinges, smooth and silent despite its weight.\n\nBeyond: a short passage, ten feet of bare stone, and another arch at the far end. Through it, faint and sourceless, a pale blue light.",
+      "events": [],
+      "scripts": {},
+      "choices": [
+        {
+          "text": "Pass through the arch into the inner sanctum",
+          "targetSection": 25
+        }
+      ]
+    },
+    {
+      "number": 25,
+      "type": "NORMAL",
+      "narrative": "The passage ends. Through the arch you step into Vordan's inner sanctum.\n\nIt is larger than you expected \u2014 a hall of dwarven proportions, its ceiling vaulted thirty feet above, its walls lined with shelves of book and bottle and instrument, all of it in studied disorder. At the far end, beyond a reading table piled with open texts, stands a man.\n\nHe is not tall. He is not imposing in any obvious way. He wears scholar's robes, now travel-stained and marked with the same spiralling sigil carved throughout the vault. He holds a carved staff and he is looking at you with the expression of a man who has been expecting an interruption and is mildly annoyed it finally arrived.\n\n'So,' says Vordan. 'They sent someone competent after all.'\n\nHe does not wait for your reply. The staff comes up. The air thickens.",
+      "events": [],
+      "scripts": {},
+      "choices": [
+        {
+          "text": "Close the distance and attack",
+          "targetSection": 26
+        },
+        {
+          "text": "Back away \u2014 you are not ready for this",
+          "targetSection": 29
+        }
+      ]
+    },
+    {
+      "number": 26,
+      "type": "NORMAL",
+      "narrative": "Vordan raises his staff and a bolt of crackling force tears across the sanctum toward you. You dodge aside and the impact craters the stone behind you. There is no more preamble. This is a fight to the death.\n\nVordan is fast \u2014 faster than a man his age has any right to be \u2014 and the staff amplifies every blow. If Dorian is with you, he flanks without being told, pressing Vordan's left side while you take the right. Even so, this will not be easy.",
+      "events": [
+        {
+          "type": "COMBAT",
+          "opponents": [
+            {
+              "name": "Stonebridge Sorcerer",
+              "skill": 8,
+              "stamina": 10
+            }
+          ],
+          "participants": [
+            "dorian"
+          ],
+          "scripts": {
+            "onCombatStart": "if state.get('companionSurvived') then ctx.showMessage('Dorian moves into position at your side. Two against one \u2014 the odds feel almost fair.') else ctx.showMessage('You face Vordan alone. Every blow counts.') end",
+            "onCombatEnd": "ctx.navigateTo(27)"
+          },
+          "failureSection": 28,
+          "successSection": 27
+        }
+      ],
+      "scripts": {},
+      "choices": []
+    },
+    {
+      "number": 27,
+      "type": "NORMAL",
+      "narrative": "Vordan staggers. His staff cracks against the stone floor and he drops to one knee, the sigils on his robes flickering out one by one as whatever power he had drawn to him dissipates.\n\nHe looks up. For a moment, something crosses his face \u2014 not quite fear, not quite respect.\n\n'The vault was never yours to take,' you tell him.\n\n'No,' he says. 'It was not.' He does not get up.\n\nBeyond him, at the far end of the sanctum, a second door stands open \u2014 or opened when he fell. Through it, a warm amber glow. The smell of old metal and older stone.",
+      "events": [],
+      "scripts": {},
+      "choices": [
+        {
+          "text": "Step over Vordan and walk toward the treasure vault",
+          "targetSection": 30
+        }
+      ]
+    },
+    {
+      "number": 28,
+      "type": "INSTANT_DEATH",
+      "narrative": "Vordan's staff catches you across the temple and the sanctum goes white. You have a single moment of clarity \u2014 the vaulted ceiling above you, the cold blue light, the sound of your sword hitting the stone floor a long way away \u2014 and then nothing.\n\nThe vault keeps its secrets. Vordan keeps the vault.",
+      "events": [],
+      "choices": []
+    },
+    {
+      "number": 29,
+      "type": "INSTANT_DEATH",
+      "narrative": "The sorcerer's last spell takes you from behind as you try to retreat through the arch. You did not hear him recover. You did not see the staff come up. There is only sudden, total darkness, and the distant sound of ancient stone closing over you.",
+      "events": [],
+      "choices": []
+    },
+    {
+      "number": 30,
+      "type": "VICTORY",
+      "narrative": "The treasure vault is a chamber cut from the living rock, its walls sheathed in dwarven granite polished to a mirror finish. Chests of dark hardwood, iron-bound and stacked three high, line every wall. Open crates hold coin in a dozen currencies \u2014 gold, silver, minted dwarven ingots stamped with the marks of clans that have not existed for five hundred years. Weapons on wall-racks, their edges still bright. Jewelled instruments whose purpose you cannot guess.\n\nVordan sealed all this away and called it his own. It was never his.\n\nBehind you, you hear Dorian let out a slow breath \u2014 or you hear only silence, and the weight of it where he should be.\n\nYou lower yourself onto the nearest chest and let the exhaustion arrive. The vault is open. The sorcerer is defeated. Whatever you carried down here \u2014 hope, greed, obligation, grief \u2014 you have earned the right to set it down.\n\nYou have won.",
+      "events": [],
+      "choices": []
     }
   ]
 }

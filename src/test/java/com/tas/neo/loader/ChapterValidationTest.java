@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tas.neo.analysis.SectionGraph;
 import com.tas.neo.domain.adventure.Adventure;
+import com.tas.neo.domain.adventure.GridTarget;
 import com.tas.neo.domain.adventure.Section;
 import com.tas.neo.domain.adventure.event.SectionEvent;
+import com.tas.neo.domain.location.Grid;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -223,8 +225,13 @@ class ChapterValidationTest {
         Set<Integer> reachable = SectionGraph.of(adventure)
                 .reachableFrom(ch.allEntrySections(), ch.rangeFrom(), ch.rangeTo());
 
+        // An exit is also reachable if it is a toSection target of a grid whose entry
+        // cell is reachable from within this chapter (i.e. a GridTarget choice in a
+        // section within the range leads into the grid, and the grid exits to this section).
+        Set<Integer> gridBridgedExits = gridBridgedExitSections(adventure, reachable);
+
         List<Integer> unreachableExits = authoredExits.stream()
-                .filter(exit -> !reachable.contains(exit))
+                .filter(exit -> !reachable.contains(exit) && !gridBridgedExits.contains(exit))
                 .sorted()
                 .toList();
 
@@ -237,6 +244,37 @@ class ChapterValidationTest {
     // -----------------------------------------------------------------------
     // Helpers
     // -----------------------------------------------------------------------
+
+    /**
+     * Returns section numbers reachable by exiting a grid whose entry is reachable
+     * (i.e. some section in {@code reachable} has a GridTarget choice pointing to that
+     * grid, and the grid has a passage with toSection). This bridges the gap between
+     * section-graph reachability and grid-mediated transitions.
+     */
+    private static Set<Integer> gridBridgedExitSections(Adventure adventure, Set<Integer> reachable) {
+        Set<String> reachableGridIds = new HashSet<>();
+        for (int sectionNum : reachable) {
+            try {
+                Section s = adventure.getSection(sectionNum);
+                for (var choice : s.choices()) {
+                    if (choice.target() instanceof GridTarget gt) {
+                        reachableGridIds.add(gt.gridId());
+                    }
+                }
+            } catch (IllegalArgumentException ignored) {}
+        }
+        Set<Integer> exits = new HashSet<>();
+        for (String gridId : reachableGridIds) {
+            adventure.getGrid(gridId).ifPresent(grid -> {
+                for (var cell : grid.cells()) {
+                    for (var passage : cell.passages().values()) {
+                        passage.toSection().ifPresent(exits::add);
+                    }
+                }
+            });
+        }
+        return exits;
+    }
 
     private static boolean inRange(int n, ChapterCase ch) {
         return n >= ch.rangeFrom() && n <= ch.rangeTo();

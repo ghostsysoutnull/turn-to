@@ -1,0 +1,51 @@
+== Section Digest: the-vaults-of-stonebridge / ch2 ==
+Generated: 2026-04-16  |  Range: §16–§30  |  Entry: §20
+
+[§16] INSTANT_DEATH 
+  You fell down the shaft....
+
+[§17] NORMAL          →§21,§19,§16
+  The carved arch at the foot of the spiral stair opens into a low vaulted passage....
+
+[§18] NORMAL          →§22,§19
+  The passage opens into a low hall — a guardroom, once, to judge by the stone benches built into the walls....
+
+[§19] NORMAL          →§18
+  The eastern passage runs straight for thirty feet before curving south....
+
+[§20] NORMAL          →§17
+  You descend the last worn step of the spiral stair and pass under the carved arch into the upper sanctum....
+  hooks:  onEnter
+
+[§21] NORMAL          →§22
+  The passage opens into a small anteroom....
+
+[§22] NORMAL          →§24,§23
+  The antechamber is a low-ceilinged room not much larger than a stable....
+  conds:  [HAS:Vault Key]→§24:"Use the Vault Key to unlock the sealed door"  [LACKS:Vault Key]→§23:"You have no key. Search the antechamber for another way through."
+
+[§23] INSTANT_DEATH 
+  There is no other way through....
+
+[§24] NORMAL          →§25
+  The Vault Key turns in the lock with a sound like a bell struck underwater — a deep, resonant tone that travels up through your hand and int...
+
+[§25] NORMAL          →§26,§29
+  The passage ends. Through the arch you step into Vordan's inner sanctum....
+
+[§26] NORMAL        
+  Vordan raises his staff and a bolt of crackling force tears across the sanctum toward you....
+  events: COMBAT→§27/§28
+
+[§27] NORMAL          →§30
+  Vordan staggers. His staff cracks against the stone floor and he drops to one knee, the sigils on his robes flickering out one by one as wha...
+
+[§28] INSTANT_DEATH 
+  Vordan's staff catches you across the temple and the sanctum goes white....
+
+[§29] INSTANT_DEATH 
+  The sorcerer's last spell takes you from behind as you try to retreat through the arch....
+
+[§30] VICTORY       
+  The treasure vault is a chamber cut from the living rock, its walls sheathed in dwarven granite polished to a mirror finish....
+

@@ -1,0 +1,4 @@
+== State Variable Report: the-vaults-of-stonebridge ==
+Generated: 2026-04-16  |  Variables: 1
+
+  companionSurvived               set:§20(onEnter)  read:§26(combat.onCombatStart)
