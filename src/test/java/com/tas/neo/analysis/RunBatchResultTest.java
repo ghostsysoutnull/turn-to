@@ -229,15 +229,43 @@ class RunBatchResultTest {
     // -------------------------------------------------------------------------
 
     @Test
-    void neverSelectedChoices_empty_when_all_choices_selected_in_some_run() {
-        // RunResult has no "never selected" tracking at this level — that requires
-        // per-run selection records aggregated across the batch.
-        // Construct a batch where all choices were selected.
+    void neverSelectedChoices_returns_conditioned_choice_never_selected() {
+        NeverSelectedChoice choice = new NeverSelectedChoice(5, "Use the sword");
+        RunBatchResult batch = new RunBatchResult(
+            List.of(victory(2, List.of(1, 2), List.of())),
+            Set.of(choice),  // was available in some run
+            Set.of()         // never selected
+        );
+
+        assertThat(batch.neverSelectedChoices())
+            .as("neverSelectedChoices must return conditioned choices that were available " +
+                "at least once but selected zero times across all runs")
+            .containsExactly(choice);
+    }
+
+    @Test
+    void neverSelectedChoices_empty_when_all_conditioned_choices_selected_at_least_once() {
+        NeverSelectedChoice choice = new NeverSelectedChoice(5, "Use the sword");
+        RunBatchResult batch = new RunBatchResult(
+            List.of(victory(2, List.of(1, 2), List.of())),
+            Set.of(choice),  // was available
+            Set.of(choice)   // also selected in at least one run
+        );
+
+        assertThat(batch.neverSelectedChoices())
+            .as("neverSelectedChoices must be empty when every available conditioned " +
+                "choice was selected in at least one run")
+            .isEmpty();
+    }
+
+    @Test
+    void neverSelectedChoices_empty_with_default_constructor() {
         RunBatchResult batch = new RunBatchResult(List.of(
             victory(2, List.of(1, 2), List.of())
         ));
-        // With no selection records provided, neverSelectedChoices returns empty.
-        assertThat(batch.neverSelectedChoices()).isEmpty();
+        assertThat(batch.neverSelectedChoices())
+            .as("default constructor with no tracking data must return empty")
+            .isEmpty();
     }
 
     // -------------------------------------------------------------------------

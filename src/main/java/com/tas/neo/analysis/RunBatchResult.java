@@ -11,9 +11,19 @@ import java.util.Set;
 public class RunBatchResult {
 
     private final List<RunResult> runs;
+    private final Set<NeverSelectedChoice> everAvailable;
+    private final Set<NeverSelectedChoice> everSelected;
 
     public RunBatchResult(List<RunResult> runs) {
-        this.runs = List.copyOf(runs);
+        this(runs, Set.of(), Set.of());
+    }
+
+    public RunBatchResult(List<RunResult> runs,
+                          Set<NeverSelectedChoice> everAvailable,
+                          Set<NeverSelectedChoice> everSelected) {
+        this.runs         = List.copyOf(runs);
+        this.everAvailable = Set.copyOf(everAvailable);
+        this.everSelected  = Set.copyOf(everSelected);
     }
 
     public long outcomeCount(RunOutcome outcome) {
@@ -106,8 +116,9 @@ public class RunBatchResult {
     }
 
     public List<NeverSelectedChoice> neverSelectedChoices() {
-        // Full tracking requires per-run selection records; returning empty for now.
-        return List.of();
+        return everAvailable.stream()
+            .filter(c -> !everSelected.contains(c))
+            .toList();
     }
 
     public Set<String> warnings() {

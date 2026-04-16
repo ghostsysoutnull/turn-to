@@ -40,6 +40,10 @@ public class RunSimulator {
     // Chapter boundary detection: map from entry section → chapter id
     private final java.util.Map<Integer, String> chapterEntries = new java.util.HashMap<>();
 
+    // Conditioned choice tracking — populated during run()
+    private final java.util.Set<NeverSelectedChoice> conditionedAvailable = new java.util.LinkedHashSet<>();
+    private final java.util.Set<NeverSelectedChoice> conditionedSelected  = new java.util.LinkedHashSet<>();
+
     public RunSimulator(Adventure adventure, JsonNode rawJson, ScriptEngine scriptEngine,
                         RunConfiguration config, Random random) {
         this.adventure = adventure;
@@ -147,6 +151,16 @@ public class RunSimulator {
             int idx = config.choiceSelector().select(available, state, random);
             Choice chosen = available.get(idx);
 
+            // Track conditioned choices: record all that were available, and which was selected
+            for (Choice c : available) {
+                if (c.condition().isPresent()) {
+                    conditionedAvailable.add(new NeverSelectedChoice(currentSection, c.text()));
+                }
+            }
+            if (chosen.condition().isPresent()) {
+                conditionedSelected.add(new NeverSelectedChoice(currentSection, chosen.text()));
+            }
+
             if (chosen.target() instanceof SectionTarget t) {
                 currentSection = t.sectionNumber();
             } else {
@@ -248,6 +262,16 @@ public class RunSimulator {
                 // Script errors are non-fatal in simulation
             }
         });
+    }
+
+    /** Conditioned choices that were available (condition met) in this run. Call after run(). */
+    public java.util.Set<NeverSelectedChoice> conditionedChoicesAvailable() {
+        return java.util.Collections.unmodifiableSet(conditionedAvailable);
+    }
+
+    /** Conditioned choices that were selected in this run. Call after run(). */
+    public java.util.Set<NeverSelectedChoice> conditionedChoicesSelected() {
+        return java.util.Collections.unmodifiableSet(conditionedSelected);
     }
 
     private List<Choice> availableChoices(Section section, SimulatedGameState state,

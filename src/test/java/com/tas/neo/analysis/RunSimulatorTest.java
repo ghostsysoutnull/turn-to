@@ -344,4 +344,87 @@ class RunSimulatorTest {
             .as("sectionsVisited must record all sections in traversal order")
             .containsExactly(1, 2, 3);
     }
+
+    // -------------------------------------------------------------------------
+    // Conditioned choice tracking
+    // -------------------------------------------------------------------------
+
+    @Test
+    void conditioned_choice_available_when_condition_met() {
+        Section s1 = normal(1, List.of(
+            Choice.to("use sword", new SectionTarget(2), new HasItemCondition("Sword")),
+            choiceTo(3)
+        ));
+        // Give the Sword via onLoad so the simulator's own state has it
+        ScriptBlock scripts = new ScriptBlock(Map.of("onLoad", "ctx.addItem('Sword')"));
+        Adventure adv = new Adventure(
+            "test", "Test", "", 1, 0,
+            List.of(s1, victory(2), victory(3)), List.of(), List.of(), List.of(), List.of(),
+            scripts
+        );
+
+        RunSimulator simulator = new RunSimulator(adv, noChapters(), new LuaScriptEngine(), defaults(), new Random(0));
+        simulator.run();
+
+        assertThat(simulator.conditionedChoicesAvailable())
+            .as("conditioned choice must appear in available set when its condition is met")
+            .contains(new NeverSelectedChoice(1, "use sword"));
+    }
+
+    @Test
+    void conditioned_choice_not_tracked_when_condition_unmet() {
+        Section s1 = normal(1, List.of(
+            Choice.to("use sword", new SectionTarget(2), new HasItemCondition("Sword")),
+            choiceTo(3)
+        ));
+        Adventure adv = adventureWith(s1, victory(2), victory(3));
+
+        RunSimulator simulator = new RunSimulator(adv, noChapters(), NO_OP, defaults(), new Random(0));
+        simulator.run(); // no Sword in inventory — conditioned choice filtered out
+
+        assertThat(simulator.conditionedChoicesAvailable())
+            .as("conditioned choice must not appear in available set when its condition is unmet")
+            .doesNotContain(new NeverSelectedChoice(1, "use sword"));
+    }
+
+    @Test
+    void selected_conditioned_choice_appears_in_selected_set() {
+        // Only the conditioned choice is available (unconditional is removed), so it must be selected
+        Section s1 = normal(1, List.of(
+            Choice.to("use sword", new SectionTarget(2), new HasItemCondition("Sword"))
+        ));
+        Adventure adv = adventureWith(s1, victory(2));
+
+        // Provide Sword via adventure onLoad script
+        ScriptBlock scripts = new ScriptBlock(Map.of("onLoad", "ctx.addItem('Sword')"));
+        Adventure advWithScript = new Adventure(
+            "test", "Test", "", 1, 0,
+            List.of(s1, victory(2)), List.of(), List.of(), List.of(), List.of(),
+            scripts
+        );
+
+        RunSimulator simulator = new RunSimulator(advWithScript, noChapters(),
+            new LuaScriptEngine(), defaults(), new Random(0));
+        simulator.run();
+
+        assertThat(simulator.conditionedChoicesSelected())
+            .as("conditioned choice selected in a run must appear in selected set")
+            .contains(new NeverSelectedChoice(1, "use sword"));
+    }
+
+    @Test
+    void unconditioned_choices_not_tracked() {
+        Section s1 = normal(1, List.of(choiceTo(2)));
+        Adventure adv = adventureWith(s1, victory(2));
+
+        RunSimulator simulator = new RunSimulator(adv, noChapters(), NO_OP, defaults(), new Random(0));
+        simulator.run();
+
+        assertThat(simulator.conditionedChoicesAvailable())
+            .as("unconditioned choices must not appear in the conditioned-available set")
+            .isEmpty();
+        assertThat(simulator.conditionedChoicesSelected())
+            .as("unconditioned choices must not appear in the conditioned-selected set")
+            .isEmpty();
+    }
 }

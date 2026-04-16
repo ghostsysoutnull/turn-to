@@ -29,13 +29,17 @@ public class AdventureRunner {
         LuaScriptEngine scriptEngine = new LuaScriptEngine();
         Random random = new Random(config.seed());
         List<RunResult> results = new ArrayList<>(config.runs());
+        Set<NeverSelectedChoice> everAvailable = new java.util.LinkedHashSet<>();
+        Set<NeverSelectedChoice> everSelected  = new java.util.LinkedHashSet<>();
 
         for (int i = 0; i < config.runs(); i++) {
             RunSimulator simulator = new RunSimulator(adventure, rawJson, scriptEngine, config, random);
             results.add(simulator.run());
+            everAvailable.addAll(simulator.conditionedChoicesAvailable());
+            everSelected.addAll(simulator.conditionedChoicesSelected());
         }
 
-        return new RunBatchResult(results);
+        return new RunBatchResult(results, everAvailable, everSelected);
     }
 
     /** CLI entry point: args[0] = path to adventure JSON file */
