@@ -67,22 +67,49 @@ public class AdventureRunner {
         Adventure adventure = new JsonAdventureLoader(adventuresDir).load(adventureId);
         JsonNode rawJson = new ObjectMapper().readTree(Files.readString(adventurePath));
 
-        ChoiceSelector selector = switch (strategy) {
-            case "survival"     -> new SurvivalChoiceSelector(adventure, new RandomChoiceSelector());
-            case "item-seeking" -> new ItemSeekingChoiceSelector();
-            default             -> new RandomChoiceSelector();
-        };
+        final RunBatchResult result;
+        final RunConfiguration config;
 
-        if (!avoided.isEmpty()) {
-            selector = new AvoidSectionsChoiceSelector(avoided, selector);
+        if ("all".equals(strategy)) {
+            List<ChoiceSelector> strategies = List.of(
+                new RandomChoiceSelector(),
+                new SurvivalChoiceSelector(adventure, new RandomChoiceSelector()),
+                new ItemSeekingChoiceSelector()
+            );
+            List<RunBatchResult> batches = new ArrayList<>();
+            for (ChoiceSelector s : strategies) {
+                ChoiceSelector sel = avoided.isEmpty() ? s : new AvoidSectionsChoiceSelector(avoided, s);
+                RunConfiguration c = new RunConfiguration(
+                    runs, sel, new com.tas.neo.mechanics.SeededDice(seed),
+                    seed, 20, OptionalInt.empty(), OptionalInt.empty()
+                );
+                batches.add(run(adventure, rawJson, c));
+            }
+            result = RunBatchResult.merge(batches);
+            ChoiceSelector allLabel = new ChoiceSelector() {
+                @Override public int select(List<com.tas.neo.domain.adventure.Choice> c,
+                                            SimulatedGameState s, Random r) { return 0; }
+                @Override public String name() { return "all (random + survival + item-seeking)"; }
+            };
+            config = new RunConfiguration(runs * strategies.size(), allLabel,
+                new com.tas.neo.mechanics.SeededDice(seed), seed, 20,
+                OptionalInt.empty(), OptionalInt.empty());
+        } else {
+            ChoiceSelector selector = switch (strategy) {
+                case "survival"     -> new SurvivalChoiceSelector(adventure, new RandomChoiceSelector());
+                case "item-seeking" -> new ItemSeekingChoiceSelector();
+                default             -> new RandomChoiceSelector();
+            };
+            if (!avoided.isEmpty()) {
+                selector = new AvoidSectionsChoiceSelector(avoided, selector);
+            }
+            config = new RunConfiguration(
+                runs, selector, new com.tas.neo.mechanics.SeededDice(seed),
+                seed, 20, OptionalInt.empty(), OptionalInt.empty()
+            );
+            result = run(adventure, rawJson, config);
         }
 
-        RunConfiguration config = new RunConfiguration(
-            runs, selector, new com.tas.neo.mechanics.SeededDice(seed),
-            seed, 20, OptionalInt.empty(), OptionalInt.empty()
-        );
-
-        RunBatchResult result = run(adventure, rawJson, config);
         String report = RunReportGenerator.generate(adventure, rawJson, result, config);
 
         System.out.print(report);

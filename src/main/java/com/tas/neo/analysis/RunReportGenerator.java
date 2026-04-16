@@ -24,7 +24,7 @@ public class RunReportGenerator {
         sb.append("== Adventure Run Report: ").append(id).append(" ==\n");
         sb.append("Runs: ").append(runs)
           .append("  Seed: ").append(config.seed())
-          .append("  Strategy: ").append(config.choiceSelector().getClass().getSimpleName())
+          .append("  Strategy: ").append(config.choiceSelector().name())
           .append("  MaxVisits: ").append(config.maxVisitsPerSection()).append("\n\n");
 
         // Outcomes

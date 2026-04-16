@@ -15,4 +15,9 @@ public interface ChoiceSelector {
      * @return index into choices (0-based)
      */
     int select(List<Choice> choices, SimulatedGameState state, Random random);
+
+    /** Human-readable label for reports. Defaults to the simple class name. */
+    default String name() {
+        return getClass().getSimpleName();
+    }
 }

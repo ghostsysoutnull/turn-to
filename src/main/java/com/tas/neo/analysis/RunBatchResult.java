@@ -1,5 +1,6 @@
 package com.tas.neo.analysis;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -13,6 +14,18 @@ public class RunBatchResult {
     private final List<RunResult> runs;
     private final Set<NeverSelectedChoice> everAvailable;
     private final Set<NeverSelectedChoice> everSelected;
+
+    public static RunBatchResult merge(List<RunBatchResult> batches) {
+        List<RunResult> allRuns = new ArrayList<>();
+        Set<NeverSelectedChoice> allAvailable = new LinkedHashSet<>();
+        Set<NeverSelectedChoice> allSelected  = new LinkedHashSet<>();
+        for (RunBatchResult b : batches) {
+            allRuns.addAll(b.runs);
+            allAvailable.addAll(b.everAvailable);
+            allSelected.addAll(b.everSelected);
+        }
+        return new RunBatchResult(allRuns, allAvailable, allSelected);
+    }
 
     public RunBatchResult(List<RunResult> runs) {
         this(runs, Set.of(), Set.of());
