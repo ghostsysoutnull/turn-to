@@ -2,6 +2,23 @@
 
 A text-based terminal adventure game inspired by the Fighting Fantasy gamebook series.
 
+## Running the Game
+
+```bash
+# Build a self-contained jar
+mvn package -DskipTests
+
+# Run with the default adventure
+java -jar target/tas-neo-1.0-SNAPSHOT.jar
+
+# Run a specific adventure (omit the .json extension)
+java -jar target/tas-neo-1.0-SNAPSHOT.jar the-iron-road
+```
+
+Available adventures are in the `adventures/` directory. The game reads from `stdin` and writes to `stdout`, so it requires an interactive terminal.
+
+---
+
 ## Documentation
 
 ### Specifications
