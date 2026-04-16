@@ -38,7 +38,9 @@ public class RunReportGenerator {
         sb.append("  VICTORY:      ").append(result.outcomeCount(RunOutcome.VICTORY)).append("\n");
         sb.append("  INSTANT_DEATH:").append(result.outcomeCount(RunOutcome.INSTANT_DEATH)).append("\n");
         sb.append("  STUCK:        ").append(result.outcomeCount(RunOutcome.STUCK)).append("\n");
-        sb.append("  CYCLE:        ").append(result.outcomeCount(RunOutcome.CYCLE)).append("\n\n");
+        sb.append("  CYCLE:        ").append(result.outcomeCount(RunOutcome.CYCLE)).append("\n");
+        sb.append("  GRID_ENTRY:   ").append(result.outcomeCount(RunOutcome.GRID_ENTRY))
+          .append("  (grid navigation not simulated)\n\n");
 
         // Coverage
         Set<Integer> covered = result.coveredSections();
@@ -138,6 +140,7 @@ public class RunReportGenerator {
         long stuck = result.outcomeCount(RunOutcome.STUCK);
         long cycle = result.outcomeCount(RunOutcome.CYCLE);
         long victory = result.outcomeCount(RunOutcome.VICTORY);
+        long gridEntry = result.outcomeCount(RunOutcome.GRID_ENTRY);
         boolean hasIssues = false;
         if (stuck > 0) {
             sb.append("  ✗ STUCK runs: ").append(stuck).append("\n");
@@ -147,7 +150,7 @@ public class RunReportGenerator {
             sb.append("  ✗ CYCLE runs: ").append(cycle).append("\n");
             hasIssues = true;
         }
-        if (victory == 0) {
+        if (victory == 0 && gridEntry == 0) {
             sb.append("  ✗ No VICTORY reached in ").append(runs).append(" runs\n");
             hasIssues = true;
         }

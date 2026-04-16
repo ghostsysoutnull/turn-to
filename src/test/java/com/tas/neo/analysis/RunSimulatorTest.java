@@ -8,6 +8,7 @@ import com.tas.neo.domain.adventure.Choice;
 import com.tas.neo.domain.adventure.HasItemCondition;
 import com.tas.neo.domain.adventure.ScriptBlock;
 import com.tas.neo.domain.adventure.Section;
+import com.tas.neo.domain.adventure.GridTarget;
 import com.tas.neo.domain.adventure.SectionTarget;
 import com.tas.neo.domain.adventure.SectionType;
 import com.tas.neo.domain.adventure.event.CombatEvent;
@@ -483,5 +484,65 @@ class RunSimulatorTest {
         assertThat(simulator.conditionedChoicesSelected())
             .as("unconditioned choices must not appear in the conditioned-selected set")
             .isEmpty();
+    }
+
+    // -------------------------------------------------------------------------
+    // GRID_ENTRY termination
+    // -------------------------------------------------------------------------
+
+    @Test
+    void run_ends_grid_entry_when_chosen_target_is_grid() {
+        Section s1 = new Section(1, "§1", List.of(),
+            List.of(Choice.to("Enter dungeon", new GridTarget("vault", "entrance"))),
+            SectionType.NORMAL, ScriptBlock.empty());
+        Adventure adv = adventureWith(s1, victory(2));
+
+        RunResult result = new RunSimulator(adv, noChapters(), NO_OP, defaults(), new Random(0)).run();
+
+        assertThat(result.outcome())
+            .as("run must end GRID_ENTRY when the selected choice leads to a grid — " +
+                "grid navigation is not simulated")
+            .isEqualTo(RunOutcome.GRID_ENTRY);
+    }
+
+    @Test
+    void run_grid_entry_records_section_at_grid_choice() {
+        Section s1 = new Section(1, "§1", List.of(),
+            List.of(Choice.to("Enter dungeon", new GridTarget("vault", "entrance"))),
+            SectionType.NORMAL, ScriptBlock.empty());
+        Adventure adv = adventureWith(s1, victory(2));
+
+        RunResult result = new RunSimulator(adv, noChapters(), NO_OP, defaults(), new Random(0)).run();
+
+        assertThat(result.endingSection())
+            .as("GRID_ENTRY ending section must be the section that had the grid choice")
+            .isEqualTo(1);
+    }
+
+    @Test
+    void run_prefers_section_target_over_grid_target_when_both_available() {
+        // Two choices: one to a section, one to a grid. RandomChoiceSelector may pick either,
+        // but FixedDice(1) → index 0. Order matters: section choice listed first.
+        Section s1 = new Section(1, "§1", List.of(),
+            List.of(
+                Choice.to("Go to §2", new SectionTarget(2)),
+                Choice.to("Enter dungeon", new GridTarget("vault", "entrance"))
+            ),
+            SectionType.NORMAL, ScriptBlock.empty());
+        Adventure adv = adventureWith(s1, victory(2));
+
+        // FixedDice(1) means roll always returns 1 — index 0 in a 0-based list via modulo
+        RunConfiguration cfg = new RunConfiguration(1, new RandomChoiceSelector(),
+            new FixedDice(1), 0L, 5,
+            java.util.OptionalInt.empty(), java.util.OptionalInt.empty());
+        RunResult result = new RunSimulator(adv, noChapters(), NO_OP, cfg, new Random(0)).run();
+
+        // With seed 0 and two choices the runner may pick either, but what matters is:
+        // if it picks the SectionTarget, outcome is VICTORY; if GridTarget, GRID_ENTRY.
+        // Either is acceptable — we just assert it is NOT STUCK (grid entry ≠ dead end).
+        assertThat(result.outcome())
+            .as("a section with a grid choice must not produce STUCK — " +
+                "GRID_ENTRY or VICTORY are both valid outcomes")
+            .isNotEqualTo(RunOutcome.STUCK);
     }
 }

@@ -116,7 +116,9 @@ public class RunBatchResult {
 
     public RunLengthSummary runLengthSummary() {
         List<Integer> lengths = runs.stream()
-            .filter(r -> r.outcome() != RunOutcome.STUCK && r.outcome() != RunOutcome.CYCLE)
+            .filter(r -> r.outcome() != RunOutcome.STUCK
+                      && r.outcome() != RunOutcome.CYCLE
+                      && r.outcome() != RunOutcome.GRID_ENTRY)
             .map(r -> r.sectionsVisited().size())
             .toList();
         if (lengths.isEmpty()) {

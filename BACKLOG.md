@@ -20,7 +20,7 @@ adventure is structurally sound.
   - Add `GRID_ENTRY` outcome to `RunOutcome` enum, or count grid-entry runs as a distinct stat
   - Report section: show grid-entry run count as a neutral note, not an error
   - Remove "No VICTORY reached" error when all non-victory outcomes are grid-entry terminations
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16
 
 ### B1-2: Party member conditions always evaluate to false in simulation
 
@@ -133,4 +133,4 @@ adventure is structurally sound (consistency check passes, all sections have exi
 is misleading as-is, but this is a symptom of B1-1 rather than an adventure defect.
 
 - **Dependency:** B1-1 must be resolved first; then regenerate the vaults run report.
-- **Status:** [ ] blocked on B1-1
+- **Status:** [x] unblocked — B1-1 done; vaults now reports `ISSUES: none ✓`

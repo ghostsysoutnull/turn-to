@@ -213,6 +213,22 @@ class RunBatchResultTest {
     }
 
     @Test
+    void runLengthSummary_excludes_grid_entry_runs() {
+        RunBatchResult batch = new RunBatchResult(List.of(
+            victory(3, List.of(1, 2, 3), List.of()),          // length 3
+            new RunResult(RunOutcome.GRID_ENTRY, 1,
+                List.of(1), List.of(), List.of())              // excluded
+        ));
+
+        RunLengthSummary summary = batch.runLengthSummary();
+        assertThat(summary.average())
+            .as("runLengthSummary must exclude GRID_ENTRY runs, same as STUCK and CYCLE")
+            .isCloseTo(3.0, within(0.001));
+        assertThat(summary.min()).isEqualTo(3);
+        assertThat(summary.max()).isEqualTo(3);
+    }
+
+    @Test
     void runLengthSummary_all_runs_included_when_no_stuck_or_cycle() {
         RunBatchResult batch = new RunBatchResult(List.of(
             victory(5, List.of(1, 2, 5), List.of()),          // length 3

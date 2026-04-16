@@ -168,8 +168,12 @@ public class RunSimulator {
 
             if (chosen.target() instanceof SectionTarget t) {
                 currentSection = t.sectionNumber();
+            } else if (chosen.target() instanceof com.tas.neo.domain.adventure.GridTarget) {
+                // Grid navigation is not simulated — record as GRID_ENTRY, not STUCK
+                return new RunResult(RunOutcome.GRID_ENTRY, currentSection,
+                    state.sectionsVisited(), state.chapterSnapshots(), List.of());
             } else {
-                // Non-section targets (grid, system) — treat as stuck in simulation
+                // SystemChoiceTarget or other — treat as stuck
                 return new RunResult(RunOutcome.STUCK, currentSection,
                     state.sectionsVisited(), state.chapterSnapshots(), List.of());
             }
@@ -291,7 +295,8 @@ public class RunSimulator {
         return all.stream()
             .filter(c -> c.condition().isEmpty()
                 || ConditionEvaluator.evaluate(c.condition().get(), state))
-            .filter(c -> c.target() instanceof SectionTarget)
+            .filter(c -> c.target() instanceof SectionTarget
+                      || c.target() instanceof com.tas.neo.domain.adventure.GridTarget)
             .toList();
     }
 }

@@ -102,6 +102,74 @@ class RunReportGeneratorTest {
     }
 
     // -------------------------------------------------------------------------
+    // GRID_ENTRY in report (B1-1)
+    // -------------------------------------------------------------------------
+
+    @Test
+    void grid_entry_outcome_appears_in_outcomes_section() {
+        Adventure adv = adventureWithItems();
+        JsonNode raw = noChaptersJson();
+        RunBatchResult result = new RunBatchResult(List.of(
+            new RunResult(RunOutcome.GRID_ENTRY, 1, List.of(1), List.of(), List.of())
+        ));
+
+        String report = RunReportGenerator.generate(adv, raw, result, config(1));
+
+        assertThat(report)
+            .as("GRID_ENTRY count must appear in OUTCOMES section")
+            .contains("GRID_ENTRY:");
+    }
+
+    @Test
+    void grid_entry_does_not_appear_as_error_in_issues() {
+        Adventure adv = adventureWithItems();
+        JsonNode raw = noChaptersJson();
+        RunBatchResult result = new RunBatchResult(List.of(
+            new RunResult(RunOutcome.GRID_ENTRY, 1, List.of(1), List.of(), List.of())
+        ));
+
+        String report = RunReportGenerator.generate(adv, raw, result, config(1));
+
+        assertThat(report)
+            .as("GRID_ENTRY runs must not be reported as an error in ISSUES — " +
+                "grid navigation is an expected simulation boundary, not a bug")
+            .doesNotContain("✗ GRID_ENTRY");
+    }
+
+    @Test
+    void no_victory_error_suppressed_when_all_runs_hit_grid_entry() {
+        Adventure adv = adventureWithItems();
+        JsonNode raw = noChaptersJson();
+        RunBatchResult result = new RunBatchResult(List.of(
+            new RunResult(RunOutcome.GRID_ENTRY, 1, List.of(1), List.of(), List.of()),
+            new RunResult(RunOutcome.GRID_ENTRY, 1, List.of(1), List.of(), List.of())
+        ));
+
+        String report = RunReportGenerator.generate(adv, raw, result, config(2));
+
+        assertThat(report)
+            .as("'No VICTORY reached' error must be suppressed when all non-victory runs " +
+                "terminated at grid entry — the adventure may be structurally sound")
+            .doesNotContain("✗ No VICTORY reached");
+    }
+
+    @Test
+    void no_victory_error_shown_when_no_grid_entry_and_no_victory() {
+        Adventure adv = adventureWithItems();
+        JsonNode raw = noChaptersJson();
+        RunBatchResult result = new RunBatchResult(List.of(
+            new RunResult(RunOutcome.STUCK, 1, List.of(1), List.of(), List.of())
+        ));
+
+        String report = RunReportGenerator.generate(adv, raw, result, config(1));
+
+        assertThat(report)
+            .as("'No VICTORY reached' error must still appear when runs end STUCK " +
+                "with no grid-entry runs to explain the absence of victory")
+            .contains("✗ No VICTORY reached");
+    }
+
+    // -------------------------------------------------------------------------
     // Report header format (T3-4)
     // -------------------------------------------------------------------------
 
