@@ -257,6 +257,72 @@ class PersonalCombatSystemTest {
     }
 
     // -------------------------------------------------------------------------
+    // combatResult() in returned outcome carries round and stamina summary
+    // -------------------------------------------------------------------------
+
+    @Test
+    void run_outcome_contains_combat_result_with_rounds_and_stamina_lost() {
+        // Round 1: creature wins → player -2 STAMINA.
+        // Round 2: player wins → goblin (stamina 2) defeated. Fight ends.
+        Player player = playerWith(5, 10);
+        Creature goblin = new Creature("Goblin", 10, 2);
+
+        SequenceDice dice = new SequenceDice(
+            1, 1,  6, 6,   // round 1: creature wins, player -2
+            6, 6,  1, 1    // round 2: player wins, goblin defeated
+        );
+        ScriptedInput noLuck = new ScriptedInput(0, 0);
+        PersonalCombatSystem system = systemWith(dice, noLuck, output);
+
+        CombatOutcome outcome = system.run(
+            player, List.of(), List.of(goblin), Map.of(),
+            emptyRegistry(), null, noLuck, output, dice);
+
+        assertThat(outcome.combatResult())
+            .as("PersonalCombatSystem must populate combatResult() in the returned outcome")
+            .isPresent();
+        assertThat(outcome.combatResult().get().roundsFought())
+            .as("combatResult roundsFought must equal the number of rounds resolved (2)")
+            .isEqualTo(2);
+        assertThat(outcome.combatResult().get().playerStaminaLost())
+            .as("combatResult playerStaminaLost must equal stamina lost during the fight (2)")
+            .isEqualTo(2);
+    }
+
+    @Test
+    void run_outcome_combat_result_reflects_player_won_true_on_victory() {
+        Player player = playerWith(10, 20);
+        Creature goblin = new Creature("Goblin", 5, 2);
+        PersonalCombatSystem system = systemWith(new FixedDice(6), input, output);
+
+        CombatOutcome outcome = system.run(
+            player, List.of(), List.of(goblin), Map.of(),
+            emptyRegistry(), null, input, output, new FixedDice(6));
+
+        assertThat(outcome.combatResult().get().playerWon())
+            .as("combatResult playerWon must be true when the player wins the fight")
+            .isTrue();
+    }
+
+    @Test
+    void run_outcome_combat_result_reflects_player_won_false_on_defeat() {
+        Player player = playerWith(5, 2);
+        Creature goblin = new Creature("Troll", 10, 20);
+
+        SequenceDice dice = new SequenceDice(1, 1, 6, 6);
+        ScriptedInput noLuck = new ScriptedInput(0);
+        PersonalCombatSystem system = systemWith(dice, noLuck, output);
+
+        CombatOutcome outcome = system.run(
+            player, List.of(), List.of(goblin), Map.of(),
+            emptyRegistry(), null, noLuck, output, dice);
+
+        assertThat(outcome.combatResult().get().playerWon())
+            .as("combatResult playerWon must be false when the player is defeated")
+            .isFalse();
+    }
+
+    // -------------------------------------------------------------------------
     // CombatSystem interface contract: PersonalCombatSystem implements CombatSystem
     // -------------------------------------------------------------------------
 

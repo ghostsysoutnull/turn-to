@@ -144,6 +144,14 @@ public class HookDispatcher {
                     state.player(), state.activePartyMembers(),
                     e.opponents(), e.params(),
                     combatRegistry, this, input, output, dice);
+                outcome.combatResult().ifPresent(cr -> {
+                    String opponentName = e.opponents().isEmpty() ? "Unknown" : e.opponents().get(0).name();
+                    int oppSkill   = e.opponents().isEmpty() ? 0 : e.opponents().get(0).skill();
+                    int oppStamina = e.opponents().isEmpty() ? 0 : e.opponents().get(0).stamina();
+                    logger.logEvent(new com.tas.neo.io.OutputEvent.CombatResolved(
+                        opponentName, oppSkill, oppStamina,
+                        cr.playerWon(), cr.roundsFought(), cr.playerStaminaLost()));
+                });
                 if (outcome.navigateTo().isPresent()) {
                     navigateTo(adventure, outcome.navigateTo().get());
                 } else if (outcome.type() == com.tas.neo.domain.combat.CombatOutcomeType.DEFEAT) {

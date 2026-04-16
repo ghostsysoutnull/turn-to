@@ -160,6 +160,13 @@ public class FileGameLogger implements GameLogger {
                         w.println("  STAT_CHANGE: " + e.attribute() + " " + sign + e.delta()
                             + " (now " + e.newValue() + ")");
                     }
+                    case OutputEvent.CombatResolved e -> {
+                        String result = e.playerWon() ? "PLAYER VICTORY" : "PLAYER DEFEAT";
+                        w.println("  COMBAT: " + e.opponentName()
+                            + " (SKILL " + e.opponentSkill() + ", STAMINA " + e.opponentStamina() + ")"
+                            + " — " + result
+                            + " (" + e.rounds() + " rounds, -" + e.staminaLost() + " STAMINA)");
+                    }
                     default -> {} // other events (status, choices, etc.) not shown in log
                 }
             }

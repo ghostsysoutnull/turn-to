@@ -395,6 +395,36 @@ class FileGameLoggerTest {
     }
 
     // -------------------------------------------------------------------------
+    // Text log: combat resolved line
+    // -------------------------------------------------------------------------
+
+    @Test
+    void txt_log_shows_combat_victory_line(@TempDir Path sessionsDir) throws IOException {
+        FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
+        logger.logNavigation(new NavigationEntry("START", "section:1", "START"));
+        logger.logEvent(new OutputEvent.CombatResolved("Gate Guard", 7, 8, true, 4, 6));
+        logger.close();
+
+        String txt = readTxtLog(sessionsDir);
+        assertThat(txt)
+            .as("text log must show COMBAT line with opponent stats, PLAYER VICTORY, rounds and stamina lost")
+            .contains("  COMBAT: Gate Guard (SKILL 7, STAMINA 8) — PLAYER VICTORY (4 rounds, -6 STAMINA)");
+    }
+
+    @Test
+    void txt_log_shows_combat_defeat_line(@TempDir Path sessionsDir) throws IOException {
+        FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
+        logger.logNavigation(new NavigationEntry("START", "section:1", "START"));
+        logger.logEvent(new OutputEvent.CombatResolved("Troll", 9, 12, false, 2, 4));
+        logger.close();
+
+        String txt = readTxtLog(sessionsDir);
+        assertThat(txt)
+            .as("text log must show COMBAT line with PLAYER DEFEAT when the player lost")
+            .contains("  COMBAT: Troll (SKILL 9, STAMINA 12) — PLAYER DEFEAT (2 rounds, -4 STAMINA)");
+    }
+
+    // -------------------------------------------------------------------------
     // Helper: read and parse the single .json file from the temp dir
     // -------------------------------------------------------------------------
 

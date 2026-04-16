@@ -40,6 +40,6 @@ public class PersonalCombatSystem implements CombatSystem {
         CombatResult result = engine.fight(player, opponents, simultaneous);
         player.modifyAttribute(AttributeType.STAMINA, -result.playerStaminaLost());
         CombatOutcomeType type = result.playerWon() ? CombatOutcomeType.VICTORY : CombatOutcomeType.DEFEAT;
-        return new CombatOutcome(type, Optional.empty());
+        return new CombatOutcome(type, Optional.empty(), Optional.of(result));
     }
 }

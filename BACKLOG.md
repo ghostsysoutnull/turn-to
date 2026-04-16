@@ -80,7 +80,7 @@ the player won a fight, how many rounds it took, or how much STAMINA they lost.
   - Text log renders: `  COMBAT: Gate Guard (SKILL 7, STAMINA 8) — PLAYER VICTORY (4 rounds, -6 STAMINA)`
 - **Note:** More invasive than B2-1 — touches the combat system interface. Should be its own session.
 - **Spec:** `docs/specs/10-session-logging.md`
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16
 
 ### B2-3: Spec coverage — analysis tools have no spec documents
 

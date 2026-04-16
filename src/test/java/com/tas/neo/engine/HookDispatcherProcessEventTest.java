@@ -17,6 +17,8 @@ import com.tas.neo.domain.adventure.event.SkillTestEvent;
 import com.tas.neo.domain.adventure.event.StatChangeEvent;
 import com.tas.neo.domain.combat.CombatOutcome;
 import com.tas.neo.domain.combat.CombatOutcomeType;
+import com.tas.neo.domain.combat.CombatResult;
+import com.tas.neo.domain.combat.Creature;
 import com.tas.neo.domain.item.Inventory;
 import com.tas.neo.domain.item.Item;
 import com.tas.neo.domain.item.ItemCategory;
@@ -548,6 +550,64 @@ class HookDispatcherProcessEventTest {
         assertThat(logged.itemName())
             .as("ItemLost event must carry the item name from the ItemEvent")
             .isEqualTo("Key");
+    }
+
+    @Test
+    void processEvent_CombatEvent_logs_CombatResolved_when_outcome_has_combat_result() {
+        RecordingGameLogger logger = new RecordingGameLogger();
+        CombatResult combatResult = new CombatResult(true, 3, 4);
+        CombatSystemRegistry registry = new CombatSystemRegistry() {
+            @Override public CombatSystem get(String id) {
+                return new CombatSystem() {
+                    @Override public String id() { return id; }
+                    @Override
+                    public CombatOutcome run(
+                            Player player,
+                            java.util.List<com.tas.neo.domain.party.PartyMember> participants,
+                            java.util.List<com.tas.neo.domain.combat.Creature> opponents,
+                            java.util.Map<String, Object> params,
+                            CombatSystemRegistry reg, HookDispatcher hooks,
+                            com.tas.neo.io.GameInput inp, com.tas.neo.io.GameOutput out,
+                            com.tas.neo.mechanics.Dice dice) {
+                        return new CombatOutcome(CombatOutcomeType.VICTORY, Optional.empty(),
+                            Optional.of(combatResult));
+                    }
+                };
+            }
+            @Override public boolean has(String id) { return true; }
+        };
+
+        Adventure adventure = adventureWithSections(normalSection(1), victorySection(30), normalSection(40));
+        state.navigateTo(adventure.getSection(1));
+
+        Creature guard = new Creature("Gate Guard", 7, 8);
+        CombatEvent event = new CombatEvent(
+            "personal", List.of(), List.of(guard),
+            false, Map.of(), ScriptBlock.empty(), 30, 40);
+
+        new HookDispatcher(new NoOpScriptEngine(), new ScriptedInput(), output, state,
+            new AdventureScriptState(), registry, new FixedDice(3), logger)
+            .processEvent(event, adventure);
+
+        assertThat(logger.sessionLog().events())
+            .as("processEvent(CombatEvent) with a combatResult must log a CombatResolved event")
+            .hasAtLeastOneElementOfType(com.tas.neo.io.OutputEvent.CombatResolved.class);
+        com.tas.neo.io.OutputEvent.CombatResolved resolved =
+            (com.tas.neo.io.OutputEvent.CombatResolved) logger.sessionLog().events().stream()
+                .filter(e -> e instanceof com.tas.neo.io.OutputEvent.CombatResolved)
+                .findFirst().orElseThrow();
+        assertThat(resolved.opponentName())
+            .as("CombatResolved must carry the first opponent's name")
+            .isEqualTo("Gate Guard");
+        assertThat(resolved.rounds())
+            .as("CombatResolved must carry the round count from combatResult")
+            .isEqualTo(3);
+        assertThat(resolved.staminaLost())
+            .as("CombatResolved must carry staminaLost from combatResult")
+            .isEqualTo(4);
+        assertThat(resolved.playerWon())
+            .as("CombatResolved playerWon must be true when the outcome type is VICTORY")
+            .isTrue();
     }
 
     @Test
