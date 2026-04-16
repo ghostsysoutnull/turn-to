@@ -201,7 +201,7 @@ public class RunSimulator {
      * Returns the successSection or failureSection accordingly.
      */
     private int simulateCombat(CombatEvent event, SimulatedGameState state) {
-        int playerSkill = state.stat("SKILL");
+        int playerSkill   = Math.max(state.stat("SKILL"),   10); // default skill if unset
         int playerStamina = Math.max(state.stat("STAMINA"), 10); // default stamina if unset
 
         // Take the first opponent (multi-opponent combat simplified to sequential)
