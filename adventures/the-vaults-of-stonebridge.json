@@ -6,7 +6,7 @@
   "initialProvisions": 10,
   "scripts": {
     "onLoad": "state.set('companionSurvived', false)",
-    "onStart": "ctx.showMessage('The dwarven town of Stonebridge rises from the mountain pass ahead. Somewhere beneath it lies an ancient vault — and the rogue sorcerer who has claimed it.')"
+    "onStart": "ctx.showMessage('The dwarven town of Stonebridge rises from the mountain pass ahead. Somewhere beneath it lies an ancient vault \u2014 and the rogue sorcerer who has claimed it.')"
   },
   "items": [
     {
@@ -44,8 +44,12 @@
         "message": "Dorian falls, clutching a wound you cannot tend. He raises a hand in a bitter farewell as you press on alone."
       },
       "stats": {
-        "SKILL": { "formula": "1d6+6" },
-        "STAMINA": { "formula": "1d6+12" }
+        "SKILL": {
+          "formula": "1d6+6"
+        },
+        "STAMINA": {
+          "formula": "1d6+12"
+        }
       }
     }
   ],
@@ -54,8 +58,11 @@
     {
       "id": "ch1",
       "title": "The Road and the Outer Defences",
-      "sectionRange": { "from": 1, "to": 15 },
-      "brief": "The player arrives at the outskirts of Stonebridge. The dwarven town is half-occupied by the sorcerer Vordan's hired guards, who have sealed off the lower quarter and the entrance to the ancient vault beneath the mountain. This chapter accomplishes three things: it introduces Dorian the sell-sword as a companion the player can recruit, it establishes the lethality of the outer defences through at least one mandatory combat and one Luck Test, and it ends with the player standing at the vault entrance, ready to descend.\n\nSetting: The mountain road, the inn at the edge of town (The Broken Pick), the lower quarter of Stonebridge, the fortified gate to the vault entrance.\n\nNamed characters: Dorian the Sell-sword — a laconic, battle-hardened mercenary who is down on his luck and willing to split any treasure 50/50. He is recruited in sections 3–5. Vordan's Gate Guard — a brutish man in mismatched armour, stationed at the checkpoint leading to the vault entrance. He is the mandatory combat encounter.\n\nItems in this chapter: Guard's Pass (gained from the Gate Guard after combat), Healing Potion (optionally available in the inn if the player has gold or passes a test). The Vault Key is NOT in this chapter — it is found inside the dungeon grid.\n\nTone: Terse and atmospheric. Short paragraphs. Danger is immediate. Dwarven stonework is oppressive and ancient. The sorcerer's hired guards are an ugly human presence in a place that is not theirs.\n\nArc contribution: By the end of ch1 the player has a companion (or has chosen to go alone), has bypassed or fought through the outer defences, and is at the threshold of the vault. The player should feel that the easy part is over.\n\nSection range: 1–15.\n\nGate references: This chapter's entry is section 1 (no incoming gate — adventure start). This chapter's exit sends the player to the dungeon grid via a choice with toGrid: 'vault-dungeon' and toCell: 'entrance' (typically from section 15). The grid's exit passages return the player to section 20 in ch2.",
+      "sectionRange": {
+        "from": 1,
+        "to": 15
+      },
+      "brief": "The player arrives at the outskirts of Stonebridge. The dwarven town is half-occupied by the sorcerer Vordan's hired guards, who have sealed off the lower quarter and the entrance to the ancient vault beneath the mountain. This chapter accomplishes three things: it introduces Dorian the sell-sword as a companion the player can recruit, it establishes the lethality of the outer defences through at least one mandatory combat and one Luck Test, and it ends with the player standing at the vault entrance, ready to descend.\n\nSetting: The mountain road, the inn at the edge of town (The Broken Pick), the lower quarter of Stonebridge, the fortified gate to the vault entrance.\n\nNamed characters: Dorian the Sell-sword \u2014 a laconic, battle-hardened mercenary who is down on his luck and willing to split any treasure 50/50. He is recruited in sections 3\u20135. Vordan's Gate Guard \u2014 a brutish man in mismatched armour, stationed at the checkpoint leading to the vault entrance. He is the mandatory combat encounter.\n\nItems in this chapter: Guard's Pass (gained from the Gate Guard after combat), Healing Potion (optionally available in the inn if the player has gold or passes a test). The Vault Key is NOT in this chapter \u2014 it is found inside the dungeon grid.\n\nTone: Terse and atmospheric. Short paragraphs. Danger is immediate. Dwarven stonework is oppressive and ancient. The sorcerer's hired guards are an ugly human presence in a place that is not theirs.\n\nArc contribution: By the end of ch1 the player has a companion (or has chosen to go alone), has bypassed or fought through the outer defences, and is at the threshold of the vault. The player should feel that the easy part is over.\n\nSection range: 1\u201315.\n\nGate references: This chapter's entry is section 1 (no incoming gate \u2014 adventure start). This chapter's exit sends the player to the dungeon grid via a choice with toGrid: 'vault-dungeon' and toCell: 'entrance' (typically from section 15). The grid's exit passages return the player to section 20 in ch2.",
       "gates": {
         "entryGate": null,
         "exitGates": [
@@ -64,17 +71,17 @@
             "out": {
               "guaranteed": [],
               "possible": [
-                "Player may have Dorian as an ACTIVE party member (recruited in sections 3–5)",
+                "Player may have Dorian as an ACTIVE party member (recruited in sections 3\u20135)",
                 "Player may carry 'Guard's Pass' (taken from Gate Guard after combat)",
                 "Player may carry 'Healing Potion' (purchased or found in inn)"
               ],
               "forbidden": [
-                "Player must not carry 'Vault Key' — it has not yet been found"
+                "Player must not carry 'Vault Key' \u2014 it has not yet been found"
               ]
             },
             "normalize": [
               "Section 15 is the vault entrance threshold. The player exits ch1 via a choice with toGrid: 'vault-dungeon' and toCell: 'entrance'. The grid is explored and the Vault Key may be found within it. When the grid's exit passage is taken (toSection: 20), the player arrives at section 20 which is the true ch2 entry point.",
-              "Section 16 is internal to ch2 and is an INSTANT_DEATH stub ('you fell down the shaft') — it exists to fill the section range and will never be reached by normal play."
+              "Section 16 is internal to ch2 and is an INSTANT_DEATH stub ('you fell down the shaft') \u2014 it exists to fill the section range and will never be reached by normal play."
             ]
           }
         ]
@@ -83,8 +90,11 @@
     {
       "id": "ch2",
       "title": "The Vault Interior and the Sorcerer's Sanctum",
-      "sectionRange": { "from": 16, "to": 30 },
-      "brief": "The player emerges from the vault dungeon grid into the deeper sanctum passages. They carry the Vault Key (found in the grid) if they found it; without it they cannot reach the sorcerer. This chapter handles three things: arrival from the grid into the upper sanctum (section 20), the sealed chamber door that requires the Vault Key, the sorcerer Vordan's combat encounter, and the VICTORY or INSTANT_DEATH outcomes.\n\nSetting: The upper sanctum passages (section 20 — carved dwarven corridors now defaced by Vordan's sigils), the sealed chamber door antechamber (section 22), Vordan's inner sanctum (section 26), and the treasure vault beyond (section 30).\n\nNamed characters: Vordan — the rogue sorcerer who has claimed the vault. He is encountered only in his inner sanctum (section 26). He is a formidable combat opponent. If Dorian is still ACTIVE, he participates in that combat. If Dorian was defeated in the grid or never recruited, the player faces Vordan alone.\n\nItems in this chapter: Vault Key (carried in from the grid — gained in the grid, not here). The sealed chamber door condition (section 22's gated choice) requires HAS_ITEM 'Vault Key'. Guard's Pass is irrelevant in ch2 and imposes no effects.\n\nState variable: 'companionSurvived' — section 20's onEnter script sets state.set('companionSurvived', ctx.isPartyMemberActive('dorian')) so that later narrative can reflect whether Dorian made it this far.\n\nTone: Claustrophobic and high-stakes. The sorcerer is genuinely dangerous. Lethality is at its peak here. Victory sections should feel hard-won.\n\nArc contribution: Ch2 delivers the climax. The player either uses the Vault Key to enter the sanctum, defeats Vordan, and claims the treasure — or dies trying.\n\nSection range: 16–30.\n\nGate references: Entry from the vault dungeon grid at section 20 (grid exit toSection: 20). Section 16 is an INSTANT_DEATH stub (fell down the shaft — unreachable in normal play, exists only to satisfy the gate entry section contract). No outgoing gates — sections 28, 29 are INSTANT_DEATH; section 30 is VICTORY.",
+      "sectionRange": {
+        "from": 16,
+        "to": 30
+      },
+      "brief": "The player emerges from the vault dungeon grid into the deeper sanctum passages. They carry the Vault Key (found in the grid) if they found it; without it they cannot reach the sorcerer. This chapter handles three things: arrival from the grid into the upper sanctum (section 20), the sealed chamber door that requires the Vault Key, the sorcerer Vordan's combat encounter, and the VICTORY or INSTANT_DEATH outcomes.\n\nSetting: The upper sanctum passages (section 20 \u2014 carved dwarven corridors now defaced by Vordan's sigils), the sealed chamber door antechamber (section 22), Vordan's inner sanctum (section 26), and the treasure vault beyond (section 30).\n\nNamed characters: Vordan \u2014 the rogue sorcerer who has claimed the vault. He is encountered only in his inner sanctum (section 26). He is a formidable combat opponent. If Dorian is still ACTIVE, he participates in that combat. If Dorian was defeated in the grid or never recruited, the player faces Vordan alone.\n\nItems in this chapter: Vault Key (carried in from the grid \u2014 gained in the grid, not here). The sealed chamber door condition (section 22's gated choice) requires HAS_ITEM 'Vault Key'. Guard's Pass is irrelevant in ch2 and imposes no effects.\n\nState variable: 'companionSurvived' \u2014 section 20's onEnter script sets state.set('companionSurvived', ctx.isPartyMemberActive('dorian')) so that later narrative can reflect whether Dorian made it this far.\n\nTone: Claustrophobic and high-stakes. The sorcerer is genuinely dangerous. Lethality is at its peak here. Victory sections should feel hard-won.\n\nArc contribution: Ch2 delivers the climax. The player either uses the Vault Key to enter the sanctum, defeats Vordan, and claims the treasure \u2014 or dies trying.\n\nSection range: 16\u201330.\n\nGate references: Entry from the vault dungeon grid at section 20 (grid exit toSection: 20). Section 16 is an INSTANT_DEATH stub (fell down the shaft \u2014 unreachable in normal play, exists only to satisfy the gate entry section contract). No outgoing gates \u2014 sections 28, 29 are INSTANT_DEATH; section 30 is VICTORY.",
       "gates": {
         "entryGate": {
           "entrySection": 20,
@@ -97,7 +107,7 @@
               "Dorian may be ACTIVE (if recruited in ch1 and not defeated in the grid)"
             ],
             "assumedState": [
-              "state.companionSurvived has not yet been set to a meaningful value — set it at section 20 onEnter"
+              "state.companionSurvived has not yet been set to a meaningful value \u2014 set it at section 20 onEnter"
             ]
           },
           "normalize": [
@@ -114,8 +124,510 @@
       "width": 4,
       "height": 3,
       "floors": 1,
-      "cells": []
+      "cells": [
+        {
+          "id": "entrance",
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "narrative": "You descend the last worn steps into the vault. Cold air presses close. The passage ahead is rough-hewn dwarven stone, its walls slick with centuries of seeping damp. Guttering torchlight from a bracket you cannot reach casts long shadows east and south. Somewhere deeper in the dark, something scrapes against stone.",
+          "events": [],
+          "scripts": {},
+          "passages": {
+            "east": {
+              "label": "Follow the north corridor east"
+            },
+            "south": {
+              "label": "Take the southern passage"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "z": 0,
+          "narrative": "A dwarven guard post, long since abandoned \u2014 a stone shelf, a broken stool, the black stain of an old fire against the wall. Fresh scratch marks in the floor speak of recent occupation. Corridors continue east and west; a side passage drops south toward the sound of rushing air.",
+          "events": [],
+          "scripts": {},
+          "passages": {
+            "west": {},
+            "east": {
+              "label": "Press on east toward the inner halls"
+            },
+            "south": {
+              "label": "Descend toward the shaft passage"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "z": 0,
+          "narrative": "The corridor widens here where two passages once met and were later crudely blocked with rubble on the north side. Torvan's sigil \u2014 a spiral carved in haste \u2014 mars the lintel of the eastern arch. The passage east leads toward a vaulted hall you can see by the torchlight. South, the floor drops away at an angle.",
+          "events": [],
+          "scripts": {},
+          "passages": {
+            "west": {},
+            "east": {
+              "label": "Enter the vaulted hall to the east"
+            },
+            "south": {
+              "label": "Descend the slanted passage south"
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "z": 0,
+          "narrative": "A broad vaulted hall, its ceiling lost in shadow. Ancient dwarven carvings line the walls \u2014 war scenes worn smooth by damp until the combatants are featureless wraiths. A stone figure at the far end moves. It is not stone. The Vault Warden turns, its hollow eye-sockets blazing with cold blue fire, and it advances.",
+          "events": [
+            {
+              "type": "COMBAT",
+              "opponents": [
+                {
+                  "name": "Vault Warden",
+                  "skill": 7,
+                  "stamina": 8
+                }
+              ],
+              "participants": [
+                "dorian"
+              ]
+            }
+          ],
+          "scripts": {},
+          "passages": {
+            "west": {
+              "label": "Return west through the corridor"
+            },
+            "south": {
+              "label": "Descend to the lower eastern passage"
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "z": 0,
+          "narrative": "A low side cave, its entrance nearly blocked by a partial collapse of the vault ceiling. You squeeze through into a natural hollow: unworked rock, a pool of black water in one corner, and faint scratches on the wall that might be old dwarven way-marks or might be nothing at all. A narrow opening leads north, and the main passage continues east.",
+          "events": [],
+          "scripts": {},
+          "passages": {
+            "north": {
+              "label": "Return north to the entrance corridor"
+            },
+            "east": {
+              "label": "Follow the passage east toward the bridge"
+            },
+            "south": {
+              "label": "Press on south through the hollow"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "z": 0,
+          "narrative": "The passage opens without warning onto a shaft. Thirty feet of black nothing yawns below. A rope bridge spans it \u2014 three fraying ropes and rotted planks, swaying in the updraft from the depths. On the far side the passage continues east toward a carved alcove. You must cross. Test your SKILL: roll two dice and compare to your SKILL score.",
+          "events": [],
+          "scripts": {
+            "onEnter": "if not state.has('bridgeOutcome') then local roll = math.random(1,6) + math.random(1,6); if roll <= ctx.getStat('SKILL') then state.set('bridgeOutcome', 'success'); ctx.showMessage('You move quickly and lightly. The planks groan but hold. You reach the far side.') else state.set('bridgeOutcome', 'failure'); ctx.modifyStat('STAMINA', -2); ctx.showMessage('A plank splinters under your foot. You lurch, grab a rope, and drag yourself across \u2014 bruised and winded. You lose 2 STAMINA.') end end"
+          },
+          "passages": {
+            "west": {
+              "label": "Back away from the bridge westward"
+            },
+            "north": {
+              "label": "Retreat north to the guard post"
+            },
+            "east": {
+              "condition": {
+                "type": "STATE_EQUALS",
+                "key": "bridgeOutcome",
+                "value": "success"
+              },
+              "label": "Cross the bridge to the carved alcove"
+            },
+            "south": {
+              "condition": {
+                "type": "STATE_EQUALS",
+                "key": "bridgeOutcome",
+                "value": "failure"
+              },
+              "label": "Descend the long way round through the lower passage"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "z": 0,
+          "narrative": "The carved alcove is a niche cut deliberately into the eastern wall \u2014 a dwarven offering-place, perhaps, or a warden's storage slot. Whatever occupied it before, something else rests here now: a heavy iron key, its bow shaped into interlocking dwarf-runes. The Vault Key. You take it. It is cold and much heavier than it looks.",
+          "events": [
+            {
+              "type": "ITEM_GAIN",
+              "itemName": "Vault Key"
+            }
+          ],
+          "scripts": {},
+          "passages": {
+            "west": {
+              "label": "Return west across the bridge"
+            },
+            "north": {
+              "label": "Climb north to the upper east corridor"
+            },
+            "east": {
+              "label": "Continue east to the lower halls"
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "z": 0,
+          "narrative": "The lower eastern passage runs beneath the vaulted hall above. The ceiling here is cracked and propped with ancient timber beams, some of which have split. Dust sifts down with each step. Passages lead north toward the hall, west toward the alcove, and south toward a staircase you can see by the glow of phosphorescent lichen.",
+          "events": [],
+          "scripts": {},
+          "passages": {
+            "west": {
+              "label": "Return west to the carved alcove"
+            },
+            "north": {
+              "label": "Climb north into the vaulted hall"
+            },
+            "south": {
+              "label": "Descend south toward the staircase"
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "z": 0,
+          "narrative": "A partially collapsed section of the vault where the ceiling has come down in one corner, forcing you to crouch. Broken dwarven masonry is strewn across the floor. There is just enough room to press through eastward, or to turn back north toward the side cave.",
+          "events": [],
+          "scripts": {},
+          "passages": {
+            "north": {
+              "label": "Return north to the side cave"
+            },
+            "east": {
+              "label": "Squeeze east through the rubble passage"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "z": 0,
+          "narrative": "The long way round \u2014 a winding passage that loops through the lower vault, clearly used as a service route by the dwarves who built this place. The walls here are smoother, the floor more level, and the old drainage channels on either side still carry a thin trickle of icy water. The detour costs time and effort. You emerge on a level with the lower east passages. Ways lead west, east, and north back toward the bridge shaft.",
+          "events": [],
+          "scripts": {},
+          "passages": {
+            "west": {
+              "label": "Return west toward the collapsed section"
+            },
+            "east": {
+              "label": "Continue east through the service passage"
+            },
+            "north": {
+              "label": "Climb back north toward the bridge"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "z": 0,
+          "narrative": "The southern service passage opens into a broader corridor where the floor is laid with flat stone flags, many of them cracked. Vordan's sigils have been scratched into the walls here with something sharp \u2014 fresh marks, not old dwarven carving. The eastern end of the corridor rises slightly; you can see the top of a stone staircase descending further down. West leads back the way you came; north climbs toward the alcove level.",
+          "events": [],
+          "scripts": {},
+          "passages": {
+            "west": {
+              "label": "Return west through the service passage"
+            },
+            "north": {
+              "label": "Climb north toward the carved alcove"
+            },
+            "east": {
+              "label": "Advance east to the staircase"
+            }
+          }
+        },
+        {
+          "id": "exit-stair",
+          "x": 3,
+          "y": 2,
+          "z": 0,
+          "narrative": "The staircase descends in a tight spiral of dwarven stonework, its steps worn to a shine by generations of use and then by years of neglect. At the bottom, a carved arch opens into the upper sanctum passages \u2014 Vordan's territory now, his sigils defacing the lintel. This is the way forward. There is no going back from here.",
+          "events": [],
+          "scripts": {},
+          "passages": {
+            "west": {
+              "label": "Return west along the flagstone corridor"
+            },
+            "north": {
+              "label": "Climb north to the lower eastern passage"
+            },
+            "south": {
+              "toSection": 20,
+              "label": "Descend the staircase into the upper sanctum"
+            }
+          }
+        }
+      ]
     }
   ],
-  "sections": []
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "The mountain road narrows as Stonebridge comes into view \u2014 a dwarven settlement carved into the living rock, its squat towers now hung with unfamiliar banners. A sorcerer called Vordan has taken the lower quarter, sealed the ancient vault beneath the town, and put his own guards on the gates. The air smells of forge-smoke and something else, something older. You came here for what is beneath the mountain. So did others, and they did not come back.\n\nThe road forks at the edge of town. A battered sign points left toward The Broken Pick, a traveller's inn. The sounds of boots on cobblestone echo from the lower quarter ahead.",
+      "events": [],
+      "choices": [
+        {
+          "text": "Head to The Broken Pick and get your bearings",
+          "targetSection": 2
+        },
+        {
+          "text": "Scout the lower quarter before doing anything else",
+          "targetSection": 7
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "NORMAL",
+      "narrative": "The Broken Pick is low-ceilinged and smoky, every beam dark with years of tallow and pipe-weed. A handful of travellers sit apart from each other, each minding their own misery. The innkeeper, a broad-shouldered dwarf woman, slides you an ale without being asked.\n\nAt the far end of the bar sits a man who doesn't fit \u2014 lean, watchful, a short sword worn close on his hip. He has the look of a soldier reduced to selling the only skill he has left. He meets your eyes and doesn't look away.",
+      "events": [],
+      "choices": [
+        {
+          "text": "Speak to the lean man at the bar",
+          "targetSection": 3
+        },
+        {
+          "text": "Buy a Healing Potion from the innkeeper's shelf (costs 3 Gold)",
+          "targetSection": 6,
+          "condition": {
+            "type": "HAS_GOLD",
+            "amount": 3
+          }
+        },
+        {
+          "text": "Leave the inn and head for the lower quarter gate",
+          "targetSection": 8
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "type": "NORMAL",
+      "narrative": "He introduces himself as Dorian. His voice is flat, unhurried, like a man who has stopped being surprised by anything. 'I was hired to guard a merchant caravan as far as Stonebridge. The merchant decided the vault was worth more than the caravan.' A pause. 'He went down there a week ago. He's not coming back.'\n\nHe turns his cup in his hands. 'I know the outer gate routine. I know where the patrol changes. And I work cheap \u2014 half whatever's in the vault.' He looks at you directly. 'The other half is yours. You look like you know how to use a blade.'",
+      "events": [],
+      "choices": [
+        {
+          "text": "Accept Dorian's offer \u2014 half the treasure is a fair price",
+          "targetSection": 4
+        },
+        {
+          "text": "Decline. You work alone.",
+          "targetSection": 5
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "type": "NORMAL",
+      "narrative": "Dorian nods once. No handshake, no ceremony. He drains his cup, sets it down, and stands. 'Good. Two swords are better than one against what's down there.' He pulls on his worn travel cloak and waits by the door while you finish your drink.\n\nYou take a moment to study him \u2014 measured, quiet, ready. A sell-sword who has run out of better options. But he's still alive, which is something in this trade.",
+      "events": [],
+      "scripts": {
+        "onEnter": "ctx.addPartyMember('dorian'); ctx.showMessage('Dorian joins you as a companion. He is ACTIVE and will fight alongside you.')"
+      },
+      "choices": [
+        {
+          "text": "Head out toward the lower quarter gate together",
+          "targetSection": 8
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "type": "NORMAL",
+      "narrative": "Dorian holds your gaze for a moment, then shrugs \u2014 the shrug of a man who expected no better. 'Your funeral,' he says, without malice. He picks up his cup again.\n\nYou leave him there. The vault is your business. You need no half-share complications.",
+      "events": [],
+      "choices": [
+        {
+          "text": "Leave the inn and head for the lower quarter gate",
+          "targetSection": 8
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "type": "NORMAL",
+      "narrative": "The innkeeper reaches under the counter and produces a small glass vial of deep red liquid. 'Travelling doctor sold me a case of these before Vordan's men showed up,' she says, setting it on the bar. 'Three gold. Take it or leave it.'\n\nYou count out the coins. She slides the vial across without another word.",
+      "events": [
+        {
+          "type": "GOLD_CHANGE",
+          "delta": -3
+        },
+        {
+          "type": "ITEM_GAIN",
+          "itemName": "Healing Potion"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Speak to the lean man at the bar",
+          "targetSection": 3
+        },
+        {
+          "text": "Leave the inn and head for the lower quarter gate",
+          "targetSection": 8
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "type": "NORMAL",
+      "narrative": "You slip away from the main road and work your way along the edge of the lower quarter, keeping to the shadows between the stone buildings. The patrol pattern is regular \u2014 two guards in mismatched armour, moving counterclockwise around the perimeter. You watch them for several minutes, looking for a gap.\n\nTest your LUCK. Are fortune and shadow both on your side?",
+      "events": [
+        {
+          "type": "LUCK_TEST",
+          "successSection": 8,
+          "failureSection": 9
+        }
+      ],
+      "choices": []
+    },
+    {
+      "number": 8,
+      "type": "NORMAL",
+      "narrative": "The checkpoint at the lower quarter gate is a squat stone arch reinforced with iron bars, a guardhouse bolted to one side. One guard sits on a stool outside the guardhouse, picking his teeth with a knife. A second stands at the gate itself \u2014 broader, dull-eyed, with a scarred cheek and a short axe thrust through his belt.\n\nThey have the gate fully closed. There is no pretending you have permission to pass.",
+      "events": [],
+      "choices": [
+        {
+          "text": "Demand they open the gate \u2014 make your intentions clear the hard way",
+          "targetSection": 10
+        },
+        {
+          "text": "Try to slip past while the seated guard is distracted",
+          "targetSection": 11
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "type": "NORMAL",
+      "narrative": "Your boot scrapes stone at exactly the wrong moment. One of the patrol guards wheels around and spots you in the shadows. 'Oi! You there!' He shoves you hard against the wall, checks your hands, and finds no weapons drawn. He decides you're a stupid wanderer, not a threat. 'Get back to the inn,' he growls. 'Lower quarter's sealed.'\n\nHe shoves you back toward the main road, harder than necessary. Your shoulder hits the wall and you bite back a curse. But you're free, and you now have a clearer picture of the patrol timing.",
+      "events": [
+        {
+          "type": "STAT_CHANGE",
+          "attribute": "STAMINA",
+          "delta": -1
+        }
+      ],
+      "choices": [
+        {
+          "text": "Approach the main gate checkpoint",
+          "targetSection": 8
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "type": "NORMAL",
+      "narrative": "The Gate Guard straightens at your approach, one hand already moving to the axe at his belt. Up close he's bigger than he looked \u2014 a solid wall of hired muscle, eyes flat and uncurious. He is not interested in your reasons. He is interested in you leaving.\n\n'Nobody passes,' he says. 'Orders.'\n\nHe attacks without waiting for your response.",
+      "events": [
+        {
+          "type": "COMBAT",
+          "opponents": [
+            {
+              "name": "Gate Guard",
+              "skill": 7,
+              "stamina": 8
+            }
+          ],
+          "scripts": {
+            "onCombatStart": "ctx.showMessage('The Gate Guard lunges, axe swinging. This is a fight to the finish.')",
+            "onCombatEnd": "ctx.addItem('Guard\\'s Pass'); ctx.showMessage('The guard falls. You search him quickly and find a worn token bearing Vordan\\'s sigil \u2014 a Guard\\'s Pass. It may be useful deeper in.')"
+          }
+        }
+      ],
+      "choices": [
+        {
+          "text": "Step through the now-unguarded gate",
+          "targetSection": 13
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "type": "NORMAL",
+      "narrative": "While the seated guard's attention drifts to a passing cat, you move low and fast toward the gate. The standing guard's back is half-turned. You need one moment of luck \u2014 just one.\n\nTest your LUCK.",
+      "events": [
+        {
+          "type": "LUCK_TEST",
+          "successSection": 12,
+          "failureSection": 10
+        }
+      ],
+      "choices": []
+    },
+    {
+      "number": 12,
+      "type": "NORMAL",
+      "narrative": "The seated guard sneezes, swears, fumbles for a cloth. The standing guard turns to look at him and in that moment you are through the gap and past the iron bars, pressing yourself flat against the stone on the other side. You hold your breath. Neither man moves to follow.\n\nYou are past the outer gate.",
+      "events": [],
+      "choices": [
+        {
+          "text": "Move deeper into the lower quarter passage",
+          "targetSection": 13
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "type": "NORMAL",
+      "narrative": "Beyond the gate the dwarven stonework changes \u2014 older, heavier, the walls carved with geometric patterns worn smooth by centuries. Torches in iron brackets throw orange light on a passage that slopes downward. The guards up top seem like a distant problem already.\n\nA side room to your left \u2014 the guardhouse interior \u2014 has been left unlocked. Through the open door you can see a rough table, a couple of stools, and a small cabinet on the wall.",
+      "events": [],
+      "choices": [
+        {
+          "text": "Search the guardhouse quickly before pressing on",
+          "targetSection": 14
+        },
+        {
+          "text": "Ignore it and head straight for the vault passage",
+          "targetSection": 15
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "type": "NORMAL",
+      "narrative": "The cabinet holds the detritus of bored guards \u2014 dice, a chipped mug, a damp blanket. But wedged behind the blanket is a small cloth pouch. Inside: a few scraps of paper with Vordan's sigil drawn in a shaky hand, as if someone was practising forgeries, and a crudely drawn map of the checkpoint rotation. Nothing of direct use \u2014 but confirmation that Vordan's operation here is held together by hired greed, not loyalty.\n\nYou pocket the map out of habit and move on.",
+      "events": [],
+      "choices": [
+        {
+          "text": "Head down toward the vault entrance",
+          "targetSection": 15
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "type": "NORMAL",
+      "narrative": "The passage opens onto a broad landing cut directly into the bedrock. Ahead of you, set into the cliff face, is a set of ancient dwarven doors \u2014 each one three times your height, iron-bound oak blackened with age, the sigils of the original builders carved deep into the stone above the lintel. They stand slightly ajar, a darkness beyond them that feels like held breath.\n\nThis is the vault entrance. Whatever Vordan has set loose inside, whatever has been waiting down there for centuries \u2014 it is on the other side of those doors.\n\nDorian, if he is with you, says nothing. He draws his blade. So do you.",
+      "events": [],
+      "choices": [
+        {
+          "text": "Step through the vault doors and descend into the dungeon",
+          "toGrid": "vault-dungeon",
+          "toCell": "entrance"
+        }
+      ]
+    }
+  ]
 }

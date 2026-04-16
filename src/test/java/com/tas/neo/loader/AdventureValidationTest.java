@@ -1,5 +1,7 @@
 package com.tas.neo.loader;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tas.neo.analysis.SectionGraph;
 import com.tas.neo.domain.adventure.Adventure;
 import com.tas.neo.domain.adventure.Section;
@@ -10,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,6 +41,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 class AdventureValidationTest {
 
     private static final Path ADVENTURES_DIR = Path.of("adventures");
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     static Stream<String> adventureIds() throws IOException {
         return Files.list(ADVENTURES_DIR)
@@ -70,6 +74,7 @@ class AdventureValidationTest {
     void adventure_has_at_least_one_victory_section(String adventureId) {
         Adventure adventure = load(adventureId);
         if (adventure.sections().isEmpty()) return; // pre-authoring skeleton — skip
+        if (isPartiallyAuthored(adventureId, adventure)) return; // authoring in progress — skip
         long victoryCount = adventure.sections().stream()
                 .filter(s -> s.type() == SectionType.VICTORY)
                 .count();
@@ -112,6 +117,27 @@ class AdventureValidationTest {
             return new JsonAdventureLoader(ADVENTURES_DIR).load(adventureId);
         } catch (AdventureLoadException e) {
             throw new RuntimeException("Failed to load adventure '" + adventureId + "': " + e.getMessage(), e);
+        }
+    }
+
+    /** Returns true when the adventure has chapters declared but not all sections authored yet. */
+    private static boolean isPartiallyAuthored(String adventureId, Adventure adventure) {
+        try {
+            JsonNode root = MAPPER.readTree(ADVENTURES_DIR.resolve(adventureId + ".json").toFile());
+            JsonNode chapters = root.path("chapters");
+            if (chapters.isMissingNode() || !chapters.isArray()) return false;
+            Set<Integer> declared = new HashSet<>();
+            for (JsonNode ch : chapters) {
+                int f = ch.path("sectionRange").path("from").asInt(-1);
+                int t = ch.path("sectionRange").path("to").asInt(-1);
+                if (f >= 0 && t >= 0) for (int i = f; i <= t; i++) declared.add(i);
+            }
+            if (declared.isEmpty()) return false;
+            Set<Integer> authored = adventure.sections().stream()
+                    .map(Section::number).collect(Collectors.toSet());
+            return !authored.containsAll(declared);
+        } catch (IOException e) {
+            return false;
         }
     }
 

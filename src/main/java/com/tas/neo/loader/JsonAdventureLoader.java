@@ -49,7 +49,8 @@ public class JsonAdventureLoader implements AdventureLoader {
         }
 
         AdventureDto dto = parseAdventureDto(root);
-        validate(dto);
+        Set<Integer> declaredSectionNums = parseDeclaredSectionNums(root);
+        validate(dto, declaredSectionNums);
         return buildAdventure(dto);
     }
 
@@ -436,7 +437,7 @@ public class JsonAdventureLoader implements AdventureLoader {
     // Validation (operates on DTOs, before domain object construction)
     // -------------------------------------------------------------------------
 
-    private void validate(AdventureDto dto) throws AdventureLoadException {
+    private void validate(AdventureDto dto, Set<Integer> declaredSectionNums) throws AdventureLoadException {
         Set<Integer> sectionNums = dto.sections.stream()
                 .map(SectionDto::number).collect(Collectors.toSet());
 
@@ -461,7 +462,7 @@ public class JsonAdventureLoader implements AdventureLoader {
             if (!gridIds.add(grid.id)) {
                 throw new AdventureLoadException("Duplicate grid id: " + grid.id);
             }
-            validateGridDto(grid, sectionNums);
+            validateGridDto(grid, sectionNums, declaredSectionNums);
             Set<String> cellIdSet = grid.cells.stream()
                     .filter(c -> c.id != null)
                     .map(c -> c.id)
@@ -598,7 +599,7 @@ public class JsonAdventureLoader implements AdventureLoader {
         }
     }
 
-    private void validateGridDto(GridDto grid, Set<Integer> allSections) throws AdventureLoadException {
+    private void validateGridDto(GridDto grid, Set<Integer> allSections, Set<Integer> declaredSectionNums) throws AdventureLoadException {
         Set<String> cellIds = new HashSet<>();
         Set<String> cellCoords = new HashSet<>();
         // Build coord set for passage validation
@@ -636,7 +637,10 @@ public class JsonAdventureLoader implements AdventureLoader {
                 Direction dir = entry.getKey();
                 PassageDto passage = entry.getValue();
                 if (passage.toSection != null) {
-                    if (!allSections.contains(passage.toSection)) {
+                    // Skip if the target is declared in a chapter range not yet authored
+                    boolean declaredButUnauthored = !allSections.contains(passage.toSection)
+                            && declaredSectionNums.contains(passage.toSection);
+                    if (!allSections.contains(passage.toSection) && !declaredButUnauthored) {
                         throw new AdventureLoadException(
                                 "Passage " + dir + " from cell (" + coord
                                         + ") in grid '" + grid.id
@@ -739,6 +743,28 @@ public class JsonAdventureLoader implements AdventureLoader {
             return Choice.to(dto.text, target, dto.condition);
         }
         return Choice.to(dto.text, target);
+    }
+
+    /**
+     * Reads the {@code chapters} array from the raw JSON (authoring metadata only — not part of
+     * the domain model) and returns the full set of section numbers declared across all chapter
+     * ranges. Used during validation to distinguish "section not yet authored" (declared in a
+     * chapter range but absent from the sections array) from "section does not exist" (not
+     * declared in any chapter range). Only cross-reference checks against declared-but-unauthored
+     * sections are skipped; references to completely undeclared numbers still throw.
+     */
+    private static Set<Integer> parseDeclaredSectionNums(JsonNode root) {
+        Set<Integer> declared = new HashSet<>();
+        JsonNode chapters = root.path("chapters");
+        if (chapters.isMissingNode() || !chapters.isArray()) return declared;
+        for (JsonNode ch : chapters) {
+            JsonNode range = ch.path("sectionRange");
+            if (range.isMissingNode()) continue;
+            int from = range.path("from").asInt(0);
+            int to   = range.path("to").asInt(0);
+            for (int i = from; i <= to; i++) declared.add(i);
+        }
+        return declared;
     }
 
     // -------------------------------------------------------------------------

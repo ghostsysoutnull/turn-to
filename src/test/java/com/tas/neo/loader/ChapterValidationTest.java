@@ -47,7 +47,8 @@ class ChapterValidationTest {
     record ChapterCase(String adventureId, String chapterId,
                        int rangeFrom, int rangeTo,
                        int entrySection, Set<Integer> allEntrySections,
-                       List<Integer> exitEntrySections) {
+                       List<Integer> exitEntrySections,
+                       Set<Integer> declaredSectionNums) {
         @Override public String toString() {
             return adventureId + "/" + chapterId + " [" + rangeFrom + "–" + rangeTo + "]";
         }
@@ -65,6 +66,14 @@ class ChapterValidationTest {
             String adventureId = root.path("id").asText();
             JsonNode chapters = root.path("chapters");
             if (chapters.isMissingNode() || !chapters.isArray()) continue;
+
+            // Compute full declared section range across all chapters
+            Set<Integer> declaredNums = new HashSet<>();
+            for (JsonNode ch : chapters) {
+                int f = ch.path("sectionRange").path("from").asInt(-1);
+                int t = ch.path("sectionRange").path("to").asInt(-1);
+                if (f >= 0 && t >= 0) for (int i = f; i <= t; i++) declaredNums.add(i);
+            }
 
             for (JsonNode ch : chapters) {
                 String chId = ch.path("id").asText();
@@ -96,7 +105,7 @@ class ChapterValidationTest {
                     }
                 }
 
-                cases.add(new ChapterCase(adventureId, chId, from, to, entrySection, allEntries, exits));
+                cases.add(new ChapterCase(adventureId, chId, from, to, entrySection, allEntries, exits, declaredNums));
             }
         }
         return cases.stream();
@@ -202,10 +211,19 @@ class ChapterValidationTest {
 
         Adventure adventure = load(ch.adventureId());
         if (adventure.sections().isEmpty()) return; // pre-authoring skeleton — skip
+
+        // Skip exit sections that are declared in a chapter range not yet authored
+        Set<Integer> authoredSections = adventure.sections().stream()
+                .map(s -> s.number()).collect(java.util.stream.Collectors.toSet());
+        List<Integer> authoredExits = ch.exitEntrySections().stream()
+                .filter(exit -> authoredSections.contains(exit)
+                        || !ch.declaredSectionNums().contains(exit))
+                .toList();
+        if (authoredExits.isEmpty()) return;
         Set<Integer> reachable = SectionGraph.of(adventure)
                 .reachableFrom(ch.allEntrySections(), ch.rangeFrom(), ch.rangeTo());
 
-        List<Integer> unreachableExits = ch.exitEntrySections().stream()
+        List<Integer> unreachableExits = authoredExits.stream()
                 .filter(exit -> !reachable.contains(exit))
                 .sorted()
                 .toList();
