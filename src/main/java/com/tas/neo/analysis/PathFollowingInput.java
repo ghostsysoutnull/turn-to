@@ -2,6 +2,7 @@ package com.tas.neo.analysis;
 
 import com.tas.neo.domain.adventure.Choice;
 import com.tas.neo.domain.adventure.SectionTarget;
+import com.tas.neo.domain.adventure.SystemChoiceTarget;
 import com.tas.neo.io.GameInput;
 
 import java.util.List;
@@ -15,6 +16,13 @@ import java.util.stream.Collectors;
  * its path and returns the 1-based index of whichever presented choice leads there.
  * System choices ({@code SystemChoiceTarget}) and grid choices ({@code GridTarget})
  * are skipped during resolution — the path addresses adventure sections only.
+ *
+ * <p>Event-only sections (luck tests, skill tests, combat) have no authored choices. After
+ * the event fires and navigates elsewhere, the engine still renders system choices and calls
+ * {@code readChoice}. In that case — when no {@code SectionTarget} choices are presented —
+ * this input selects the "inventory" system choice as a safe no-op and does NOT advance the
+ * path cursor. The next call (from the section the event navigated to) will consume the
+ * next path entry normally.
  *
  * <p>{@link #readYesNo} always returns {@code false} (decline), which causes optional
  * interactions such as luck tests during combat to be silently opted out. This keeps
@@ -32,6 +40,12 @@ public class PathFollowingInput implements GameInput {
 
     @Override
     public int readChoice(List<Choice> choices) {
+        // Event-only sections (combat, luck/skill tests) have no authored choices.
+        // The event has already navigated elsewhere; we just need to pass through
+        // without consuming a path entry.
+        if (noSectionTargets(choices)) {
+            return safePassThroughChoice(choices);
+        }
         if (cursor >= path.size()) {
             throw new IllegalStateException(
                 "PathFollowingInput exhausted after " + path.size() + " choices. " +
@@ -71,6 +85,35 @@ public class PathFollowingInput implements GameInput {
         throw new IllegalStateException(
             "No choice leads to section " + targetSection + ". " +
             "Available choices: " + describeChoices(choices));
+    }
+
+    // -----------------------------------------------------------------------
+    // Private helpers
+    // -----------------------------------------------------------------------
+
+    private static boolean noSectionTargets(List<Choice> choices) {
+        return choices.stream().noneMatch(c -> c.target() instanceof SectionTarget);
+    }
+
+    /**
+     * Picks the "inventory" system choice as a safe no-op pass-through.
+     * Falls back to the first non-quit system choice if inventory is absent.
+     */
+    private static int safePassThroughChoice(List<Choice> choices) {
+        for (int i = 0; i < choices.size(); i++) {
+            if (choices.get(i).target() instanceof SystemChoiceTarget sc
+                    && sc.action().equals("inventory")) {
+                return i + 1;
+            }
+        }
+        for (int i = 0; i < choices.size(); i++) {
+            if (choices.get(i).target() instanceof SystemChoiceTarget sc
+                    && !sc.action().equals("quit")) {
+                return i + 1;
+            }
+        }
+        throw new IllegalStateException(
+            "No safe pass-through choice found: " + describeChoices(choices));
     }
 
     private static String describeChoices(List<Choice> choices) {

@@ -114,6 +114,59 @@ class PathFollowingInputTest {
     }
 
     // -----------------------------------------------------------------------
+    // Event-only section pass-through (no SectionTarget choices)
+    // -----------------------------------------------------------------------
+
+    @Test
+    void readChoice_passes_through_without_advancing_cursor_when_no_section_targets() {
+        // §8 is a LUCK_TEST event-only section; after the event fires the engine
+        // still calls readChoice with only system choices. Cursor must not advance.
+        List<Choice> systemOnly = List.of(
+            Choice.to("Check inventory", new SystemChoiceTarget("inventory")),
+            Choice.to("Quit",            new SystemChoiceTarget("quit"))
+        );
+        List<Choice> nextSection = List.of(
+            Choice.to("Go north", new SectionTarget(25)),
+            Choice.to("Go south", new SectionTarget(30))
+        );
+
+        PathFollowingInput input = new PathFollowingInput(List.of(25));
+
+        int passThrough = input.readChoice(systemOnly);
+        assertThat(passThrough).as("inventory chosen as safe no-op").isEqualTo(1);
+
+        int real = input.readChoice(nextSection);
+        assertThat(real).as("cursor advances on next real section choice").isEqualTo(1);
+    }
+
+    @Test
+    void readChoice_prefers_inventory_over_other_system_choices_for_pass_through() {
+        List<Choice> choices = List.of(
+            Choice.to("Eat",             new SystemChoiceTarget("eat")),
+            Choice.to("Check inventory", new SystemChoiceTarget("inventory")),
+            Choice.to("Quit",            new SystemChoiceTarget("quit"))
+        );
+
+        PathFollowingInput input = new PathFollowingInput(List.of());
+        assertThat(input.readChoice(choices))
+            .as("inventory (index 2) preferred over eat (index 1)")
+            .isEqualTo(2);
+    }
+
+    @Test
+    void readChoice_falls_back_to_first_non_quit_when_inventory_absent() {
+        List<Choice> choices = List.of(
+            Choice.to("Eat",  new SystemChoiceTarget("eat")),
+            Choice.to("Quit", new SystemChoiceTarget("quit"))
+        );
+
+        PathFollowingInput input = new PathFollowingInput(List.of());
+        assertThat(input.readChoice(choices))
+            .as("falls back to eat since inventory absent")
+            .isEqualTo(1);
+    }
+
+    // -----------------------------------------------------------------------
     // PlaybackScenario parsing
     // -----------------------------------------------------------------------
 
@@ -129,5 +182,18 @@ class PathFollowingInputTest {
         PlaybackScenario scenario = PlaybackScenario.of("test", "1,2,3");
         assertThatThrownBy(() -> scenario.path().add(99))
             .isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    void scenario_with_seed_stores_seed() {
+        PlaybackScenario scenario = PlaybackScenario.of("the-iron-road", "3,8,15", 42L);
+        assertThat(scenario.seed().isPresent()).isTrue();
+        assertThat(scenario.seed().getAsLong()).isEqualTo(42L);
+    }
+
+    @Test
+    void scenario_without_seed_has_empty_optional() {
+        PlaybackScenario scenario = PlaybackScenario.of("the-iron-road", "2,4");
+        assertThat(scenario.seed().isEmpty()).isTrue();
     }
 }

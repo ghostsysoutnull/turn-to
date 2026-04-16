@@ -14,6 +14,7 @@ import com.tas.neo.loader.JsonAdventureLoader;
 import com.tas.neo.mechanics.CombatEngine;
 import com.tas.neo.mechanics.Dice;
 import com.tas.neo.mechanics.RandomDice;
+import com.tas.neo.mechanics.SeededDice;
 import com.tas.neo.scripting.LuaScriptEngine;
 import com.tas.neo.scripting.ScriptEngine;
 
@@ -57,7 +58,9 @@ public class GamePlaybackRunner {
         ByteArrayOutputStream captured = new ByteArrayOutputStream();
         PrintStream capturedStream = new PrintStream(captured, true, StandardCharsets.UTF_8);
 
-        Dice dice                           = new RandomDice();
+        Dice dice = scenario.seed().isPresent()
+            ? new SeededDice(scenario.seed().getAsLong())
+            : new RandomDice();
         GameInput input                     = new PathFollowingInput(scenario.path());
         GameOutput output                   = new TerminalOutput(capturedStream);
         GameLogger logger                   = new NoOpGameLogger();
@@ -73,11 +76,11 @@ public class GamePlaybackRunner {
         return captured.toString(StandardCharsets.UTF_8);
     }
 
-    /** CLI entry point: args[0] = path to adventure JSON, args[1] = comma-separated target sections */
+    /** CLI entry point: args[0] = path to adventure JSON, args[1] = comma-separated target sections, [--seed N] */
     public static void main(String[] args) throws Exception {
         if (args.length < 2) {
-            System.err.println("Usage: GamePlaybackRunner <path-to-adventure.json> <section,section,...>");
-            System.err.println("Example: GamePlaybackRunner adventures/the-iron-road.json 2,4");
+            System.err.println("Usage: GamePlaybackRunner <path-to-adventure.json> <section,...> [--seed N]");
+            System.err.println("Example: GamePlaybackRunner adventures/the-iron-road.json 3,8,25 --seed 42");
             System.exit(1);
         }
 
@@ -86,7 +89,14 @@ public class GamePlaybackRunner {
         String adventureId  = adventurePath.getFileName().toString().replace(".json", "");
         String pathArg      = args[1];
 
-        PlaybackScenario scenario = PlaybackScenario.of(adventureId, pathArg);
+        long seed = -1;
+        for (int i = 2; i < args.length - 1; i++) {
+            if ("--seed".equals(args[i])) seed = Long.parseLong(args[i + 1]);
+        }
+
+        PlaybackScenario scenario = seed >= 0
+            ? PlaybackScenario.of(adventureId, pathArg, seed)
+            : PlaybackScenario.of(adventureId, pathArg);
 
         String output = run(scenario, adventuresDir);
         System.out.print(output);

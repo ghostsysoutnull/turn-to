@@ -143,6 +143,9 @@ public class HookDispatcher {
                     navigateTo(adventure, outcome.navigateTo().get());
                 } else if (outcome.type() == com.tas.neo.domain.combat.CombatOutcomeType.DEFEAT) {
                     if (e.failureSection() > 0) {
+                        // Navigate to the failure section and let the game loop render it
+                        // (typically INSTANT_DEATH). Do NOT set game over here — the section's
+                        // type handler in runSectionStep is responsible.
                         navigateTo(adventure, e.failureSection());
                     } else {
                         state.setGameOver();
@@ -151,7 +154,6 @@ public class HookDispatcher {
                            && outcome.type() == com.tas.neo.domain.combat.CombatOutcomeType.VICTORY) {
                     navigateTo(adventure, e.successSection());
                 }
-                if (!state.player().isAlive()) state.setGameOver();
             }
         }
     }

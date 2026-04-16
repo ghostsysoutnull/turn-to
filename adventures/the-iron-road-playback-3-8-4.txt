@@ -1,0 +1,85 @@
+The Iron Road stretches before you — three kingdoms, countless enemies, and a sealed satchel whose contents could end you.
+
+─────────────────────────────────────────────────────
+  SKILL: 8   STAMINA: 16/16   LUCK: 7   Gold: 0
+─────────────────────────────────────────────────────
+The Iron Road runs wide and straight through the forest, paved in pale grey stone worn smooth by a thousand years of trade. You are a traveller — unremarkable, unhurried — walking the verge when the carriage ahead of you stops without warning.
+
+There is no drama in what happens next. Four figures step from the treeline. They do not shout. They do not run. They move with the quiet efficiency of men who have done this before. The coachman goes first, a single blow, and then the door swings open and a plainly dressed man of middle years is dragged into the road.
+
+A royal courier. You recognise the cut of his coat even from here.
+
+He struggles. He does not beg. Something falls from his hand — a leather satchel, sealed with dark wax — and skids across the stone toward your feet.
+
+The four figures look up. The nearest one, the commander, meets your eyes. He speaks in a flat voice: "Don't."
+
+You pick up the satchel anyway.
+1. Run into the forest — now, before they reach you
+2. Stand your ground and face the commander
+3. Eat a provision (restores 4 STAMINA)
+4. Check inventory
+5. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 8   STAMINA: 15/16   LUCK: 7   Gold: 0
+─────────────────────────────────────────────────────
+You break left, off the stone road and into the forest verge, crashing through undergrowth with the satchel clutched under your arm. Behind you there is a short pause — the pause of men deciding — and then the sound of boots on earth.
+
+They are fast. Trained. But the forest here is dense and tangled, gullied by old seasonal floods, and you know how to move in rough ground. You duck under a low branch, skid down a shallow bank, and come up running along a dry streambed.
+
+For a moment you cannot hear them behind you. You press deeper into the dark between the trees.
+1. Keep running along the streambed
+2. Leave the streambed and climb the gully bank to the north
+3. Hide in the hollow under the bank and wait
+4. Eat a provision (restores 4 STAMINA)
+5. Check inventory
+6. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 8   STAMINA: 15/16   LUCK: 6   Gold: 0
+─────────────────────────────────────────────────────
+You press yourself flat under the cut bank, the root-threaded earth inches above your face, the satchel clamped against your chest. You control your breathing.
+
+Boots crunch on the streambed stones. One pair, moving fast, scanning. The tracker passes within four metres. You see boots, trousers tucked into them, a long knife in a plain scabbard. He stops. He listens. A long moment.
+
+Then he moves on.
+
+You give it a count of thirty before you allow yourself to breathe properly.
+1. Eat a provision (restores 4 STAMINA)
+2. Check inventory
+3. Quit
+INVENTORY
+─────────────────────────────────────
+  Sealed Satchel
+─────────────────────────────────────
+  Gold: 0    Provisions: 10
+
+─────────────────────────────────────────────────────
+  SKILL: 8   STAMINA: 15/16   LUCK: 6   Gold: 0
+─────────────────────────────────────────────────────
+Your cover holds for twenty minutes. Then the tracker reverses. You hear his boots at the edge of your hearing — a deliberate, careful tread — and then he is above you on the bank, looking down at the hollow where you are pressed.
+
+He drops in beside you before you can move.
+
+"Don't," he says. He is not breathing hard.
+
+He crouches to your level, close. His blade is in his hand but angled away — not a fighting grip, something more ambiguous.
+
+"Listen to me," he says, low and urgent. "He'll tell you to walk away. He won't mean it. I've watched him work. Give me the satchel, now, and I'll tell him you outran us. You'll be alive tonight."
+1. Give him the satchel
+2. "What's in it?"
+3. Attack him while he's close
+4. Eat a provision (restores 4 STAMINA)
+5. Check inventory
+6. Quit
+You set the satchel down on the road between you.
+
+The commander picks it up. He checks the wax seal — intact — and tucks it under his arm. Then he looks back at you, and something changes in his expression: a small, flat appraisal.
+
+"Thank you," he says.
+
+He nods once to the man on his left.
+
+You do not feel the blow. There is only the road rising toward you, and then nothing.
+
+A traveller who knows nothing and can identify no one is still a witness. The Iron Road does not forgive loose ends.

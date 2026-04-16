@@ -356,6 +356,95 @@ class HookDispatcherProcessEventTest {
     }
 
     // -----------------------------------------------------------------------
+    // CombatEvent — defeat with failureSection navigates there (does NOT set game over)
+    // -----------------------------------------------------------------------
+
+    @Test
+    void processEvent_CombatEvent_defeat_navigates_to_failureSection_without_setting_game_over() {
+        // The failure section (typically INSTANT_DEATH) must be rendered by the main game loop.
+        // Prematurely setting game over here would skip that section's narrative.
+        CombatSystemRegistry defeatRegistry = new CombatSystemRegistry() {
+            @Override
+            public CombatSystem get(String id) {
+                return new CombatSystem() {
+                    @Override public String id() { return id; }
+                    @Override
+                    public CombatOutcome run(
+                            Player player,
+                            java.util.List<com.tas.neo.domain.party.PartyMember> participants,
+                            java.util.List<com.tas.neo.domain.combat.Creature> opponents,
+                            java.util.Map<String, Object> params,
+                            CombatSystemRegistry reg,
+                            HookDispatcher hooks,
+                            com.tas.neo.io.GameInput inp,
+                            com.tas.neo.io.GameOutput out,
+                            com.tas.neo.mechanics.Dice dice) {
+                        return new CombatOutcome(CombatOutcomeType.DEFEAT, Optional.empty());
+                    }
+                };
+            }
+            @Override public boolean has(String id) { return true; }
+        };
+
+        Adventure adventure = adventureWithSections(
+            normalSection(1), normalSection(30), normalSection(40));
+        state.navigateTo(adventure.getSection(1));
+
+        CombatEvent event = new CombatEvent(
+            "personal", List.of(), List.of(),
+            false, Map.of(), ScriptBlock.empty(), 30, 40
+        );
+
+        dispatcherWithCombatRegistry(defeatRegistry).processEvent(event, adventure);
+
+        assertThat(state.currentSection().number())
+            .as("processEvent(CombatEvent) with DEFEAT outcome and failureSection=40 must navigate to section 40")
+            .isEqualTo(40);
+        assertThat(state.isGameOver())
+            .as("game over must NOT be set by processEvent — the game loop renders the failure section and sets it")
+            .isFalse();
+    }
+
+    @Test
+    void processEvent_CombatEvent_defeat_with_no_failureSection_sets_game_over() {
+        CombatSystemRegistry defeatRegistry = new CombatSystemRegistry() {
+            @Override
+            public CombatSystem get(String id) {
+                return new CombatSystem() {
+                    @Override public String id() { return id; }
+                    @Override
+                    public CombatOutcome run(
+                            Player player,
+                            java.util.List<com.tas.neo.domain.party.PartyMember> participants,
+                            java.util.List<com.tas.neo.domain.combat.Creature> opponents,
+                            java.util.Map<String, Object> params,
+                            CombatSystemRegistry reg,
+                            HookDispatcher hooks,
+                            com.tas.neo.io.GameInput inp,
+                            com.tas.neo.io.GameOutput out,
+                            com.tas.neo.mechanics.Dice dice) {
+                        return new CombatOutcome(CombatOutcomeType.DEFEAT, Optional.empty());
+                    }
+                };
+            }
+            @Override public boolean has(String id) { return true; }
+        };
+
+        Adventure adventure = adventureWithSections(normalSection(1));
+        state.navigateTo(adventure.getSection(1));
+
+        CombatEvent event = new CombatEvent(
+            "personal", List.of(), List.of(),
+            false, Map.of(), ScriptBlock.empty(), 0, 0  // no successSection, no failureSection
+        );
+
+        dispatcherWithCombatRegistry(defeatRegistry).processEvent(event, adventure);
+
+        assertThat(state.isGameOver())
+            .as("DEFEAT with no failureSection must set game over immediately")
+            .isTrue();
+    }
+
     // CombatEvent — victory with successSection navigates to that section
     // -----------------------------------------------------------------------
 

@@ -1,0 +1,94 @@
+The Iron Road stretches before you — three kingdoms, countless enemies, and a sealed satchel whose contents could end you.
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 19/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+The Iron Road runs wide and straight through the forest, paved in pale grey stone worn smooth by a thousand years of trade. You are a traveller — unremarkable, unhurried — walking the verge when the carriage ahead of you stops without warning.
+
+There is no drama in what happens next. Four figures step from the treeline. They do not shout. They do not run. They move with the quiet efficiency of men who have done this before. The coachman goes first, a single blow, and then the door swings open and a plainly dressed man of middle years is dragged into the road.
+
+A royal courier. You recognise the cut of his coat even from here.
+
+He struggles. He does not beg. Something falls from his hand — a leather satchel, sealed with dark wax — and skids across the stone toward your feet.
+
+The four figures look up. The nearest one, the commander, meets your eyes. He speaks in a flat voice: "Don't."
+
+You pick up the satchel anyway.
+1. Run into the forest — now, before they reach you
+2. Stand your ground and face the commander
+3. Eat a provision (restores 4 STAMINA)
+4. Check inventory
+5. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 18/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+You break left, off the stone road and into the forest verge, crashing through undergrowth with the satchel clutched under your arm. Behind you there is a short pause — the pause of men deciding — and then the sound of boots on earth.
+
+They are fast. Trained. But the forest here is dense and tangled, gullied by old seasonal floods, and you know how to move in rough ground. You duck under a low branch, skid down a shallow bank, and come up running along a dry streambed.
+
+For a moment you cannot hear them behind you. You press deeper into the dark between the trees.
+1. Keep running along the streambed
+2. Leave the streambed and climb the gully bank to the north
+3. Hide in the hollow under the bank and wait
+4. Eat a provision (restores 4 STAMINA)
+5. Check inventory
+6. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 18/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+You scramble up the gully bank on hands and knees, loose earth crumbling under your grip. At the top you are in a stand of old pine, the ground needled and soft, the trees spaced wide. Good ground to move in.
+
+You can hear voices below — two of them, speaking in short, clipped sentences. They have split up. One is following the streambed. The other is ahead of you, cutting around to intercept at the forest edge.
+
+You need to decide quickly.
+1. Push through the pine stand to the north — away from both voices
+2. Backtrack along the high bank and try to circle back behind them
+3. Press east toward the forest edge and the open road beyond
+4. Eat a provision (restores 4 STAMINA)
+5. Check inventory
+6. Quit
+Combat round: CombatRound[roundNumber=1, playerAttackStrength=12, creatureAttackStrength=15, playerRoll=5, creatureRoll=8, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=2, playerAttackStrength=14, creatureAttackStrength=15, playerRoll=7, creatureRoll=8, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=3, playerAttackStrength=14, creatureAttackStrength=14, playerRoll=7, creatureRoll=7, outcome=DRAW]
+Combat round: CombatRound[roundNumber=4, playerAttackStrength=17, creatureAttackStrength=17, playerRoll=10, creatureRoll=10, outcome=DRAW]
+Combat round: CombatRound[roundNumber=5, playerAttackStrength=12, creatureAttackStrength=15, playerRoll=5, creatureRoll=8, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=6, playerAttackStrength=15, creatureAttackStrength=13, playerRoll=8, creatureRoll=6, outcome=PLAYER_WOUNDS]
+Combat round: CombatRound[roundNumber=7, playerAttackStrength=18, creatureAttackStrength=15, playerRoll=11, creatureRoll=8, outcome=PLAYER_WOUNDS]
+Combat round: CombatRound[roundNumber=8, playerAttackStrength=15, creatureAttackStrength=13, playerRoll=8, creatureRoll=6, outcome=PLAYER_WOUNDS]
+Combat round: CombatRound[roundNumber=9, playerAttackStrength=13, creatureAttackStrength=16, playerRoll=6, creatureRoll=9, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=10, playerAttackStrength=10, creatureAttackStrength=11, playerRoll=3, creatureRoll=4, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=11, playerAttackStrength=11, creatureAttackStrength=16, playerRoll=4, creatureRoll=9, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=12, playerAttackStrength=10, creatureAttackStrength=13, playerRoll=3, creatureRoll=6, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=13, playerAttackStrength=14, creatureAttackStrength=16, playerRoll=7, creatureRoll=9, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=14, playerAttackStrength=10, creatureAttackStrength=10, playerRoll=3, creatureRoll=3, outcome=DRAW]
+Combat round: CombatRound[roundNumber=15, playerAttackStrength=13, creatureAttackStrength=14, playerRoll=6, creatureRoll=7, outcome=CREATURE_WOUNDS]
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 0/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+You move east, toward where the forest thins near the road. Bad choice. The assassin who circled ahead is waiting at the tree line — you almost walk into him.
+
+He spots you at the same moment. He is bigger than the tracker, broader across the shoulders, and he does not hesitate. He charges.
+
+You have no time to run.
+1. Eat a provision (restores 4 STAMINA)
+2. Check inventory
+3. Quit
+INVENTORY
+─────────────────────────────────────
+  Sealed Satchel
+─────────────────────────────────────
+  Gold: 0    Provisions: 10
+You are faster than you thought you were. But they are faster than you hoped.
+
+The blow comes from the right — the one you did not account for, the third member of the team you had not seen. It catches you across the side of the head and the ground comes up hard.
+
+You manage to hold onto the satchel, which is the wrong kind of victory.
+
+The commander crouches beside you. He is not pleased, but he is not angry either. He takes the satchel with the care of a man retrieving something that belongs to him.
+
+"I told you," he says quietly.
+
+The Iron Road does not forgive loose ends. You are one.

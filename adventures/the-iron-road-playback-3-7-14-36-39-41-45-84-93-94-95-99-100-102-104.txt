@@ -1,0 +1,273 @@
+The Iron Road stretches before you — three kingdoms, countless enemies, and a sealed satchel whose contents could end you.
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 19/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+The Iron Road runs wide and straight through the forest, paved in pale grey stone worn smooth by a thousand years of trade. You are a traveller — unremarkable, unhurried — walking the verge when the carriage ahead of you stops without warning.
+
+There is no drama in what happens next. Four figures step from the treeline. They do not shout. They do not run. They move with the quiet efficiency of men who have done this before. The coachman goes first, a single blow, and then the door swings open and a plainly dressed man of middle years is dragged into the road.
+
+A royal courier. You recognise the cut of his coat even from here.
+
+He struggles. He does not beg. Something falls from his hand — a leather satchel, sealed with dark wax — and skids across the stone toward your feet.
+
+The four figures look up. The nearest one, the commander, meets your eyes. He speaks in a flat voice: "Don't."
+
+You pick up the satchel anyway.
+1. Run into the forest — now, before they reach you
+2. Stand your ground and face the commander
+3. Eat a provision (restores 4 STAMINA)
+4. Check inventory
+5. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 18/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+You break left, off the stone road and into the forest verge, crashing through undergrowth with the satchel clutched under your arm. Behind you there is a short pause — the pause of men deciding — and then the sound of boots on earth.
+
+They are fast. Trained. But the forest here is dense and tangled, gullied by old seasonal floods, and you know how to move in rough ground. You duck under a low branch, skid down a shallow bank, and come up running along a dry streambed.
+
+For a moment you cannot hear them behind you. You press deeper into the dark between the trees.
+1. Keep running along the streambed
+2. Leave the streambed and climb the gully bank to the north
+3. Hide in the hollow under the bank and wait
+4. Eat a provision (restores 4 STAMINA)
+5. Check inventory
+6. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 18/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+You scramble up the gully bank on hands and knees, loose earth crumbling under your grip. At the top you are in a stand of old pine, the ground needled and soft, the trees spaced wide. Good ground to move in.
+
+You can hear voices below — two of them, speaking in short, clipped sentences. They have split up. One is following the streambed. The other is ahead of you, cutting around to intercept at the forest edge.
+
+You need to decide quickly.
+1. Push through the pine stand to the north — away from both voices
+2. Backtrack along the high bank and try to circle back behind them
+3. Press east toward the forest edge and the open road beyond
+4. Eat a provision (restores 4 STAMINA)
+5. Check inventory
+6. Quit
+Combat round: CombatRound[roundNumber=1, playerAttackStrength=19, creatureAttackStrength=17, playerRoll=12, creatureRoll=10, outcome=PLAYER_WOUNDS]
+Combat round: CombatRound[roundNumber=2, playerAttackStrength=14, creatureAttackStrength=19, playerRoll=7, creatureRoll=12, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=3, playerAttackStrength=18, creatureAttackStrength=16, playerRoll=11, creatureRoll=9, outcome=PLAYER_WOUNDS]
+Combat round: CombatRound[roundNumber=4, playerAttackStrength=16, creatureAttackStrength=16, playerRoll=9, creatureRoll=9, outcome=DRAW]
+Combat round: CombatRound[roundNumber=5, playerAttackStrength=10, creatureAttackStrength=16, playerRoll=3, creatureRoll=9, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=6, playerAttackStrength=15, creatureAttackStrength=16, playerRoll=8, creatureRoll=9, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=7, playerAttackStrength=14, creatureAttackStrength=19, playerRoll=7, creatureRoll=12, outcome=CREATURE_WOUNDS]
+Combat round: CombatRound[roundNumber=8, playerAttackStrength=19, creatureAttackStrength=13, playerRoll=12, creatureRoll=6, outcome=PLAYER_WOUNDS]
+Combat round: CombatRound[roundNumber=9, playerAttackStrength=17, creatureAttackStrength=16, playerRoll=10, creatureRoll=9, outcome=PLAYER_WOUNDS]
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 10/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+You move east, toward where the forest thins near the road. Bad choice. The assassin who circled ahead is waiting at the tree line — you almost walk into him.
+
+He spots you at the same moment. He is bigger than the tracker, broader across the shoulders, and he does not hesitate. He charges.
+
+You have no time to run.
+1. Eat a provision (restores 4 STAMINA)
+2. Check inventory
+3. Quit
+INVENTORY
+─────────────────────────────────────
+  Sealed Satchel
+─────────────────────────────────────
+  Gold: 0    Provisions: 10
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 10/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+The cart track brings you out onto the Iron Road half a kilometre north of the ambush site. The road here is empty — no carriages, no soldiers, no sign that anything has happened. The trees stand silent on both sides.
+
+You are on the road again. Exposed. Moving north.
+
+A milestone ahead reads: WAYSTATION — 1 LEAGUE. The symbol carved beneath it is the courier corps insignia — the station is a royal relay point.
+1. Walk openly on the road toward the waystation
+2. Keep to the verge and move cautiously
+3. Eat a provision (restores 4 STAMINA)
+4. Check inventory
+5. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 10/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+The Iron Road north of the ambush site is wide and grey and empty in both directions. The sky above the treeline is the colour of old pewter — afternoon tipping toward dusk.
+
+You walk. The satchel is under your arm, the wax seal pressing against your ribs with every step. Around you, other travellers eventually appear — a merchant's wagon grinding north, two monks walking in silence, a farmer driving geese — and you realise that in the company of ordinary traffic, you are less visible.
+
+The waystation sits on a low hill a few hundred metres ahead. Beyond that, the road curves and the forest begins to thin. The border city is a day and a half away at walking pace.
+1. Stop at the waystation before continuing
+2. Keep walking — reach the road junction before dark
+3. Eat a provision (restores 4 STAMINA)
+4. Check inventory
+5. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 9/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+You do not stop. The waystation passes on your left, set back from the road, its shuttered windows blank as closed eyes. Whatever is inside, you leave it.
+
+The road opens up as the forest thins. A crossroads marker points west to a village name you do not recognise and north to Varenmark — the border city. The distance: two days on foot, one by coach.
+
+Dusk is coming. You are tired, you have been running for hours, and the satchel under your arm feels heavier than it should.
+
+Ahead, the road drops toward a river valley. On the far bank, barely visible in the fading light, the lights of a small settlement: an inn, a stable, a smithy.
+1. Stop at the settlement for the night
+2. Press on through the night — reach the border city faster
+3. Eat a provision (restores 4 STAMINA)
+4. Check inventory
+5. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 9/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+A day and a half of road, and at last Varenmark rises from the dust.
+
+It is everything you expected and worse: a frontier city of tight-packed stone buildings and narrow streets pressed against the bank of a sluggish river, the air smelling of coal smoke and horse and something under both that you cannot name. The Iron Road becomes the city's main street without ceremony — just a widening of the paved surface, a sudden press of wagons and pedestrians, and a customs gatehouse at the far end where the road continues north into the second kingdom.
+
+You join the flow of traffic. Around you: merchants, soldiers, labourers, travellers of every sort. You are unremarkable. The satchel is under your cloak, or under your arm, and no one looks twice.
+
+For now.
+1. Head straight for the Ironbell Inn — the principal travellers' inn
+2. Find the market and assess what is available
+3. Approach the Customs House and watch the border inspection from a distance
+4. Keep your head down and move through the city quickly
+5. Eat a provision (restores 4 STAMINA)
+6. Check inventory
+7. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 9/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+You keep your eyes forward and your pace steady — the gait of someone who has somewhere to be and is not interested in conversation. The city does not care about you. Varenmark is full of travellers, and to the city's eyes you are just another body on the road.
+
+But you need a border pass. You cannot leave this city without one, or without finding another way through the gate.
+
+You find a quiet doorway and think. The Ironbell Inn to the south, the Customs House to the north, and somewhere in the back lanes the city's less official services. And if all else fails — the river road east of the city bypasses the gate entirely, though it adds a day and requires local knowledge.
+1. Go to the Ironbell Inn
+2. Find the back lanes and see what unofficial services are available
+3. Head to the Customs House
+4. Take the back road around the city — no pass required
+5. Eat a provision (restores 4 STAMINA)
+6. Check inventory
+7. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 8/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+The back road around Varenmark is local knowledge — a drover's track running east along the river bank, bypassing the gatehouse entirely and rejoining the Iron Road three kilometres north of the city. It is unpaved, slow, and watched by no official.
+
+You ask a stablehand for directions and get a suspicious look and a grudging gesture. An hour later you are on the track, mud underfoot, hawthorn pressing close on both sides. No guards. No checkpoints.
+
+Also no cover story if you are stopped north of the gate with no border pass in a kingdom that checks them.
+1. Continue on the back road and bypass the gatehouse entirely
+2. Turn back — the risk isn't worth it without more preparation
+3. Eat a provision (restores 4 STAMINA)
+4. Check inventory
+5. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 8/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+The back road is a shepherd's track that hairpins through a shallow gulch before emerging in a stand of birch trees a kilometre north of the customs gate. You were directed to it by a contact who preferred not to be remembered.
+
+The track is unused this morning. No guards. No checkpoints. The only witness is a crow on a fence post that watches you pass with professional indifference.
+
+You emerge onto the Iron Road on the second kingdom side of the border and join the ordinary flow of traffic as if you have always been there. No stamp in any ledger. No record of your crossing.
+
+No questions asked means no lies told. That is its own kind of freedom.
+1. Merge into the road traffic and head north
+2. Eat a provision (restores 4 STAMINA)
+3. Check inventory
+4. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 8/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+The Iron Road in the second kingdom is wider than you remembered, or perhaps Varenmark simply made everything feel narrow. Merchant caravans roll south with loaded wagons. Drovers move cattle in loose columns on the verge. A courier on horseback — royal livery, bronze token at the belt — passes at a canter without a glance.
+
+You walk north. The satchel is slung close. The weight of it is familiar now, not comforting but present, like an old injury.
+
+A day's walk ahead lies the Crossroads Inn, where the capital road branches off the main trade route. Every faction uses it. Everyone stops there. You cannot avoid it entirely — but you can choose how you arrive.
+1. Walk steadily north, staying in the traffic flow
+2. Cut across the fields and approach the Crossroads Inn from the west
+3. Eat a provision (restores 4 STAMINA)
+4. Check inventory
+5. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 8/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+You fall in behind a merchant caravan — six wagons, a dozen guards, and twice that many workers. The caravan master is a broad woman who studies anyone who walks too close to her wagons and relaxes when they walk on. The road company is unremarkable and therefore perfect.
+
+A military patrol rides past going south. Four soldiers, light cavalry kit. The lead rider's eyes sweep the caravan and move on. They are looking for quantity — smuggling volume — not individuals.
+
+By late afternoon the Crossroads Inn is visible, its tiled roof rising above the poplars.
+1. Continue with the caravan to the inn
+2. Break away before the inn and observe from the back lane
+3. Eat a provision (restores 4 STAMINA)
+4. Check inventory
+5. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 8/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+The Crossroads Inn is everything the road promises: large, busy, and neutral by reputation if not by practice. Three wings around a central courtyard, a stable yard to the east, a taproom that serves hot food until midnight, and rooms on the upper floor that cost more than they should.
+
+You approach across the forecourt. A coach is being unloaded. Servants carry boxes. A factor in city clothes argues with a carter about weight limits.
+
+Nobody looks at you. That could mean nothing, or it could mean everyone already knows where you are. You need to read this room carefully before anyone reads you.
+1. Enter the common room
+2. Find the taproom and order a meal while you observe
+3. Go directly to the innkeeper, take a room, and sleep
+4. Eat a provision (restores 4 STAMINA)
+5. Check inventory
+6. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 8/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+The common room is a long, low-ceilinged space with trestle tables and a fire that has been burning all day. Merchants, drovers, a pair of clerics, two soldiers off-duty in plain clothes. The ordinary human inventory of a busy road inn.
+
+A man near the window catches your attention not by looking at you but by carefully not looking at you.
+
+He is perhaps fifty, well-dressed in the manner of someone who travels frequently and has learned what roads do to fine cloth. He sits alone with a cup he is not drinking from and a ledger he is not reading.
+
+Everything about him says merchant. Everything about him says something else.
+1. Take a seat across the room and watch him
+2. Approach him directly
+3. Eat a provision (restores 4 STAMINA)
+4. Check inventory
+5. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 7   STAMINA: 8/19   LUCK: 12   Gold: 0
+─────────────────────────────────────────────────────
+"I represent the lord who ordered the courier's removal," he says, with no inflection on the word ordered, as if it were the most ordinary phrase in the world. "The satchel contains correspondence that embarrasses powerful people. Delivering it creates enemies you do not need and will not survive."
+
+He sets the cup down.
+
+"My employer will pay you twenty gold, your complete safety on the road, and a formal letter of clearance, in exchange for the satchel. No questions asked. No further contact. You walk away a wealthy person with a long life ahead."
+
+He is unhurried. He is not threatening. He is describing a business transaction.
+
+"You have until morning."
+1. "Twenty gold and a clearance letter. I'll think about it."
+2. "I'll take your offer."
+3. "No. The satchel isn't yours to buy."
+4. Eat a provision (restores 4 STAMINA)
+5. Check inventory
+6. Quit
+He takes the satchel without ceremony. Twenty gold changes hands. The letter of clearance — stamped with a seal you do not recognise — joins your other papers.
+
+He gives you a nod of something that is almost respect.
+
+"You made the sensible choice. Travel safely."
+
+He is gone before you can count the coins a second time. The satchel is gone. The weight of it — physical and otherwise — is simply absent.
+
+You feel, simultaneously, lighter and hollow.
+
+The Iron Road north is clear. The capital gates will pass you without incident. Whatever was in the satchel is no longer your problem, your purpose, or your burden.
