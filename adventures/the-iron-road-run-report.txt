@@ -1,93 +1,95 @@
 == Adventure Run Report: the-iron-road ==
-Generated: 2026-04-16  |  Runs: 500  |  Strategy: RandomChoiceSelector  |  Dice: RANDOM  |  Seed: 1776381458284
+Generated: 2026-04-16  |  Runs: 2000  |  Strategy: RandomChoiceSelector  |  Dice: RANDOM  |  Seed: 1776383388942
 
 OUTCOMES
-  VICTORY:      374
-  INSTANT_DEATH:124
+  VICTORY:      1418
+  INSTANT_DEATH:576
   STUCK:        0
-  CYCLE:        2
+  CYCLE:        6
   GRID_ENTRY:   0  (grid navigation not simulated)
 
 COVERAGE
-  153/170 sections (90%)
-  unreached ch1    §40
-  unreached ch2    §75 §82
+  163/170 sections (96%)
   unreached ch3    §118 §119
-  unreached ch4    §134 §135 §137 §156 §160 §161 §162 §163 §166 §167 §168 §170
+  unreached ch4    §133 §135 §167 §168 §170
 
 RUN LENGTH (excl STUCK/CYCLE)
-  avg=39.3  min=3  max=125
+  avg=38.9  min=3  max=156
 
 CHAPTER REACH RATES
   ch1    100%
-  ch2    75%
-  ch3    75%
-  ch4    61%
+  ch2    72%
+  ch3    72%
+  ch4    62%
 
 ENDINGS
-  §4    INSTANT_DEATH 124/500
-  §104  VICTORY      67/500
-  §141  VICTORY      37/500
-  §145  VICTORY      43/500
-  §151  VICTORY      24/500
-  §159  VICTORY      203/500
-  §64   CYCLE        2/500
+  §4    INSTANT_DEATH 549/2000
+  §40   INSTANT_DEATH 5/2000
+  §104  VICTORY      195/2000
+  §137  INSTANT_DEATH 7/2000
+  §141  VICTORY      151/2000
+  §145  VICTORY      200/2000
+  §151  VICTORY      76/2000
+  §159  VICTORY      792/2000
+  §161  VICTORY      4/2000
+  §163  INSTANT_DEATH 3/2000
+  §166  INSTANT_DEATH 12/2000
+  §45   CYCLE        4/2000
+  §64   CYCLE        1/2000
+  §78   CYCLE        1/2000
 
 ITEM FLOW AT CHAPTER BOUNDARIES  (% of runs carrying item when entering chapter)
   — = not carried in any run at this boundary
                             ch1    ch2    ch3    ch4
   Sealed Satchel              —   100%   100%   100%
-  Courier's Token             —     2%     2%     2%
-  Forged Border Pass          —      —    24%    23%
-  Legitimate Border Pass      —      —    45%    48%
-  Spymaster's Letter          —      —    14%    12%
-  Bribe Purse                 —      —     4%     4%
-  Traveller's Cloak           —    58%    57%    57%
-  Healing Potion              —    57%    61%    62%
-  Assassin's Blade            —     5%     5%     5%
-  Spy Ring Cipher             —      —    13%    11%
-  Noble's Invitation          —      —      —     5%
+  Courier's Token             —     3%     3%     3%
+  Forged Border Pass          —      —    29%    29%
+  Legitimate Border Pass      —      —    44%    44%
+  Spymaster's Letter          —      —    20%    20%
+  Bribe Purse                 —      —     3%     3%
+  Traveller's Cloak           —    58%    58%    58%
+  Healing Potion              —    56%    59%    59%
+  Assassin's Blade            —     4%     4%     4%
+  Spy Ring Cipher             —      —    14%    15%
+  Noble's Invitation          —      —      —     7%
   Relay Station Key           —      —      —     1%
 
 GOLD AND STATE DISTRIBUTION AT CHAPTER BOUNDARIES
   gold at ch1 entry: avg 10  range 10–10
+  satchelOpened at ch1 entry:  false:100%
   spymasterDebt at ch1 entry: avg 0  range 0–0
   suspicion at ch1 entry: avg 0  range 0–0
   contactAlive at ch1 entry:  true:100%
-  satchelOpened at ch1 entry:  false:100%
   gold at ch2 entry: avg 10  range 10–10
+  satchelOpened at ch2 entry:  false:100%
   spymasterDebt at ch2 entry: avg 0  range 0–0
   suspicion at ch2 entry: avg 0  range 0–0
   contactAlive at ch2 entry:  true:100%
-  satchelOpened at ch2 entry:  false:100%
-  gold at ch3 entry: avg 4  range 0–10
-  spymasterDebt at ch3 entry: avg 0  range 0–4
-  suspicion at ch3 entry: avg 0  range 0–3
-  contactAlive at ch3 entry:  true:100%
+  gold at ch3 entry: avg 5  range 0–10
   satchelOpened at ch3 entry:  false:100%
-  gold at ch4 entry: avg 4  range 0–10
-  refusedLordsAgent at ch4 entry:  true:100%
+  spymasterDebt at ch3 entry: avg 0  range 0–6
+  suspicion at ch3 entry: avg 0  range 0–6
+  contactAlive at ch3 entry:  true:100%
+  gold at ch4 entry: avg 5  range 0–10
   satchelOpened at ch4 entry:  false:100%
-  spymasterDebt at ch4 entry: avg 0  range 0–4
+  spymasterDebt at ch4 entry: avg 0  range 0–6
+  suspicion at ch4 entry: avg 1  range 0–6
   contactAlive at ch4 entry:  true:100%
-  suspicion at ch4 entry: avg 0  range 0–6
   stalledLordsAgent at ch4 entry:  true:100%
+  refusedLordsAgent at ch4 entry:  true:100%
 
 GATING
   Choices with condition never met in any run:
     §124  "Offer a Bribe Purse to smooth things over"
-    §124  "Present the Noble's Invitation as cover"
     §133  "Show your Courier's Token"
     §133  "Show your Relay Station Key"
+    §133  "Show your Noble's Invitation"
     §133  "Offer a bribe"
-    §134  "Reach for your Assassin's Blade"
     §158  "Tell them the satchel no longer exists"
-    §160  "Hand over the Sealed Satchel to the intelligence officer"
     §160  "Tell him the satchel no longer exists"
-    §162  "Go back — surrender the satchel on your terms"
 
 ISSUES
-  ✗ CYCLE runs: 2
+  ✗ CYCLE runs: 6
   ⚠ Conditioned choices never selected (condition may be unachievable):
-      §52    "Show the Courier's Token and say you are on urgent royal business"
-      §146   "Present your Relay Station Key at the checkpoint"
+      §134   "Reach for your Assassin's Blade"
+      §162   "Go back — surrender the satchel on your terms"

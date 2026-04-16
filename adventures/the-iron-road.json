@@ -2927,7 +2927,7 @@
       "narrative": "The city gates rise ahead of you — two towers of dressed stone flanking an iron-banded arch wide enough for three coaches abreast. Guards in the capital livery stand at each side, checking papers and waving most travellers through. Most.\n\nYou join the queue. Your pulse is steady or it is not, but either way you keep your face composed. The Sealed Satchel — if you still carry it — is hidden beneath your coat. The city presses close: hawkers, porters, a sergeant shouting at a stopped cart.\n\nAs you near the front of the queue you take stock of how you look to these guards. How many eyes have marked you since the ambush on the Iron Road?",
       "events": [],
       "scripts": {
-        "onEnter": "local s = state.get('suspicion'); if s >= 6 then ctx.navigateTo(134) elseif s >= 5 then ctx.navigateTo(133) else ctx.navigateTo(132) end"
+        "onEnter": "if state.get('suspicion') >= 5 then state.set('contactAlive', false) end; local s = state.get('suspicion'); if s >= 6 then ctx.navigateTo(134) elseif s >= 5 then ctx.navigateTo(133) else ctx.navigateTo(132) end"
       },
       "choices": []
     },
