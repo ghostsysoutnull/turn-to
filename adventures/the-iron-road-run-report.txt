@@ -1,39 +1,38 @@
 == Adventure Run Report: the-iron-road ==
-Runs: 150  Seed: 20260415  Strategy: all (random + survival + item-seeking)  MaxVisits: 20
+Runs: 600  Seed: 42  Strategy: all (random + survival + item-seeking)  MaxVisits: 20
 
 OUTCOMES
-  VICTORY:      94
-  INSTANT_DEATH:39
+  VICTORY:      383
+  INSTANT_DEATH:152
   STUCK:        0
-  CYCLE:        17
+  CYCLE:        65
 
 COVERAGE
-  140/170 sections (82%)
-  unreached ch1    §15 §37 §40
+  143/170 sections (84%)
+  unreached ch1    §15 §37
   unreached ch2    §48 §74 §76 §77 §79 §89
   unreached ch3    §92 §97 §118 §119 §124 §125
-  unreached ch4    §133 §134 §135 §136 §137 §156 §160 §161 §162 §163 §166 §167 §168 §169 §170
+  unreached ch4    §133 §134 §135 §136 §137 §160 §161 §162 §163 §166 §167 §168 §170
 
 RUN LENGTH (excl STUCK/CYCLE)
-  avg=53.5  min=3  max=197
+  avg=56.3  min=3  max=184
 
 CHAPTER REACH RATES
   ch1    100%
-  ch2    74%
-  ch3    63%
-  ch4    51%
+  ch2    75%
+  ch3    64%
+  ch4    55%
 
 ENDINGS
-  §4    INSTANT_DEATH 39/150
-  §104  VICTORY      17/150
-  §141  VICTORY      4/150
-  §145  VICTORY      12/150
-  §151  VICTORY      5/150
-  §159  VICTORY      56/150
+  §4    INSTANT_DEATH 151/600
+  §40   INSTANT_DEATH 1/600
+  §104  VICTORY      54/600
+  §141  VICTORY      37/600
+  §145  VICTORY      56/600
+  §151  VICTORY      24/600
+  §159  VICTORY      212/600
 
 ISSUES
-  ✗ CYCLE runs: 17
-  ⚠ Conditioned choices never selected (condition may be unachievable):
-      §146   "Present your Relay Station Key at the checkpoint"
+  ✗ CYCLE runs: 65
   ⚠ SKILL uninitialised — combat used default value 10
   ⚠ STAMINA uninitialised — combat used default value 10

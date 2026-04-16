@@ -2634,7 +2634,7 @@
         }
       ],
       "scripts": {
-        "onEnter": "if state.get('suspicion') >= 5 then state.set('contactAlive', false) end"
+        "onEnter": "if state.get('suspicion') >= 7 then state.set('contactAlive', false) end"
       }
     },
     {

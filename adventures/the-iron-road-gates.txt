@@ -1,5 +1,5 @@
 == Gate Contract Digest: the-iron-road ==
-Generated: 2026-04-15  |  Chapters: 4
+Generated: 2026-04-16  |  Chapters: 4
 
 CH1  [§1–§40]
   IN   (adventure start — no entry contract)

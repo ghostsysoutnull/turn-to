@@ -1,5 +1,5 @@
 == Adventure Report: the-iron-road ==
-Generated: 2026-04-15  |  Title: The Iron Road  |  Sections: 170  |  Items: 12
+Generated: 2026-04-16  |  Title: The Iron Road  |  Sections: 170  |  Items: 12
 
 REACHABILITY
   All 170 sections reachable from start (1) ✓

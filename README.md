@@ -18,6 +18,7 @@ A text-based terminal adventure game inspired by the Fighting Fantasy gamebook s
 | [08 - Adventure Authoring](docs/specs/08-adventure-authoring.md) | Chapters, gates, briefs, and the adventure manifest |
 | [09 - Location Networks](docs/specs/09-location-networks.md) | Location graph, travel events, region-based navigation |
 | [10 - Session Logging](docs/specs/10-session-logging.md) | Session log format, event recording, replay |
+| [11 - Adventure Runner](docs/specs/11-adventure-runner.md) | Automated simulation: strategies, coverage, report format |
 
 ### Technical Design
 
@@ -47,6 +48,7 @@ A text-based terminal adventure game inspired by the Fighting Fantasy gamebook s
 | `AdventureGateDigest` | Gate contracts for all chapters in one view |
 | `AdventureSectionDigest` | Compact per-chapter narrative digest |
 | `AdventureSectionInspector` | Targeted queries: read sections, inbound refs, event/condition search, dead ends, state var focus, gate JSON |
+| `AdventureRunner` | Batch simulation: N runs with configurable strategy, coverage report, unreached sections, never-selected choices |
 
 ## Agent Workflow
 
@@ -75,6 +77,6 @@ See [`workflow/ADVENTURE-AUTHORING-PIPELINE.md`](workflow/ADVENTURE-AUTHORING-PI
 
 ## Tech Stack
 
-- Java (latest)
+- Java 21
 - Maven
 - JUnit 5 + AssertJ
