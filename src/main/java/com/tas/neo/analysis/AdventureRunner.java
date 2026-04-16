@@ -47,16 +47,25 @@ public class AdventureRunner {
 
         int runs = 50;
         long seed = System.currentTimeMillis();
+        String strategy = "random";
         for (int i = 1; i < args.length - 1; i++) {
             if ("--runs".equals(args[i])) runs = Integer.parseInt(args[i + 1]);
             if ("--seed".equals(args[i])) seed = Long.parseLong(args[i + 1]);
+            if ("--strategy".equals(args[i])) strategy = args[i + 1];
         }
 
         Adventure adventure = new JsonAdventureLoader(adventuresDir).load(adventureId);
         JsonNode rawJson = new ObjectMapper().readTree(Files.readString(adventurePath));
+
+        ChoiceSelector selector = switch (strategy) {
+            case "survival"     -> new SurvivalChoiceSelector(adventure, new RandomChoiceSelector());
+            case "item-seeking" -> new ItemSeekingChoiceSelector();
+            default             -> new RandomChoiceSelector();
+        };
+
         RunConfiguration config = new RunConfiguration(
-            runs, new RandomChoiceSelector(), new com.tas.neo.mechanics.SeededDice(seed),
-            seed, 10, OptionalInt.empty(), OptionalInt.empty()
+            runs, selector, new com.tas.neo.mechanics.SeededDice(seed),
+            seed, 20, OptionalInt.empty(), OptionalInt.empty()
         );
 
         RunBatchResult result = run(adventure, rawJson, config);
