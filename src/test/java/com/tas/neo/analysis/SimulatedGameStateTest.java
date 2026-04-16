@@ -220,4 +220,34 @@ class SimulatedGameStateTest {
             .extracting(ChapterSnapshot::chapterId)
             .containsExactly("ch1", "ch2");
     }
+
+    // -------------------------------------------------------------------------
+    // Party member state
+    // -------------------------------------------------------------------------
+
+    @Test
+    void initPartyMember_sets_initial_state() {
+        SimulatedGameState state = new SimulatedGameState();
+        state.initPartyMember("scout", com.tas.neo.domain.party.MemberState.WAITING);
+        assertThat(state.partyMemberState("scout"))
+            .as("party member state must match the initial state set via initPartyMember")
+            .isEqualTo(com.tas.neo.domain.party.MemberState.WAITING);
+    }
+
+    @Test
+    void setPartyMemberState_updates_state() {
+        SimulatedGameState state = new SimulatedGameState();
+        state.initPartyMember("scout", com.tas.neo.domain.party.MemberState.WAITING);
+        state.setPartyMemberState("scout", com.tas.neo.domain.party.MemberState.ACTIVE);
+        assertThat(state.partyMemberState("scout"))
+            .as("party member state must reflect the value set via setPartyMemberState")
+            .isEqualTo(com.tas.neo.domain.party.MemberState.ACTIVE);
+    }
+
+    @Test
+    void partyMemberState_returns_null_for_unknown_member() {
+        assertThat(new SimulatedGameState().partyMemberState("unknown"))
+            .as("partyMemberState must return null for a member that was never initialised")
+            .isNull();
+    }
 }

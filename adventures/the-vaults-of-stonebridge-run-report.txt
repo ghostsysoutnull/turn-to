@@ -1,0 +1,38 @@
+== Adventure Run Report: the-vaults-of-stonebridge ==
+Generated: 2026-04-16  |  Runs: 100  |  Strategy: RandomChoiceSelector  |  Dice: RANDOM  |  Seed: 42
+
+OUTCOMES
+  VICTORY:      0
+  INSTANT_DEATH:0
+  STUCK:        0
+  CYCLE:        0
+  GRID_ENTRY:   100  (grid navigation not simulated)
+
+COVERAGE
+  13/30 sections (43%)
+  unreached ch1    §6 §12
+  unreached ch2    §16 §17 §18 §19 §20 §21 §22 §23 §24 §25 §26 §27 §28 §29 §30
+
+RUN LENGTH (excl STUCK/CYCLE)
+  avg=0.0  min=0  max=0
+
+CHAPTER REACH RATES
+  ch1    100%
+  ch2    0%
+
+ENDINGS
+  (none)
+
+GOLD AND STATE DISTRIBUTION AT CHAPTER BOUNDARIES
+  gold at ch1 entry: avg 0  range 0–0
+  companionSurvived at ch1 entry:  false:100%
+
+GATING
+  Choices with condition never met in any run:
+    §2    "Buy a Healing Potion from the innkeeper's shelf (costs 3 Gold)"
+    §18   "Show the Guard's Pass — the guard nods and steps aside"
+    §22   "Use the Vault Key to unlock the sealed door"
+    §22   "You have no key. Search the antechamber for another way through."
+
+ISSUES
+  none ✓

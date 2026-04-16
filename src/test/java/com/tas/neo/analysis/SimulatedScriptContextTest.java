@@ -2,6 +2,7 @@ package com.tas.neo.analysis;
 
 import com.tas.neo.domain.adventure.Choice;
 import com.tas.neo.domain.adventure.SectionTarget;
+import com.tas.neo.domain.party.MemberState;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -173,12 +174,23 @@ class SimulatedScriptContextTest {
     }
 
     @Test
-    void addPartyMember_logs_warning_and_does_not_throw() {
-        SimulatedScriptContext ctx = ctx(new SimulatedGameState());
-        ctx.addPartyMember("ally");
-        assertThat(ctx.warnings())
-            .as("addPartyMember must log a warning as it is unsupported in simulation")
-            .isNotEmpty();
+    void addPartyMember_sets_member_state_to_active() {
+        SimulatedGameState state = new SimulatedGameState();
+        state.initPartyMember("ally", MemberState.WAITING);
+        ctx(state).addPartyMember("ally");
+        assertThat(state.partyMemberState("ally"))
+            .as("addPartyMember must transition member state to ACTIVE in SimulatedGameState")
+            .isEqualTo(MemberState.ACTIVE);
+    }
+
+    @Test
+    void removePartyMember_sets_member_state_to_removed() {
+        SimulatedGameState state = new SimulatedGameState();
+        state.initPartyMember("ally", MemberState.ACTIVE);
+        ctx(state).removePartyMember("ally");
+        assertThat(state.partyMemberState("ally"))
+            .as("removePartyMember must transition member state to REMOVED in SimulatedGameState")
+            .isEqualTo(MemberState.REMOVED);
     }
 
     @Test

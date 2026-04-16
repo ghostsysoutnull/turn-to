@@ -2,6 +2,7 @@ package com.tas.neo.analysis;
 
 import com.tas.neo.domain.adventure.Choice;
 import com.tas.neo.domain.adventure.SectionTarget;
+import com.tas.neo.domain.party.MemberState;
 import com.tas.neo.scripting.PartyMemberProxy;
 import com.tas.neo.scripting.ScriptContext;
 
@@ -135,12 +136,12 @@ public class SimulatedScriptContext implements ScriptContext {
 
     @Override
     public void addPartyMember(String id) {
-        warnings.add("unsupported: addPartyMember");
+        state.setPartyMemberState(id, MemberState.ACTIVE);
     }
 
     @Override
     public void removePartyMember(String id) {
-        warnings.add("unsupported: removePartyMember");
+        state.setPartyMemberState(id, MemberState.REMOVED);
     }
 
     @Override

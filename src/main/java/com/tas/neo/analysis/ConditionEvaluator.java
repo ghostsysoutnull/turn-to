@@ -12,6 +12,7 @@ import com.tas.neo.domain.adventure.PartyStatCondition;
 import com.tas.neo.domain.adventure.StatCondition;
 import com.tas.neo.domain.adventure.StateEqualsCondition;
 import com.tas.neo.domain.adventure.StateNotEqualsCondition;
+import com.tas.neo.domain.party.MemberState;
 
 public class ConditionEvaluator {
 
@@ -34,10 +35,13 @@ public class ConditionEvaluator {
                 Object stored = state.scriptState().get(c.key());
                 yield stored == null || !stored.equals(c.value());
             }
-            // Party conditions — not tracked in simulation; default to false
-            case PartyMemberActiveCondition ignored -> false;
-            case PartyMemberWaitingCondition ignored -> false;
-            case PartyMemberRemovedCondition ignored -> false;
+            case PartyMemberActiveCondition c ->
+                state.partyMemberState(c.memberId()) == MemberState.ACTIVE;
+            case PartyMemberWaitingCondition c ->
+                state.partyMemberState(c.memberId()) == MemberState.WAITING;
+            case PartyMemberRemovedCondition c ->
+                state.partyMemberState(c.memberId()) == MemberState.REMOVED;
+            // PartyStatCondition — not tracked in simulation; default to false
             case PartyStatCondition ignored -> false;
         };
     }

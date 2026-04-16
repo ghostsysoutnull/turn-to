@@ -4,9 +4,13 @@ import com.tas.neo.domain.adventure.ComparisonType;
 import com.tas.neo.domain.adventure.GoldCondition;
 import com.tas.neo.domain.adventure.HasItemCondition;
 import com.tas.neo.domain.adventure.LacksItemCondition;
+import com.tas.neo.domain.adventure.PartyMemberActiveCondition;
+import com.tas.neo.domain.adventure.PartyMemberRemovedCondition;
+import com.tas.neo.domain.adventure.PartyMemberWaitingCondition;
 import com.tas.neo.domain.adventure.StatCondition;
 import com.tas.neo.domain.adventure.StateEqualsCondition;
 import com.tas.neo.domain.adventure.StateNotEqualsCondition;
+import com.tas.neo.domain.party.MemberState;
 import com.tas.neo.domain.player.AttributeType;
 import org.junit.jupiter.api.Test;
 
@@ -198,6 +202,80 @@ class ConditionEvaluatorTest {
         state.scriptState().set("flag", true);
         assertThat(ConditionEvaluator.evaluate(new StateNotEqualsCondition("flag", true), state))
             .as("StateNotEqualsCondition must be false when variable value matches")
+            .isFalse();
+    }
+
+    // -------------------------------------------------------------------------
+    // PartyMemberActiveCondition
+    // -------------------------------------------------------------------------
+
+    @Test
+    void partyMemberActive_true_when_member_is_active() {
+        SimulatedGameState state = new SimulatedGameState();
+        state.initPartyMember("scout", MemberState.ACTIVE);
+        assertThat(ConditionEvaluator.evaluate(new PartyMemberActiveCondition("scout"), state))
+            .as("PartyMemberActiveCondition must be true when member state is ACTIVE")
+            .isTrue();
+    }
+
+    @Test
+    void partyMemberActive_false_when_member_is_waiting() {
+        SimulatedGameState state = new SimulatedGameState();
+        state.initPartyMember("scout", MemberState.WAITING);
+        assertThat(ConditionEvaluator.evaluate(new PartyMemberActiveCondition("scout"), state))
+            .as("PartyMemberActiveCondition must be false when member state is WAITING")
+            .isFalse();
+    }
+
+    @Test
+    void partyMemberActive_false_when_member_unknown() {
+        assertThat(ConditionEvaluator.evaluate(
+                new PartyMemberActiveCondition("unknown"), new SimulatedGameState()))
+            .as("PartyMemberActiveCondition must be false when member is not tracked")
+            .isFalse();
+    }
+
+    // -------------------------------------------------------------------------
+    // PartyMemberWaitingCondition
+    // -------------------------------------------------------------------------
+
+    @Test
+    void partyMemberWaiting_true_when_member_is_waiting() {
+        SimulatedGameState state = new SimulatedGameState();
+        state.initPartyMember("guide", MemberState.WAITING);
+        assertThat(ConditionEvaluator.evaluate(new PartyMemberWaitingCondition("guide"), state))
+            .as("PartyMemberWaitingCondition must be true when member state is WAITING")
+            .isTrue();
+    }
+
+    @Test
+    void partyMemberWaiting_false_when_member_is_active() {
+        SimulatedGameState state = new SimulatedGameState();
+        state.initPartyMember("guide", MemberState.ACTIVE);
+        assertThat(ConditionEvaluator.evaluate(new PartyMemberWaitingCondition("guide"), state))
+            .as("PartyMemberWaitingCondition must be false when member state is ACTIVE")
+            .isFalse();
+    }
+
+    // -------------------------------------------------------------------------
+    // PartyMemberRemovedCondition
+    // -------------------------------------------------------------------------
+
+    @Test
+    void partyMemberRemoved_true_when_member_is_removed() {
+        SimulatedGameState state = new SimulatedGameState();
+        state.initPartyMember("soldier", MemberState.REMOVED);
+        assertThat(ConditionEvaluator.evaluate(new PartyMemberRemovedCondition("soldier"), state))
+            .as("PartyMemberRemovedCondition must be true when member state is REMOVED")
+            .isTrue();
+    }
+
+    @Test
+    void partyMemberRemoved_false_when_member_is_active() {
+        SimulatedGameState state = new SimulatedGameState();
+        state.initPartyMember("soldier", MemberState.ACTIVE);
+        assertThat(ConditionEvaluator.evaluate(new PartyMemberRemovedCondition("soldier"), state))
+            .as("PartyMemberRemovedCondition must be false when member state is ACTIVE")
             .isFalse();
     }
 }

@@ -38,7 +38,7 @@ condition is perfectly reachable in real play.
   - `ConditionEvaluator` can then evaluate party conditions against simulated state
 - **Note:** No current adventure uses party-gated choices, so this does not produce false positives
   today. Becomes urgent as soon as any adventure gates choices on party state.
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16
 
 ---
 

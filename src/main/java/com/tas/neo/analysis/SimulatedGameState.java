@@ -1,5 +1,6 @@
 package com.tas.neo.analysis;
 
+import com.tas.neo.domain.party.MemberState;
 import com.tas.neo.scripting.AdventureScriptState;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class SimulatedGameState {
     private final List<Integer> visitOrder = new ArrayList<>();
     private final List<ChapterSnapshot> snapshots = new ArrayList<>();
     private final AdventureScriptState scriptState = new AdventureScriptState();
+    private final Map<String, MemberState> partyMembers = new HashMap<>();
 
     // -------------------------------------------------------------------------
     // Inventory
@@ -103,6 +105,23 @@ public class SimulatedGameState {
 
     public List<ChapterSnapshot> chapterSnapshots() {
         return List.copyOf(snapshots);
+    }
+
+    // -------------------------------------------------------------------------
+    // Party member state
+    // -------------------------------------------------------------------------
+
+    public void initPartyMember(String id, MemberState state) {
+        partyMembers.put(id, state);
+    }
+
+    public void setPartyMemberState(String id, MemberState state) {
+        partyMembers.put(id, state);
+    }
+
+    /** Returns the current state of a party member, or null if not tracked. */
+    public MemberState partyMemberState(String id) {
+        return partyMembers.get(id);
     }
 
     // -------------------------------------------------------------------------

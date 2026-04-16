@@ -15,6 +15,7 @@ import com.tas.neo.domain.adventure.event.NavigateEvent;
 import com.tas.neo.domain.adventure.event.SectionEvent;
 import com.tas.neo.domain.adventure.event.SkillTestEvent;
 import com.tas.neo.domain.combat.Creature;
+import com.tas.neo.domain.party.PartyMemberDefinition;
 import com.tas.neo.scripting.AdventureScriptState;
 import com.tas.neo.scripting.LuaScriptEngine;
 import com.tas.neo.scripting.ScriptEngine;
@@ -91,6 +92,11 @@ public class RunSimulator {
         // Apply fixed stats if configured
         config.fixedSkill().ifPresent(v -> state.setStat("SKILL", v));
         config.fixedStamina().ifPresent(v -> state.setStat("STAMINA", v));
+
+        // Initialise party member states from definitions
+        for (PartyMemberDefinition def : adventure.partyMemberDefinitions()) {
+            state.initPartyMember(def.id(), def.initialState());
+        }
 
         // Execute adventure-level lifecycle scripts (initialises state variables)
         SimulatedScriptContext initCtx = new SimulatedScriptContext(state);
