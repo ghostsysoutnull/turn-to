@@ -155,6 +155,11 @@ mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureSectionDigest     -
 # repeat AdventureSectionDigest for each chapter
 ```
 
+**Authoritative sources:**
+
+- If a report file disagrees with the adventure JSON, the JSON wins. Fix the JSON (or the report generator), then regenerate.
+- Never edit a generated report file by hand. All report files must be reproducible from their source by running the generator above.
+
 ---
 
 ## Agent Workflow
