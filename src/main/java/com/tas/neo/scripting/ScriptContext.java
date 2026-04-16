@@ -12,6 +12,7 @@ public interface ScriptContext {
     boolean hasItem(String itemName);
     int getItemCount(String itemName);
     PartyMemberProxy getPartyMember(String id);
+    boolean isPartyMemberActive(String id);
     void addPartyMember(String id);
     void removePartyMember(String id);
     void navigateTo(int section);

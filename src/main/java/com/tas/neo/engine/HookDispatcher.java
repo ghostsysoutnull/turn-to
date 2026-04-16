@@ -224,9 +224,10 @@ public class HookDispatcher {
         @Override public void removeItem(String n, int q)    { delegate.removeItem(n, q); }
         @Override public boolean hasItem(String n)           { return delegate.hasItem(n); }
         @Override public int getItemCount(String n)          { return delegate.getItemCount(n); }
-        @Override public PartyMemberProxy getPartyMember(String id) { return delegate.getPartyMember(id); }
-        @Override public void addPartyMember(String id)     { delegate.addPartyMember(id); }
-        @Override public void removePartyMember(String id)  { delegate.removePartyMember(id); }
+        @Override public PartyMemberProxy getPartyMember(String id)  { return delegate.getPartyMember(id); }
+        @Override public boolean isPartyMemberActive(String id)      { return delegate.isPartyMemberActive(id); }
+        @Override public void addPartyMember(String id)              { delegate.addPartyMember(id); }
+        @Override public void removePartyMember(String id)           { delegate.removePartyMember(id); }
         @Override public void navigateTo(int s)              { delegate.navigateTo(s); }
         @Override public int currentSection()                { return delegate.currentSection(); }
         @Override public void showMessage(String m)          { delegate.showMessage(m); }

@@ -1,0 +1,27 @@
+{
+  "id": "valid-with-player-stats",
+  "title": "Adventure With Player Stats",
+  "description": "Test fixture for playerStats parsing.",
+  "startSection": 1,
+  "initialProvisions": 5,
+  "playerStats": {
+    "SKILL":   { "formula": "1d6+6" },
+    "STAMINA": { "formula": "2d6+12" },
+    "LUCK":    { "formula": "1d6+6" }
+  },
+  "sections": [
+    {
+      "number": 1,
+      "type": "NORMAL",
+      "narrative": "Section 1.",
+      "choices": [
+        { "text": "Go to section 2", "targetSection": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "type": "VICTORY",
+      "narrative": "Victory!"
+    }
+  ]
+}

@@ -1,8 +1,10 @@
 package com.tas.neo.loader;
 
+import com.tas.neo.domain.DiceStatDefinition;
 import com.tas.neo.domain.adventure.Adventure;
 import com.tas.neo.domain.adventure.event.CombatEvent;
 import com.tas.neo.domain.adventure.event.SectionEvent;
+import com.tas.neo.mechanics.FixedDice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,6 +38,39 @@ class JsonAdventureLoaderTest {
     // -------------------------------------------------------------------------
     // Happy-path: valid adventures load without error
     // -------------------------------------------------------------------------
+
+    @Test
+    void player_stats_field_parsed_correctly() throws AdventureLoadException {
+        Adventure adventure = loader.load("valid-with-player-stats");
+
+        assertThat(adventure.playerStats())
+                .as("playerStats must contain exactly SKILL, STAMINA, LUCK")
+                .containsOnlyKeys("SKILL", "STAMINA", "LUCK");
+
+        DiceStatDefinition skill = (DiceStatDefinition) adventure.playerStats().get("SKILL");
+        DiceStatDefinition stamina = (DiceStatDefinition) adventure.playerStats().get("STAMINA");
+        DiceStatDefinition luck = (DiceStatDefinition) adventure.playerStats().get("LUCK");
+
+        FixedDice one = new FixedDice(1);
+        assertThat(skill.resolveInitial(one))
+                .as("SKILL formula 1d6+6 with FixedDice(1) must yield 7 (1+6)")
+                .isEqualTo(7);
+        assertThat(stamina.resolveInitial(one))
+                .as("STAMINA formula 2d6+12 with FixedDice(1) must yield 14 (1+1+12)")
+                .isEqualTo(14);
+        assertThat(luck.resolveInitial(one))
+                .as("LUCK formula 1d6+6 with FixedDice(1) must yield 7 (1+6)")
+                .isEqualTo(7);
+    }
+
+    @Test
+    void player_stats_absent_yields_empty_map() throws AdventureLoadException {
+        Adventure adventure = loader.load("valid-minimal");
+
+        assertThat(adventure.playerStats())
+                .as("adventure with no playerStats block must return empty map, not null")
+                .isEmpty();
+    }
 
     @Test
     void valid_minimal_adventure_loads_without_error() throws AdventureLoadException {

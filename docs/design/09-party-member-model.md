@@ -139,28 +139,28 @@ These replace the former `PartyMemberPresentCondition`. Each condition tests an 
 
 ## Test Strategy
 
-| What | Approach |
-|------|----------|
-| `DiceFormula.parse` | Valid and invalid expressions |
-| `DiceFormula.roll` | `FixedDice` → assert deterministic total |
-| `DiceStatDefinition` resolution | `FixedDice` with and without `fixedMax` |
-| `PartyMemberStat.modify` | Assert clamping at 0 and max |
-| `PartyMember.isDefeated` | Set life stat to 0 → assert true |
-| `PartyMember.isActive` | Member in each state → assert correct boolean |
-| Defeat → `GAME_OVER` | Stat reduced to 0 → assert `state.isGameOver()` |
-| Defeat → `REMOVE` | Stat reduced to 0 → assert member state is `REMOVED` in `GameState` |
-| Defeat → `NAVIGATE` | Stat reduced to 0 → assert member state is `REMOVED` and `state.currentSection()` changed |
-| `ctx.addPartyMember` on `WAITING` member | Member moves to `ACTIVE` → assert `isActive()` true |
-| `ctx.addPartyMember` on `ACTIVE` member | No-op → assert state unchanged |
-| `ctx.addPartyMember` on `REMOVED` member | Member re-activates → assert `isActive()` true, stats preserved |
-| `ctx.addPartyMember` unknown id | No-op → assert no exception |
-| `ctx.removePartyMember` on `ACTIVE` member | Member moves to `REMOVED` → assert not in `activePartyMembers()` |
-| `ctx.removePartyMember` on `WAITING` member | No-op → assert state unchanged |
-| `ctx.removePartyMember` on `REMOVED` member | No-op → assert state unchanged |
-| `ctx.removePartyMember` does not trigger `onDefeat` | Remove `ACTIVE` member → assert game not over, no defeat message |
-| `PartyMemberActiveCondition` | `ACTIVE` member → true; `WAITING`/`REMOVED` → false |
-| `PartyMemberWaitingCondition` | `WAITING` member → true; others → false |
-| `PartyMemberRemovedCondition` | `REMOVED` member → true; others → false |
-| `PartyStatCondition` on non-ACTIVE member | Member not `ACTIVE` → condition evaluates false |
-| Proxy no-op on unknown id | `ctx.getPartyMember('unknown')` → assert no exception |
-| Stats rolled at load time, not on join | Member with dice-formula stat: stats fixed before `addPartyMember` call |
+| Layer | What | Approach |
+|-------|------|----------|
+| unit | `DiceFormula.parse` | Valid and invalid expressions |
+| unit | `DiceFormula.roll` | `FixedDice` → assert deterministic total |
+| unit | `DiceStatDefinition` resolution | `FixedDice` with and without `fixedMax` |
+| unit | `PartyMemberStat.modify` | Assert clamping at 0 and max |
+| unit | `PartyMember.isDefeated` | Set life stat to 0 → assert true |
+| unit | `PartyMember.isActive` | Member in each state → assert correct boolean |
+| engine-integration | Defeat → `GAME_OVER` | Stat reduced to 0 → assert `state.isGameOver()` |
+| engine-integration | Defeat → `REMOVE` | Stat reduced to 0 → assert member state is `REMOVED` in `GameState` |
+| engine-integration | Defeat → `NAVIGATE` | Stat reduced to 0 → assert member state is `REMOVED` and `state.currentSection()` changed |
+| engine-integration | `ctx.addPartyMember` on `WAITING` member | Member moves to `ACTIVE` → assert `isActive()` true |
+| engine-integration | `ctx.addPartyMember` on `ACTIVE` member | No-op → assert state unchanged |
+| engine-integration | `ctx.addPartyMember` on `REMOVED` member | Member re-activates → assert `isActive()` true, stats preserved |
+| engine-integration | `ctx.addPartyMember` unknown id | No-op → assert no exception |
+| engine-integration | `ctx.removePartyMember` on `ACTIVE` member | Member moves to `REMOVED` → assert not in `activePartyMembers()` |
+| engine-integration | `ctx.removePartyMember` on `WAITING` member | No-op → assert state unchanged |
+| engine-integration | `ctx.removePartyMember` on `REMOVED` member | No-op → assert state unchanged |
+| engine-integration | `ctx.removePartyMember` does not trigger `onDefeat` | Remove `ACTIVE` member → assert game not over, no defeat message |
+| unit | `PartyMemberActiveCondition` | `ACTIVE` member → true; `WAITING`/`REMOVED` → false |
+| unit | `PartyMemberWaitingCondition` | `WAITING` member → true; others → false |
+| unit | `PartyMemberRemovedCondition` | `REMOVED` member → true; others → false |
+| unit | `PartyStatCondition` on non-ACTIVE member | Member not `ACTIVE` → condition evaluates false |
+| unit | Proxy no-op on unknown id | `ctx.getPartyMember('unknown')` → assert no exception |
+| unit | Stats rolled at load time, not on join | Member with dice-formula stat: stats fixed before `addPartyMember` call |

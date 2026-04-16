@@ -353,17 +353,17 @@ Produces the report format defined in the spec. No section narrative text appear
 
 ## Test strategy
 
-| Test class | What it covers |
-|------------|---------------|
-| `SimulatedGameStateTest` | `addItem`/`removeItem`/`hasItem` correctness; `modifyGold` floors at 0; `modifyStat` clamps to 0; `visitCount` increments; snapshot immutability |
-| `SimulatedScriptContextTest` | `navigateTo` captured in `navigationTarget()`; `addItem` delegates to state; `showMessage` is no-op; `addChoice` appended to dynamic choices; unsupported ops logged as warnings |
-| `ConditionEvaluatorTest` | One test per `Condition` subtype; true and false cases; `StateEqualsCondition` with int, string, and boolean values |
-| `RandomChoiceSelectorTest` | With one choice: always returns index 0; with `FixedDice` sequence: deterministic selection |
-| `ItemSeekingChoiceSelectorTest` | Choice with satisfied `HAS_ITEM` selected more often than unconditioned choice over 1000 trials |
-| `HighSuspicionChoiceSelectorTest` | Suspicion-raising choice preferred; non-suspicion choice preferred with `LowSuspicionChoiceSelector` |
-| `RunSimulatorTest` | VICTORY reached; INSTANT_DEATH reached; STUCK detected; CYCLE detected; ITEM_GAIN event applied to state; GOLD_CHANGE floored at 0; `navigateTo` in script overrides choice; chapter snapshot captured at entry section |
-| `RunBatchResultTest` | `coveredSections()` union of all runs; `itemCarryRate()` fraction; `neverSelectedChoices()` correct; `stateDistribution()` avg/min/max; `goldDistribution()` avg/min/max; `chapterReachRate()` fraction; `runLengthSummary()` avg/min/max excluding STUCK/CYCLE |
-| `AdventureRunnerIntegrationTest` | Runs 20 iterations against `the-iron-road.json` with `RANDOM` strategy and fixed seed; asserts at least one VICTORY reached; asserts all 170 sections appear in `coveredSections()` union within reasonable run count |
+| Layer | Test class | What it covers |
+|-------|------------|---------------|
+| unit | `SimulatedGameStateTest` | `addItem`/`removeItem`/`hasItem` correctness; `modifyGold` floors at 0; `modifyStat` clamps to 0; `visitCount` increments; snapshot immutability |
+| unit | `SimulatedScriptContextTest` | `navigateTo` captured in `navigationTarget()`; `addItem` delegates to state; `showMessage` is no-op; `addChoice` appended to dynamic choices; unsupported ops logged as warnings |
+| unit | `ConditionEvaluatorTest` | One test per `Condition` subtype; true and false cases; `StateEqualsCondition` with int, string, and boolean values |
+| unit | `RandomChoiceSelectorTest` | With one choice: always returns index 0; with `FixedDice` sequence: deterministic selection |
+| unit | `ItemSeekingChoiceSelectorTest` | Choice with satisfied `HAS_ITEM` selected more often than unconditioned choice over 1000 trials |
+| unit | `HighSuspicionChoiceSelectorTest` | Suspicion-raising choice preferred; non-suspicion choice preferred with `LowSuspicionChoiceSelector` |
+| unit | `RunSimulatorTest` | VICTORY reached; INSTANT_DEATH reached; STUCK detected; CYCLE detected; ITEM_GAIN event applied to state; GOLD_CHANGE floored at 0; `navigateTo` in script overrides choice; chapter snapshot captured at entry section |
+| unit | `RunBatchResultTest` | `coveredSections()` union of all runs; `itemCarryRate()` fraction; `neverSelectedChoices()` correct; `stateDistribution()` avg/min/max; `goldDistribution()` avg/min/max; `chapterReachRate()` fraction; `runLengthSummary()` avg/min/max excluding STUCK/CYCLE |
+| simulation | `AdventureRunnerIntegrationTest` | Runs 20 iterations against `the-iron-road.json` with `RANDOM` strategy and fixed seed; asserts at least one VICTORY reached; asserts all 170 sections appear in `coveredSections()` union within reasonable run count |
 
 All tests use `SeededDice` or `FixedDice` — no wall-clock randomness. No test reads from the filesystem except `AdventureRunnerIntegrationTest`, which uses `adventures/the-iron-road.json` as its fixture (same pattern as `AdventureValidationTest`).
 

@@ -114,13 +114,49 @@ If the correct package for a new class is unclear from the design doc, raise it 
 
 Before completing your task:
 
+`mvn -q test` runs all five automated testing layers in one command. Every layer must be green before committing.
+
+| Layer | What `mvn -q test` runs | What it catches |
+|-------|------------------------|----------------|
+| Unit | All `*Test` classes using test doubles | Component invariants, domain rules, parsing, scripting, combat math |
+| Engine integration | `GameTest`, `ScenarioRunner`-based tests | Full game loop: navigation, events, stats, grid, party lifecycle |
+| Acceptance | Tests in `src/test/java/.../acceptance/` loading real adventure JSON + Lua | Real authored content and scripts end-to-end |
+| Simulation | `AdventureRunnerIntegrationTest` — 50 batch runs, fixed seed | Structural properties across the whole adventure: victory reachable, no stuck runs, coverage thresholds |
+| Structural validation | `AdventureValidationTest`, `ChapterValidationTest` | Every production adventure JSON passes all loader validation rules |
+
 | Check | How to verify |
 |-------|--------------|
-| All target tests pass | Run the test suite |
+| All five layers pass | `mvn -q test` — must be clean |
+| Implementation matches design doc | If you implemented a class, interface, or method differently from what the design doc declares (different signature, different responsibility, different package), that is a blocker to the Design Agent — not a silent deviation. Raise it before committing. |
 | No test files modified | `git diff src/test/` shows no changes |
 | Package structure matches architecture doc | Compare new files against `docs/design/01-architecture.md` |
 | No layer dependency violations | Verify imports respect the dependency rules |
 | No `System.in` / `System.out` outside terminal adapters | Grep for direct usage |
+| Adventure reports regenerated | If any `adventures/*.json` was modified, run all five generators and the runner for each changed adventure (see commands in `CLAUDE.md § Adventure Analysis Tools`) |
+| Simulation thresholds reviewed | If any `adventures/*.json` was modified, check whether `AdventureRunnerIntegrationTest` thresholds (cycle rate, section coverage, chapter reach rates) are still valid. If thresholds need updating, append a `BACKLOG.md` item naming the specific threshold and the adventure — do not leave it as a free-text observation. This requires a dedicated effort, not an inline fix. |
+
+Adventure report regeneration commands (run for each modified `<id>`):
+
+```
+mvn -q exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureReportGenerator  -Dexec.args="adventures/<id>.json"
+mvn -q exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureStateReport      -Dexec.args="adventures/<id>.json"
+mvn -q exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureItemReport        -Dexec.args="adventures/<id>.json"
+mvn -q exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureGateDigest        -Dexec.args="adventures/<id>.json"
+mvn -q exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureSectionDigest     -Dexec.args="adventures/<id>.json <chapterId>"
+mvn -q exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureRunner            -Dexec.args="adventures/<id>.json"
+```
+
+Review the runner output for new ISSUES, changes to GATING, or unexpected shifts in OUTCOMES before committing.
+
+---
+
+## You Are Done When
+
+- `mvn -q test` is clean — all five layers pass.
+- No test file was modified.
+- Every implementation matches the design doc declaration. Any deviation is raised as a blocker to the Design Agent, not silently absorbed.
+- Adventure reports have been regenerated for every modified adventure JSON, and the runner output has been reviewed.
+- A user reading only the test results and your summary could verify the feature is complete and nothing regressed.
 
 ---
 

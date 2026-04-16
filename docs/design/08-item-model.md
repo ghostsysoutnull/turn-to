@@ -125,12 +125,12 @@ INVENTORY
 
 ## Test Strategy
 
-| What | Approach |
-|------|----------|
-| `Inventory` add/remove quantity | Plain unit test; assert `count()` after each operation |
-| `onDrop` fires only at 0 | Remove N-1 units, assert not fired; remove last, assert fired once |
-| `onPickup` fires per call | `addItem('Arrow', 10)` → assert fired once, not ten times |
-| `remove` capped at stock | Remove 10 of 5 → assert 5 returned, `onDrop` fired |
-| `ItemStack.displayName` | Unit test both `countable` values at quantity 1 and > 1 |
-| Cursed amulet refuses drop | `onDrop` script re-adds item; assert count still 1 after removal |
-| `onCombatRound` firing order | Two passive items; assert hooks fired in insertion order |
+| Layer | What | Approach |
+|-------|------|----------|
+| unit | `Inventory` add/remove quantity | Plain unit test; assert `count()` after each operation |
+| unit | `onDrop` fires only at 0 | Remove N-1 units, assert not fired; remove last, assert fired once |
+| unit | `onPickup` fires per call | `addItem('Arrow', 10)` → assert fired once, not ten times |
+| unit | `remove` capped at stock | Remove 10 of 5 → assert 5 returned, `onDrop` fired |
+| unit | `ItemStack.displayName` | Unit test both `countable` values at quantity 1 and > 1 |
+| unit | Cursed amulet refuses drop | `onDrop` script re-adds item; assert count still 1 after removal |
+| unit | `onCombatRound` firing order | Two passive items; assert hooks fired in insertion order |

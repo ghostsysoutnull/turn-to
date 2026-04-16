@@ -135,6 +135,11 @@ public class SimulatedScriptContext implements ScriptContext {
     }
 
     @Override
+    public boolean isPartyMemberActive(String id) {
+        return state.partyMemberState(id) == com.tas.neo.domain.party.MemberState.ACTIVE;
+    }
+
+    @Override
     public void addPartyMember(String id) {
         state.setPartyMemberState(id, MemberState.ACTIVE);
     }

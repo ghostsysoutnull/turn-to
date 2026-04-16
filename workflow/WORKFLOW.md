@@ -25,6 +25,25 @@ Each stage is a deliberate checkpoint. The user reviews the output of each agent
 
 ---
 
+## Feature Intake
+
+Before any agent is invoked, a new requirement must clear this bar:
+
+**Can the requirement be described in terms of what the system does and what rules it follows, without naming any class, method, or implementation mechanism?**
+
+If yes — it is ready for the Spec Agent.
+If no — it is an implementation idea, not a requirement. Clarify what behaviour the user wants to observe before proceeding.
+
+This is the pipeline's front door. Skipping it produces specs that contain design decisions, designs that contradict specs, and tests that assert implementation details rather than behaviour. The cost of one clarifying question here is lower than the cost of unwinding a misaligned pipeline later.
+
+**Protocol:**
+1. User states a requirement in plain language.
+2. If the requirement is behavioural and unambiguous → invoke Spec Agent with it directly.
+3. If the requirement names a class, method, or package → ask the user to restate it as observable behaviour first.
+4. If the requirement is a refactoring (structural change, no observable behaviour change) → it goes to `REFACTORING-BACKLOG.md` via the protocol in `docs/design/13-oo-design-guidelines.md`, not into the pipeline.
+
+---
+
 ## Adventure Authoring Pipeline
 
 Creating a new adventure uses a separate pipeline. See `workflow/ADVENTURE-AUTHORING-PIPELINE.md`.

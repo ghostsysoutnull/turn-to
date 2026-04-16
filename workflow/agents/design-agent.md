@@ -66,11 +66,14 @@ Introducing a dependency that violates these rules is a blocker — raise it to 
 ## Test Strategy Tables
 
 Every design document must include a test strategy section with a table covering:
+- **Layer** — which testing layer applies: `unit`, `engine-integration`, or `acceptance`
 - What scenario is being tested
 - Which test doubles are used (from `docs/design/06-testability.md`)
 - What to assert
 
-The test agent reads these tables directly to write tests. Incomplete or vague test strategies produce incomplete tests.
+The test agent reads these tables directly to write tests. Incomplete or vague test strategies produce incomplete tests. The layer tag tells the test agent *how* to write the test — `unit` means isolated with doubles; `engine-integration` means `ScenarioRunner` with a scripted adventure; `acceptance` means a real production adventure JSON with real Lua.
+
+When designing a component that affects authored adventure content (sections, scripts, chapters), include at least one `acceptance` row covering a scripted path through that content.
 
 ---
 
@@ -85,6 +88,16 @@ Run these against all existing design files before completing your task:
 | Interfaces consistent with architecture | Signatures match `docs/design/01-architecture.md` |
 | No duplicate component definitions | The same class is not described differently in two docs |
 | Test strategy tables present | Every component section has a test strategy |
+
+---
+
+## You Are Done When
+
+- Every spec concept has a corresponding component, interface, or record in a design document.
+- Every component section has a test strategy table with a Layer column and at least one row per distinct behaviour.
+- No design document contains a method body, pseudocode, or private implementation detail.
+- Interface signatures and package assignments are consistent with `docs/design/01-architecture.md`.
+- A Test Agent reading only `docs/design/` could write every test without asking you a question.
 
 ---
 

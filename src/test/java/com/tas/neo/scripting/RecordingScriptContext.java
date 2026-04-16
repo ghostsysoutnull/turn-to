@@ -123,6 +123,11 @@ public class RecordingScriptContext implements ScriptContext {
     }
 
     @Override
+    public boolean isPartyMemberActive(String id) {
+        return false;
+    }
+
+    @Override
     public void addPartyMember(String id) {
         // not tracked in this recorder
     }

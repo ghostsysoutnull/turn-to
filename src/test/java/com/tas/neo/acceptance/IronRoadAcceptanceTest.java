@@ -164,4 +164,62 @@ class IronRoadAcceptanceTest {
                             .isEqualTo(13);
                 });
     }
+
+    // -----------------------------------------------------------------------
+    // Tier 4 — Ch3 VICTORY via back road and selling the satchel
+    // -----------------------------------------------------------------------
+
+    /**
+     * Walks a full deterministic path from §1 through ch1, ch2, and ch3 to the VICTORY
+     * section §104 (sell the satchel to the spymaster's agent). Verifies:
+     * <ul>
+     *   <li>Traveller's Cloak and Healing Potion are gained at §29.</li>
+     *   <li>§41 onEnter reduces suspicion by 1 when player carries the Cloak — suspicion
+     *       starts at 0 (onLoad) and stays at 0 after max(0, 0-1).</li>
+     *   <li>No Lua errors across the entire run.</li>
+     *   <li>Run reaches VICTORY.</li>
+     * </ul>
+     *
+     * <p>Path (section sequence):
+     * §1→§3→§6→§9→§25→§29→§36→§39→§41→§45→§84→§93→§94→§95→§99→§100→§102→§104(VICTORY)
+     *
+     * <p>Dice: FixedDice(1) — SKILL 7, STAMINA 14, LUCK 7. No combat or luck tests on
+     * this path; three STAMINA-1 events (§3, §39, §84) leave STAMINA at 11.
+     *
+     * <p>Input sequence (17 inputs):
+     * §1(1→§3), §3(1→§6), §6(1→§9), §9(1→§25), §25(1→§29 take cloak+potion),
+     * §29(1→§36), §36(2→§39 keep walking), §39(1→§41),
+     * §41(4→§45 keep head down), §45(4→§84 back road),
+     * §84(1→§93 continue), §93(1→§94), §94(1→§95), §95(1→§99),
+     * §99(1→§100 common room), §100(2→§102 approach), §102(2→§104 sell satchel)
+     */
+    @Test
+    void travellers_cloak_reduces_suspicion_at_ch2_entry_and_path_reaches_victory() {
+        ScenarioResult result = ScenarioRunner
+                .scripted(IRON_ROAD, new FixedDice(1),
+                        1, 1, 1, 1, 1, 1, 2, 1, 4, 4, 1, 1, 1, 1, 1, 2, 2)
+                .withScriptEngine(new LuaScriptEngine())
+                .run();
+
+        assertThat(result.sessionLog().errors())
+                .as("no Lua errors should occur across the full back-road run")
+                .isEmpty();
+
+        assertThat(result.finalState().isVictory())
+                .as("path must reach §104 VICTORY (sell satchel to spymaster's agent)")
+                .isTrue();
+
+        assertThat(result.sessionLog().events())
+                .as("session log must contain ItemGained(Traveller's Cloak) from §29")
+                .anySatisfy(e -> {
+                    assertThat(e).isInstanceOf(OutputEvent.ItemGained.class);
+                    assertThat(((OutputEvent.ItemGained) e).itemName())
+                            .isEqualTo("Traveller's Cloak");
+                });
+
+        assertThat(result.scriptState().get("suspicion"))
+                .as("suspicion must stay at 0 — onLoad sets it to 0, §41 onEnter applies " +
+                    "max(0, 0-1)=0 when player carries the Traveller's Cloak")
+                .isEqualTo(0);
+    }
 }

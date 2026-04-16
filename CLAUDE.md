@@ -210,6 +210,14 @@ Each agent stays strictly within its own output boundary. Violations of scope ar
 
 When a structural smell is identified while working on something else, do not refactor inline. Complete the original task, append an entry to `REFACTORING-BACKLOG.md`, and report it explicitly. Medium and broad refactors require the user's explicit approval in a dedicated effort. See `docs/design/13-oo-design-guidelines.md § Raising a Refactoring Detected During Unrelated Work` for the full protocol.
 
+### Problem-scope discipline
+
+When the user raises a concern about the workflow, process, or system quality, map the full problem space before proposing a fix. A concern about one gap usually implies related gaps elsewhere — in other agents, other layers, other lifecycle phases. Answering only the narrow slice named is not enough.
+
+Before proposing changes, ask: across all agents, all testing layers, all lifecycle phases — where else could this concern manifest? Present that full picture, then propose changes that address the whole thing.
+
+Answering the narrow version and waiting for the user to direct the next step is a failure mode. The user should not need to ask the same question five times from different angles to get complete coverage.
+
 ### Pipeline discipline in conversational sessions
 
 The pipeline applies even when working conversationally, not through formal agent invocations:

@@ -123,16 +123,16 @@ Player death (STAMINA == 0) is detected by `HookDispatcher` immediately after an
 
 ## Test Strategy
 
-| Scenario | Setup | What to assert |
-|----------|-------|----------------|
-| Victory section ends game | `InMemoryAdventureLoader` with VICTORY section | `state.isVictory() == true` |
-| INSTANT_DEATH ends game | Section of type INSTANT_DEATH | `state.isGameOver() == true` |
-| Player death mid-event | STAMINA reduced to 0 by `StatChangeEvent` | `state.isGameOver()`, no choices shown |
-| System choices injected | Any normal section | "Check inventory" and "Quit" always present |
-| Navigation follows choice | `ScriptedInput` selecting choice 1 | `state.currentSection()` == target |
-| Party member created | Adventure with dice-formula stat | Stat within expected range |
-| Player stats rolled from adventure formulas | `standardPlayerStats()` + `FixedDice(1)` | `player.getSkill() == 7`, `player.getStamina() == 14`, `player.getLuck() == 7` |
-| Player max stats equal initial rolled value | `standardPlayerStats()` + `FixedDice(1)` | `player.getMaxStamina() == 14` (max fixed at creation, never exceeds initial roll) |
-| Enter grid via choice | `InMemoryAdventureLoader` with grid, choice using `GridTarget` | `state.isInGrid() == true`, `state.currentCell()` == entry cell |
-| Exit grid via passage `toSection` | Player in grid, selects exit passage | `state.isInGrid() == false`, `state.currentSection()` == target |
-| Cell events fire on entry | Cell with `StatChangeEvent` | Player stat modified |
+| Layer | Scenario | Setup | What to assert |
+|-------|----------|-------|----------------|
+| engine-integration | Victory section ends game | `InMemoryAdventureLoader` with VICTORY section | `state.isVictory() == true` |
+| engine-integration | INSTANT_DEATH ends game | Section of type INSTANT_DEATH | `state.isGameOver() == true` |
+| engine-integration | Player death mid-event | STAMINA reduced to 0 by `StatChangeEvent` | `state.isGameOver()`, no choices shown |
+| engine-integration | System choices injected | Any normal section | "Check inventory" and "Quit" always present |
+| engine-integration | Navigation follows choice | `ScriptedInput` selecting choice 1 | `state.currentSection()` == target |
+| engine-integration | Party member created | Adventure with dice-formula stat | Stat within expected range |
+| engine-integration | Player stats rolled from adventure formulas | `standardPlayerStats()` + `FixedDice(1)` | `player.getSkill() == 7`, `player.getStamina() == 14`, `player.getLuck() == 7` |
+| engine-integration | Player max stats equal initial rolled value | `standardPlayerStats()` + `FixedDice(1)` | `player.getMaxStamina() == 14` (max fixed at creation, never exceeds initial roll) |
+| engine-integration | Enter grid via choice | `InMemoryAdventureLoader` with grid, choice using `GridTarget` | `state.isInGrid() == true`, `state.currentCell()` == entry cell |
+| engine-integration | Exit grid via passage `toSection` | Player in grid, selects exit passage | `state.isInGrid() == false`, `state.currentSection()` == target |
+| engine-integration | Cell events fire on entry | Cell with `StatChangeEvent` | Player stat modified |

@@ -122,11 +122,11 @@ A system can delegate to another via `registry.get("personal").run(...)`. No spe
 
 ## Test Strategy
 
-| What | Approach |
-|------|----------|
-| `PersonalCombatSystem` victory | `FixedDice` favouring player → assert `VICTORY` outcome |
-| `PersonalCombatSystem` defeat | `FixedDice` favouring creature → assert `DEFEAT` outcome |
-| System delegation | Mock registry returning fixed-outcome system; assert `DELEGATED` not returned |
-| `CombatEvent` defaults to personal | JSON with no `system` field → assert `"personal"` used |
-| Participant resolution | `GameState` with party member; event names it → assert correct member passed |
-| Unknown system id | `registry.get("unknown")` → assert `CombatException` |
+| Layer | What | Approach |
+|-------|------|----------|
+| unit | `PersonalCombatSystem` victory | `FixedDice` favouring player → assert `VICTORY` outcome |
+| unit | `PersonalCombatSystem` defeat | `FixedDice` favouring creature → assert `DEFEAT` outcome |
+| unit | System delegation | Mock registry returning fixed-outcome system; assert `DELEGATED` not returned |
+| unit | `CombatEvent` defaults to personal | JSON with no `system` field → assert `"personal"` used |
+| unit | Participant resolution | `GameState` with party member; event names it → assert correct member passed |
+| unit | Unknown system id | `registry.get("unknown")` → assert `CombatException` |

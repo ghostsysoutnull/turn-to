@@ -110,6 +110,11 @@ public class DefaultScriptContext implements ScriptContext {
     }
 
     @Override
+    public boolean isPartyMemberActive(String id) {
+        return getPartyMember(id).isActive();
+    }
+
+    @Override
     public void addPartyMember(String id) {
         PartyMember member = state.getPartyMember(id);
         if (member == null || member.state() == MemberState.ACTIVE) return;

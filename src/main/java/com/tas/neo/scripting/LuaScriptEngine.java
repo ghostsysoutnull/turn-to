@@ -151,6 +151,13 @@ public class LuaScriptEngine implements ScriptEngine {
             }
         });
 
+        ctx.set("isPartyMemberActive", new VarArgFunction() {
+            @Override
+            public Varargs invoke(Varargs args) {
+                return LuaValue.valueOf(context.isPartyMemberActive(args.checkjstring(1)));
+            }
+        });
+
         ctx.set("addPartyMember", new VarArgFunction() {
             @Override
             public Varargs invoke(Varargs args) {

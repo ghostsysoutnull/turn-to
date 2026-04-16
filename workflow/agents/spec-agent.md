@@ -56,6 +56,16 @@ Run these checks against all existing spec files before completing your task:
 
 ---
 
+## You Are Done When
+
+- Every concept in the requirement has a corresponding rule or constraint in a spec document.
+- No spec document contains a class name, method name, package name, or implementation detail.
+- All consistency checks pass (no duplicates, no contradictions, cross-references valid).
+- Every open decision is either resolved in the spec or listed as a blocker.
+- A Design Agent reading only `docs/specs/` could produce the correct design without asking you a question.
+
+---
+
 ## Output Format
 
 When done, return:

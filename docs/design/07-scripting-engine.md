@@ -43,6 +43,7 @@ public interface ScriptContext {
     boolean hasItem(String itemName);
     int getItemCount(String itemName);
     PartyMemberProxy getPartyMember(String id);
+    boolean isPartyMemberActive(String id);
     void addPartyMember(String id);
     void removePartyMember(String id);
     void navigateTo(int section);
@@ -167,12 +168,12 @@ public class PartyMemberProxy {
 
 ## Test Strategy
 
-| What | Approach |
-|------|----------|
-| `LuaScriptEngine` executes script | `RecordingScriptContext` → assert calls recorded |
-| Failed script does not crash | Script with syntax error → assert `ScriptException` caught, game continues |
-| Sandboxing | Script attempting `io.open(...)` → assert error, no file access |
-| `HookDispatcher` no-op on empty hook | `ScriptBlock.empty()` → assert `ScriptEngine.execute` never called |
-| `HookDispatcher` fires correct hook | Fixture section with `onEnter` script → assert it executes on entry |
-| `navigateTo` blocked in `onChoices` | `DefaultScriptContext` in choices mode → assert `UnsupportedOperationException` |
-| Party member proxy no-op on unknown id | `ctx.getPartyMember('unknown')` → assert no exception, warning logged |
+| Layer | What | Approach |
+|-------|------|----------|
+| unit | `LuaScriptEngine` executes script | `RecordingScriptContext` → assert calls recorded |
+| unit | Failed script does not crash | Script with syntax error → assert `ScriptException` caught, game continues |
+| unit | Sandboxing | Script attempting `io.open(...)` → assert error, no file access |
+| unit | `HookDispatcher` no-op on empty hook | `ScriptBlock.empty()` → assert `ScriptEngine.execute` never called |
+| unit | `HookDispatcher` fires correct hook | Fixture section with `onEnter` script → assert it executes on entry |
+| unit | `navigateTo` blocked in `onChoices` | `DefaultScriptContext` in choices mode → assert `UnsupportedOperationException` |
+| unit | Party member proxy no-op on unknown id | `ctx.getPartyMember('unknown')` → assert no exception, warning logged |

@@ -252,13 +252,13 @@ public class Game {
 
 ## Test Strategy
 
-| What | Approach |
-|------|----------|
-| `NavigationEntry` format | Assert `from`/`to` strings for section and grid locations |
-| `PlayerSnapshot.of` | Known `GameState` → assert all fields captured correctly |
-| `RecordingGameLogger` accumulates | Run `ScenarioRunner` with it → assert `sessionLog().path()` matches choices made |
-| `RecordingGameLogger` captures errors | ScenarioRunner with a section that has a broken script → assert `hasErrors() == true`, error `source` and `type` correct |
-| `FileGameLogger` writes both files | `ScenarioRunner` with `FileGameLogger` pointing to a temp dir → assert both files exist and JSON parses correctly |
-| `SeededDice` reproducibility | Two runs with same seed → assert identical navigation paths |
-| Random run terminates | `ScenarioRunner.random()` with `SeededDice` → assert run reaches terminal state |
-| No log files in test runs | `ScenarioRunner` with `NoOpGameLogger` (default) → assert no files written to `sessions/` |
+| Layer | What | Approach |
+|-------|------|----------|
+| unit | `NavigationEntry` format | Assert `from`/`to` strings for section and grid locations |
+| unit | `PlayerSnapshot.of` | Known `GameState` → assert all fields captured correctly |
+| engine-integration | `RecordingGameLogger` accumulates | Run `ScenarioRunner` with it → assert `sessionLog().path()` matches choices made |
+| engine-integration | `RecordingGameLogger` captures errors | ScenarioRunner with a section that has a broken script → assert `hasErrors() == true`, error `source` and `type` correct |
+| engine-integration | `FileGameLogger` writes both files | `ScenarioRunner` with `FileGameLogger` pointing to a temp dir → assert both files exist and JSON parses correctly |
+| engine-integration | `SeededDice` reproducibility | Two runs with same seed → assert identical navigation paths |
+| engine-integration | Random run terminates | `ScenarioRunner.random()` with `SeededDice` → assert run reaches terminal state |
+| engine-integration | No log files in test runs | `ScenarioRunner` with `NoOpGameLogger` (default) → assert no files written to `sessions/` |

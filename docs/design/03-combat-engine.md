@@ -64,13 +64,13 @@ Rolls 2d6 and compares against the player's current SKILL. Unlike LUCK, SKILL is
 
 Luck is optional — `GameInput.askTestLuck()` is called at each wound opportunity. If the player declines, normal damage applies.
 
-| Scenario | Setup | What to assert |
-|----------|-------|----------------|
-| Player wins every round | `FixedDice` giving player high AS, creature low AS | `CombatResult.playerWon() == true`, correct round count |
-| Creature wins every round | `FixedDice` giving creature high AS | `CombatResult.playerWon() == false` |
-| Draw rounds | `FixedDice` giving equal AS for N rounds then player wins | `playerStaminaLost == 0` for draw rounds, round count correct |
-| Luck test: player wounds creature, lucky | `SequenceDice` + `ScriptedInput` confirming luck, lucky roll | Creature takes 4 STAMINA instead of 2 |
-| Luck test: player wounds creature, unlucky | `SequenceDice` + `ScriptedInput` confirming luck, unlucky roll | Creature takes 1 STAMINA instead of 2 |
-| Luck test: creature wounds player, lucky | `SequenceDice` + `ScriptedInput` confirming luck, lucky roll | Player takes 1 STAMINA instead of 2 |
-| Luck test: creature wounds player, unlucky | `SequenceDice` + `ScriptedInput` confirming luck, unlucky roll | Player takes 3 STAMINA instead of 2 |
-| Simultaneous multi-combat | Two creatures, `simultaneous = true` | Both creatures attack each round; `roundsFought` reflects combined combat |
+| Layer | Scenario | Setup | What to assert |
+|-------|----------|-------|----------------|
+| unit | Player wins every round | `FixedDice` giving player high AS, creature low AS | `CombatResult.playerWon() == true`, correct round count |
+| unit | Creature wins every round | `FixedDice` giving creature high AS | `CombatResult.playerWon() == false` |
+| unit | Draw rounds | `FixedDice` giving equal AS for N rounds then player wins | `playerStaminaLost == 0` for draw rounds, round count correct |
+| unit | Luck test: player wounds creature, lucky | `SequenceDice` + `ScriptedInput` confirming luck, lucky roll | Creature takes 4 STAMINA instead of 2 |
+| unit | Luck test: player wounds creature, unlucky | `SequenceDice` + `ScriptedInput` confirming luck, unlucky roll | Creature takes 1 STAMINA instead of 2 |
+| unit | Luck test: creature wounds player, lucky | `SequenceDice` + `ScriptedInput` confirming luck, lucky roll | Player takes 1 STAMINA instead of 2 |
+| unit | Luck test: creature wounds player, unlucky | `SequenceDice` + `ScriptedInput` confirming luck, unlucky roll | Player takes 3 STAMINA instead of 2 |
+| unit | Simultaneous multi-combat | Two creatures, `simultaneous = true` | Both creatures attack each round; `roundsFought` reflects combined combat |

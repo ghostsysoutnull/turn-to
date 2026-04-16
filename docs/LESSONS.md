@@ -8,6 +8,8 @@ gotchas, non-obvious patterns, failure modes discovered at runtime.
 An entry does NOT belong here when the underlying design doc should be updated instead.
 If a lesson reveals a design doc is wrong, fix the doc and skip the entry.
 
+**Quality bar:** before writing an entry, ask: would a future agent, reading this cold, make a different decision without it? If the answer is no — because the design doc already says it, or because it is obvious from the code — skip the entry. A long LESSONS.md that is mostly noise is worse than a short one that is all signal.
+
 ---
 
 ## Entry format

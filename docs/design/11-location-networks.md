@@ -120,16 +120,16 @@ The engine builds the choice list for a cell by:
 
 ## Test Strategy
 
-| What | Approach |
-|------|----------|
-| `Direction.dx/dy/dz` | Assert each direction returns correct deltas |
-| `Direction.opposite` | Assert all six inverse pairs |
-| `Grid.getCell` | Grid with known cells → assert correct cell returned, empty for unoccupied position |
-| `Grid.getCellById` | Named cell lookup → assert correct cell; unknown id → empty |
-| `Passage` default label | Passage with no label → engine uses direction default |
-| `Passage` with condition | Condition not met → passage hidden from choice list |
-| `Passage` with `toSection` | Player selects → `state.isInGrid() == false`, correct section |
-| Cell with events | `InMemoryAdventureLoader` + cell with `StatChangeEvent` → stat modified on entry |
-| Cell `onEnter` script | Cell with `onEnter` → script fires before narrative |
-| Cell `onChoices` script | Cell with `onChoices` adding a choice → choice appears in list |
-| Cell explicit choices | Cell with `choices` list → appear alongside passage choices |
+| Layer | What | Approach |
+|-------|------|----------|
+| unit | `Direction.dx/dy/dz` | Assert each direction returns correct deltas |
+| unit | `Direction.opposite` | Assert all six inverse pairs |
+| unit | `Grid.getCell` | Grid with known cells → assert correct cell returned, empty for unoccupied position |
+| unit | `Grid.getCellById` | Named cell lookup → assert correct cell; unknown id → empty |
+| unit | `Passage` default label | Passage with no label → engine uses direction default |
+| engine-integration | `Passage` with condition | Condition not met → passage hidden from choice list |
+| engine-integration | `Passage` with `toSection` | Player selects → `state.isInGrid() == false`, correct section |
+| engine-integration | Cell with events | `InMemoryAdventureLoader` + cell with `StatChangeEvent` → stat modified on entry |
+| engine-integration | Cell `onEnter` script | Cell with `onEnter` → script fires before narrative |
+| engine-integration | Cell `onChoices` script | Cell with `onChoices` adding a choice → choice appears in list |
+| engine-integration | Cell explicit choices | Cell with `choices` list → appear alongside passage choices |
