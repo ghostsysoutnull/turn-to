@@ -34,9 +34,10 @@ public record PlayerSnapshot(
 
     private static String locationString(GameState state) {
         if (state.isInGrid()) {
-            return state.currentGrid()
-                .map(g -> "grid:" + g.id())
-                .orElse("grid:unknown");
+            String gridId = state.currentGrid().map(g -> g.id()).orElse("unknown");
+            return state.currentCell()
+                .map(c -> "grid:" + gridId + ":" + c.x() + "," + c.y() + "," + c.z())
+                .orElse("grid:" + gridId);
         }
         if (state.currentSection() != null) {
             return "section:" + state.currentSection().number();

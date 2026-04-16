@@ -83,7 +83,7 @@ Passages with no explicit label display the direction enum name (e.g. `NORTH`) i
 - **Where:** `src/main/java/com/tas/neo/domain/log/PlayerSnapshot.java`
 - **Fix:** Include current cell coordinates when location is a grid cell
 - **Spec:** `docs/specs/10-session-logging.md`
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16
 
 ### T3-4: Adventure Runner report header format (spec 11)
 
