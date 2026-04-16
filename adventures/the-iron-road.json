@@ -2633,7 +2633,9 @@
           "targetSection": 115
         }
       ],
-      "scripts": {}
+      "scripts": {
+        "onEnter": "if state.get('suspicion') >= 5 then state.set('contactAlive', false) end"
+      }
     },
     {
       "number": 114,

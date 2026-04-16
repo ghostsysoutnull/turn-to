@@ -1,9 +1,9 @@
 == State Variable Report: the-iron-road ==
 Generated: 2026-04-15  |  Variables: 6
 
-  contactAlive                    set:§116(onEnter), §118(onEnter)  read:§116(onEnter), §157(onEnter)
+  contactAlive                    set:§113(onEnter), §116(onEnter), §118(onEnter)  read:§116(onEnter), §157(onEnter)
   refusedLordsAgent               set:§103(onEnter)  read:§120(onEnter)
   satchelOpened                   set:§165(onEnter)  read:§140(onEnter), §158(onEnter), §160(onEnter)
   spymasterDebt                   set:§71(onEnter), §88(onEnter), §140(onEnter)  read:§140(onEnter), §71(onEnter), §88(onEnter)
   stalledLordsAgent               set:§105(onEnter)  read:§120(onEnter)
-  suspicion                       set:§41(onEnter), §62(onEnter), §90(onEnter), §93(onEnter), §97(onEnter), §125(onEnter), §135(onEnter), §136(onEnter), §147(onEnter), §154(onEnter), §162(onEnter), §168(onEnter)  read:§122(onEnter), §125(onEnter), §131(onEnter), §135(onEnter), §136(onEnter), §138(onEnter), §147(onEnter), §154(onEnter), §162(onEnter), §168(onEnter), §41(onEnter), §62(onEnter), §90(onEnter), §93(onEnter), §97(onEnter)
+  suspicion                       set:§41(onEnter), §62(onEnter), §90(onEnter), §93(onEnter), §97(onEnter), §125(onEnter), §135(onEnter), §136(onEnter), §147(onEnter), §154(onEnter), §162(onEnter), §168(onEnter)  read:§113(onEnter), §122(onEnter), §125(onEnter), §131(onEnter), §135(onEnter), §136(onEnter), §138(onEnter), §147(onEnter), §154(onEnter), §162(onEnter), §168(onEnter), §41(onEnter), §62(onEnter), §90(onEnter), §93(onEnter), §97(onEnter)

@@ -11,10 +11,18 @@ public class LuaScriptEngine implements ScriptEngine {
 
     @Override
     public void execute(String script, ScriptContext context) {
+        execute(script, context, null);
+    }
+
+    /** Executes a script with both a ScriptContext binding and an AdventureScriptState binding. */
+    public void execute(String script, ScriptContext context, AdventureScriptState scriptState) {
         Globals globals = JsePlatform.standardGlobals();
 
         sandbox(globals);
         bindContext(globals, context);
+        if (scriptState != null) {
+            bindState(globals, scriptState);
+        }
 
         try {
             globals.load(script).call();
@@ -174,5 +182,46 @@ public class LuaScriptEngine implements ScriptEngine {
                 return LuaValue.NONE;
             }
         });
+    }
+
+    private void bindState(Globals globals, AdventureScriptState scriptState) {
+        LuaTable state = new LuaTable();
+
+        state.set("set", new VarArgFunction() {
+            @Override
+            public Varargs invoke(Varargs args) {
+                String key = args.checkjstring(1);
+                LuaValue val = args.arg(2);
+                if (val.isboolean()) {
+                    scriptState.set(key, val.toboolean());
+                } else if (val.isint()) {
+                    scriptState.set(key, val.toint());
+                } else {
+                    scriptState.set(key, val.tojstring());
+                }
+                return LuaValue.NONE;
+            }
+        });
+
+        state.set("get", new VarArgFunction() {
+            @Override
+            public Varargs invoke(Varargs args) {
+                String key = args.checkjstring(1);
+                Object value = scriptState.get(key);
+                if (value == null) return LuaValue.NIL;
+                if (value instanceof Boolean b) return LuaValue.valueOf(b);
+                if (value instanceof Integer i) return LuaValue.valueOf(i);
+                return LuaValue.valueOf(value.toString());
+            }
+        });
+
+        state.set("has", new VarArgFunction() {
+            @Override
+            public Varargs invoke(Varargs args) {
+                return LuaValue.valueOf(scriptState.has(args.checkjstring(1)));
+            }
+        });
+
+        globals.set("state", state);
     }
 }

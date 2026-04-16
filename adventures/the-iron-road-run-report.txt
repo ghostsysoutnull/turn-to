@@ -1,0 +1,32 @@
+== Adventure Run Report: the-iron-road ==
+Runs: 50  Seed: 20260415  Strategy: RandomChoiceSelector  MaxVisits: 10
+
+OUTCOMES
+  VICTORY:      11
+  INSTANT_DEATH:33
+  STUCK:        0
+  CYCLE:        6
+
+COVERAGE
+  121/170 sections (71%)
+
+RUN LENGTH (excl STUCK/CYCLE)
+  avg=17.9  min=3  max=102
+
+CHAPTER REACH RATES
+  ch1    100%
+  ch2    34%
+  ch3    22%
+  ch4    16%
+
+ENDINGS
+  §4    INSTANT_DEATH 20/50
+  §40   INSTANT_DEATH 13/50
+  §104  VICTORY      3/50
+  §141  VICTORY      1/50
+  §145  VICTORY      2/50
+  §151  VICTORY      1/50
+  §159  VICTORY      4/50
+
+ISSUES
+  ✗ CYCLE runs: 6

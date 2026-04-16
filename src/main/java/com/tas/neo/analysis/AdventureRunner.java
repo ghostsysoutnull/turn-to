@@ -1,0 +1,71 @@
+package com.tas.neo.analysis;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tas.neo.domain.adventure.Adventure;
+import com.tas.neo.loader.JsonAdventureLoader;
+import com.tas.neo.scripting.LuaScriptEngine;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.OptionalInt;
+import java.util.Random;
+
+public class AdventureRunner {
+
+    /**
+     * Runs the adventure the configured number of times and returns an aggregated result.
+     *
+     * @param adventure  loaded adventure domain object
+     * @param rawJson    raw adventure JSON (used for chapter boundary detection)
+     * @param config     run configuration
+     */
+    public static RunBatchResult run(Adventure adventure, JsonNode rawJson, RunConfiguration config) {
+        LuaScriptEngine scriptEngine = new LuaScriptEngine();
+        Random random = new Random(config.seed());
+        List<RunResult> results = new ArrayList<>(config.runs());
+
+        for (int i = 0; i < config.runs(); i++) {
+            RunSimulator simulator = new RunSimulator(adventure, rawJson, scriptEngine, config, random);
+            results.add(simulator.run());
+        }
+
+        return new RunBatchResult(results);
+    }
+
+    /** CLI entry point: args[0] = path to adventure JSON file */
+    public static void main(String[] args) throws Exception {
+        if (args.length < 1) {
+            System.err.println("Usage: AdventureRunner <path-to-adventure.json> [--runs N] [--seed N]");
+            System.exit(1);
+        }
+        Path adventurePath = Path.of(args[0]);
+        Path adventuresDir = adventurePath.getParent();
+        String adventureId = adventurePath.getFileName().toString().replace(".json", "");
+
+        int runs = 50;
+        long seed = System.currentTimeMillis();
+        for (int i = 1; i < args.length - 1; i++) {
+            if ("--runs".equals(args[i])) runs = Integer.parseInt(args[i + 1]);
+            if ("--seed".equals(args[i])) seed = Long.parseLong(args[i + 1]);
+        }
+
+        Adventure adventure = new JsonAdventureLoader(adventuresDir).load(adventureId);
+        JsonNode rawJson = new ObjectMapper().readTree(Files.readString(adventurePath));
+        RunConfiguration config = new RunConfiguration(
+            runs, new RandomChoiceSelector(), new com.tas.neo.mechanics.SeededDice(seed),
+            seed, 10, OptionalInt.empty(), OptionalInt.empty()
+        );
+
+        RunBatchResult result = run(adventure, rawJson, config);
+        String report = RunReportGenerator.generate(adventure, rawJson, result, config);
+
+        System.out.print(report);
+
+        Path reportPath = adventuresDir.resolve(adventureId + "-run-report.txt");
+        Files.writeString(reportPath, report);
+        System.err.println("Report written to " + reportPath);
+    }
+}

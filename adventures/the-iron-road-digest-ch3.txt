@@ -78,6 +78,7 @@ Generated: 2026-04-15  |  Range: §91–§130  |  Entry: §91
 [§113] NORMAL          →§114,§115
   The Relay Station sits back from the Iron Road behind a low stone wall, its gate marked by a royal courier corps flag — blue with a bronze t...
   conds:  [HAS:Courier's Token]→§114:"Present the Courier's Token"
+  hooks:  onEnter
 
 [§114] NORMAL          →§116,§115
   The sentry examines the token with the focused attention of someone who knows exactly what she is looking at....

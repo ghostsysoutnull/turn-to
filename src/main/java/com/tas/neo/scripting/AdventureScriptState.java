@@ -27,4 +27,9 @@ public class AdventureScriptState {
     public boolean has(String key) {
         return store.containsKey(key);
     }
+
+    /** Returns an immutable snapshot of the current state variables. */
+    public Map<String, Object> snapshot() {
+        return Map.copyOf(store);
+    }
 }
