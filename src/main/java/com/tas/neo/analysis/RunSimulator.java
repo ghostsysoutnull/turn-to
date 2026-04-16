@@ -44,6 +44,9 @@ public class RunSimulator {
     private final java.util.Set<NeverSelectedChoice> conditionedAvailable = new java.util.LinkedHashSet<>();
     private final java.util.Set<NeverSelectedChoice> conditionedSelected  = new java.util.LinkedHashSet<>();
 
+    // Warnings accumulated during run()
+    private final List<String> runWarnings = new ArrayList<>();
+
     public RunSimulator(Adventure adventure, JsonNode rawJson, ScriptEngine scriptEngine,
                         RunConfiguration config, Random random) {
         this.adventure = adventure;
@@ -101,7 +104,7 @@ public class RunSimulator {
             state.recordVisit(currentSection);
             if (state.visitCount(currentSection) > config.maxVisitsPerSection()) {
                 return new RunResult(RunOutcome.CYCLE, currentSection,
-                    state.sectionsVisited(), state.chapterSnapshots(), List.of());
+                    state.sectionsVisited(), state.chapterSnapshots(), List.copyOf(runWarnings));
             }
 
             // Chapter snapshot on entry
@@ -114,11 +117,11 @@ public class RunSimulator {
             // Termination sections
             if (section.type() == SectionType.VICTORY) {
                 return new RunResult(RunOutcome.VICTORY, currentSection,
-                    state.sectionsVisited(), state.chapterSnapshots(), List.of());
+                    state.sectionsVisited(), state.chapterSnapshots(), List.copyOf(runWarnings));
             }
             if (section.type() == SectionType.INSTANT_DEATH) {
                 return new RunResult(RunOutcome.INSTANT_DEATH, currentSection,
-                    state.sectionsVisited(), state.chapterSnapshots(), List.of());
+                    state.sectionsVisited(), state.chapterSnapshots(), List.copyOf(runWarnings));
             }
 
             // Run onEnter script first — it may override navigation
@@ -143,8 +146,10 @@ public class RunSimulator {
             List<Choice> available = availableChoices(section, state, scriptCtx);
 
             if (available.isEmpty()) {
+                List<String> allWarnings = new ArrayList<>(runWarnings);
+                allWarnings.addAll(scriptCtx.warnings());
                 return new RunResult(RunOutcome.STUCK, currentSection,
-                    state.sectionsVisited(), state.chapterSnapshots(), scriptCtx.warnings());
+                    state.sectionsVisited(), state.chapterSnapshots(), allWarnings);
             }
 
             // Select a choice
@@ -215,8 +220,12 @@ public class RunSimulator {
      * Returns the successSection or failureSection accordingly.
      */
     private int simulateCombat(CombatEvent event, SimulatedGameState state) {
-        int playerSkill   = Math.max(state.stat("SKILL"),   10); // default skill if unset
-        int playerStamina = Math.max(state.stat("STAMINA"), 10); // default stamina if unset
+        int rawSkill   = state.stat("SKILL");
+        int rawStamina = state.stat("STAMINA");
+        if (rawSkill   == 0) runWarnings.add("SKILL uninitialised — combat used default value 10");
+        if (rawStamina == 0) runWarnings.add("STAMINA uninitialised — combat used default value 10");
+        int playerSkill   = Math.max(rawSkill,   10);
+        int playerStamina = Math.max(rawStamina, 10);
 
         // Take the first opponent (multi-opponent combat simplified to sequential)
         List<Creature> opponents = event.opponents();

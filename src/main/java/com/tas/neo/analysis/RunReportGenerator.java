@@ -96,6 +96,13 @@ public class RunReportGenerator {
             sb.append("  ✗ No VICTORY reached in ").append(runs).append(" runs\n");
             hasIssues = true;
         }
+        List<NeverSelectedChoice> neverSelected = result.neverSelectedChoices();
+        if (!neverSelected.isEmpty()) {
+            sb.append("  ⚠ Conditioned choices never selected (condition may be unachievable):\n");
+            neverSelected.forEach(c -> sb.append(String.format(
+                "      §%-4d  \"%s\"\n", c.section(), c.choiceText())));
+            hasIssues = true;
+        }
         Set<String> warnings = result.warnings();
         if (!warnings.isEmpty()) {
             warnings.forEach(w -> sb.append("  ⚠ ").append(w).append("\n"));
