@@ -19,7 +19,10 @@ public sealed interface OutputEvent
             OutputEvent.GameOverShown,
             OutputEvent.StatusShown,
             OutputEvent.InventoryShown,
-            OutputEvent.ScreenCleared {
+            OutputEvent.ScreenCleared,
+            OutputEvent.ItemGained,
+            OutputEvent.ItemLost,
+            OutputEvent.StatChanged {
 
     record NarrativeShown(String text)                              implements OutputEvent {}
     record MessageShown(String text)                                implements OutputEvent {}
@@ -30,4 +33,7 @@ public sealed interface OutputEvent
     record StatusShown(Player player, List<PartyMember> activeMembers) implements OutputEvent {}
     record InventoryShown(List<ItemStack> stacks, int gold, int provisions) implements OutputEvent {}
     record ScreenCleared()                                          implements OutputEvent {}
+    record ItemGained(String itemName)                              implements OutputEvent {}
+    record ItemLost(String itemName)                                implements OutputEvent {}
+    record StatChanged(String attribute, int delta, int newValue)   implements OutputEvent {}
 }

@@ -144,13 +144,22 @@ public class FileGameLogger implements GameLogger {
                 w.println("[" + locationLabel + "]");
             }
 
-            // Render any terminal-state events (Victory, GameOver)
+            // Render in-step events
             for (OutputEvent event : stepEvents) {
                 switch (event) {
                     case OutputEvent.VictoryShown e ->
                         w.println("  VICTORY — " + e.message());
                     case OutputEvent.GameOverShown e ->
                         w.println("  GAME OVER — " + e.message());
+                    case OutputEvent.ItemGained e ->
+                        w.println("  ITEM_GAIN: " + e.itemName());
+                    case OutputEvent.ItemLost e ->
+                        w.println("  ITEM_LOSS: " + e.itemName());
+                    case OutputEvent.StatChanged e -> {
+                        String sign = e.delta() >= 0 ? "+" : "";
+                        w.println("  STAT_CHANGE: " + e.attribute() + " " + sign + e.delta()
+                            + " (now " + e.newValue() + ")");
+                    }
                     default -> {} // other events (status, choices, etc.) not shown in log
                 }
             }

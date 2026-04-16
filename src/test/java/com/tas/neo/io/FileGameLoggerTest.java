@@ -352,6 +352,49 @@ class FileGameLoggerTest {
     }
 
     // -------------------------------------------------------------------------
+    // Text log: item and stat events rendered in-step
+    // -------------------------------------------------------------------------
+
+    @Test
+    void txt_log_shows_item_gain_line_in_step(@TempDir Path sessionsDir) throws IOException {
+        FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
+        logger.logNavigation(new NavigationEntry("START", "section:1", "START"));
+        logger.logEvent(new OutputEvent.ItemGained("Guard's Pass"));
+        logger.close();
+
+        String txt = readTxtLog(sessionsDir);
+        assertThat(txt)
+            .as("text log must show ITEM_GAIN line for an ItemGained event")
+            .contains("  ITEM_GAIN: Guard's Pass");
+    }
+
+    @Test
+    void txt_log_shows_item_loss_line_in_step(@TempDir Path sessionsDir) throws IOException {
+        FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
+        logger.logNavigation(new NavigationEntry("START", "section:1", "START"));
+        logger.logEvent(new OutputEvent.ItemLost("Torch"));
+        logger.close();
+
+        String txt = readTxtLog(sessionsDir);
+        assertThat(txt)
+            .as("text log must show ITEM_LOSS line for an ItemLost event")
+            .contains("  ITEM_LOSS: Torch");
+    }
+
+    @Test
+    void txt_log_shows_stat_change_line_in_step(@TempDir Path sessionsDir) throws IOException {
+        FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
+        logger.logNavigation(new NavigationEntry("START", "section:1", "START"));
+        logger.logEvent(new OutputEvent.StatChanged("STAMINA", -4, 14));
+        logger.close();
+
+        String txt = readTxtLog(sessionsDir);
+        assertThat(txt)
+            .as("text log must show STAT_CHANGE line with delta and new value for a StatChanged event")
+            .contains("  STAT_CHANGE: STAMINA -4 (now 14)");
+    }
+
+    // -------------------------------------------------------------------------
     // Helper: read and parse the single .json file from the temp dir
     // -------------------------------------------------------------------------
 

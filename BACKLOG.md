@@ -61,7 +61,7 @@ changed at each section.
   - `  ITEM_LOSS: Torch`
   - `  STAT_CHANGE: STAMINA -4 (now 14)`
 - **Spec:** `docs/specs/10-session-logging.md`
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16
 
 ### B2-2: Session log text format — combat round summary (deferred from T2-1)
 

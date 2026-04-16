@@ -109,6 +109,9 @@ public class HookDispatcher {
         switch (event) {
             case StatChangeEvent e -> {
                 state.player().modifyAttribute(e.attribute(), e.delta());
+                int newValue = state.player().getStat(e.attribute());
+                logger.logEvent(new com.tas.neo.io.OutputEvent.StatChanged(
+                    e.attribute().name(), e.delta(), newValue));
                 if (!state.player().isAlive()) {
                     state.setGameOver();
                 }
@@ -118,8 +121,10 @@ public class HookDispatcher {
                 if (e.action() == ItemAction.GAIN) {
                     Item item = new Item(e.itemName(), "", ItemCategory.PASSIVE, false, ScriptBlock.empty());
                     state.player().getInventory().add(item, e.quantity());
+                    logger.logEvent(new com.tas.neo.io.OutputEvent.ItemGained(e.itemName()));
                 } else {
                     state.player().getInventory().remove(e.itemName(), e.quantity());
+                    logger.logEvent(new com.tas.neo.io.OutputEvent.ItemLost(e.itemName()));
                 }
             }
             case NavigateEvent e -> navigateTo(adventure, e.targetSection());

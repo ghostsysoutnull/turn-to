@@ -23,6 +23,7 @@ import com.tas.neo.domain.item.ItemCategory;
 import com.tas.neo.domain.player.Attribute;
 import com.tas.neo.domain.player.AttributeType;
 import com.tas.neo.domain.player.Player;
+import com.tas.neo.io.RecordingGameLogger;
 import com.tas.neo.io.RecordingOutput;
 import com.tas.neo.io.ScriptedInput;
 import com.tas.neo.mechanics.FixedDice;
@@ -106,6 +107,22 @@ class HookDispatcherProcessEventTest {
     private static Section victorySection(int number) {
         return new Section(number, "You win.", List.of(), List.of(),
                            SectionType.VICTORY, ScriptBlock.empty());
+    }
+
+    /**
+     * Builds a HookDispatcher wired to the shared state/output and the given logger,
+     * with a no-op script engine, scripted input, and no-op combat registry.
+     */
+    private HookDispatcher dispatcherWithLogger(RecordingGameLogger logger) {
+        CombatSystemRegistry noCombat = new CombatSystemRegistry() {
+            @Override public CombatSystem get(String id) {
+                throw new IllegalArgumentException("No combat in this test");
+            }
+            @Override public boolean has(String id) { return false; }
+        };
+        return new HookDispatcher(
+            new NoOpScriptEngine(), new ScriptedInput(), output, state,
+            new AdventureScriptState(), noCombat, new FixedDice(3), logger);
     }
 
     /**
@@ -487,5 +504,74 @@ class HookDispatcherProcessEventTest {
         assertThat(state.currentSection().number())
             .as("processEvent(CombatEvent) with VICTORY outcome and successSection=30 must navigate to section 30")
             .isEqualTo(30);
+    }
+
+    // -----------------------------------------------------------------------
+    // Logging: ItemEvent and StatChangeEvent emit OutputEvents to GameLogger
+    // -----------------------------------------------------------------------
+
+    @Test
+    void processEvent_ItemEvent_gain_logs_ItemGained_event() {
+        RecordingGameLogger logger = new RecordingGameLogger();
+        ItemEvent event = new ItemEvent("Rope", ItemAction.GAIN, 1);
+
+        dispatcherWithLogger(logger).processEvent(event);
+
+        assertThat(logger.sessionLog().events())
+            .as("processEvent(ItemEvent GAIN) must log an OutputEvent.ItemGained to the GameLogger")
+            .hasAtLeastOneElementOfType(com.tas.neo.io.OutputEvent.ItemGained.class);
+        com.tas.neo.io.OutputEvent.ItemGained logged =
+            (com.tas.neo.io.OutputEvent.ItemGained) logger.sessionLog().events().stream()
+                .filter(e -> e instanceof com.tas.neo.io.OutputEvent.ItemGained)
+                .findFirst().orElseThrow();
+        assertThat(logged.itemName())
+            .as("ItemGained event must carry the item name from the ItemEvent")
+            .isEqualTo("Rope");
+    }
+
+    @Test
+    void processEvent_ItemEvent_loss_logs_ItemLost_event() {
+        RecordingGameLogger logger = new RecordingGameLogger();
+        Item key = new Item("Key", "", ItemCategory.PASSIVE, false, ScriptBlock.empty());
+        state.player().getInventory().add(key);
+        ItemEvent event = new ItemEvent("Key", ItemAction.LOSS, 1);
+
+        dispatcherWithLogger(logger).processEvent(event);
+
+        assertThat(logger.sessionLog().events())
+            .as("processEvent(ItemEvent LOSS) must log an OutputEvent.ItemLost to the GameLogger")
+            .hasAtLeastOneElementOfType(com.tas.neo.io.OutputEvent.ItemLost.class);
+        com.tas.neo.io.OutputEvent.ItemLost logged =
+            (com.tas.neo.io.OutputEvent.ItemLost) logger.sessionLog().events().stream()
+                .filter(e -> e instanceof com.tas.neo.io.OutputEvent.ItemLost)
+                .findFirst().orElseThrow();
+        assertThat(logged.itemName())
+            .as("ItemLost event must carry the item name from the ItemEvent")
+            .isEqualTo("Key");
+    }
+
+    @Test
+    void processEvent_StatChangeEvent_logs_StatChanged_event_with_delta_and_new_value() {
+        RecordingGameLogger logger = new RecordingGameLogger();
+        StatChangeEvent event = new StatChangeEvent(AttributeType.STAMINA, -4);
+
+        dispatcherWithLogger(logger).processEvent(event);
+
+        assertThat(logger.sessionLog().events())
+            .as("processEvent(StatChangeEvent) must log an OutputEvent.StatChanged to the GameLogger")
+            .hasAtLeastOneElementOfType(com.tas.neo.io.OutputEvent.StatChanged.class);
+        com.tas.neo.io.OutputEvent.StatChanged logged =
+            (com.tas.neo.io.OutputEvent.StatChanged) logger.sessionLog().events().stream()
+                .filter(e -> e instanceof com.tas.neo.io.OutputEvent.StatChanged)
+                .findFirst().orElseThrow();
+        assertThat(logged.attribute())
+            .as("StatChanged event must carry the attribute name")
+            .isEqualTo("STAMINA");
+        assertThat(logged.delta())
+            .as("StatChanged event must carry the delta")
+            .isEqualTo(-4);
+        assertThat(logged.newValue())
+            .as("StatChanged event must carry the post-change value (18 - 4 = 14)")
+            .isEqualTo(14);
     }
 }
