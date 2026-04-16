@@ -111,7 +111,8 @@ public class RunReportGenerator {
                 }
             }
         }
-        if (endings.isEmpty()) {
+        Map<Integer, Long> cycleRoots = result.cycleEndingSections();
+        if (endings.isEmpty() && cycleRoots.isEmpty()) {
             sb.append("  (none)\n");
         } else {
             endings.forEach((sec, count) -> {
@@ -119,6 +120,8 @@ public class RunReportGenerator {
                 sb.append(String.format("  §%-4d %-12s %d/%d\n",
                     sec, type, count, runs));
             });
+            cycleRoots.forEach((sec, count) ->
+                sb.append(String.format("  §%-4d %-12s %d/%d\n", sec, "CYCLE", count, runs)));
         }
         sb.append("\n");
 

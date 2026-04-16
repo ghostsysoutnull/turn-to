@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.Set;
+import java.util.TreeMap;
 
 public class RunBatchResult {
 
@@ -152,6 +153,17 @@ public class RunBatchResult {
             }
         }
         return keys;
+    }
+
+    /** Section numbers that triggered cycle detection, mapped to the number of runs that ended there. */
+    public Map<Integer, Long> cycleEndingSections() {
+        Map<Integer, Long> counts = new TreeMap<>();
+        for (RunResult r : runs) {
+            if (r.outcome() == RunOutcome.CYCLE) {
+                counts.merge(r.endingSection(), 1L, Long::sum);
+            }
+        }
+        return counts;
     }
 
     public Set<String> warnings() {

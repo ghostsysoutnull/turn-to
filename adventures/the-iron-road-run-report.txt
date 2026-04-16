@@ -1,11 +1,12 @@
 == Adventure Run Report: the-iron-road ==
-Runs: 50  Seed: 42  Strategy: RandomChoiceSelector  MaxVisits: 20
+Generated: 2026-04-16  |  Runs: 50  |  Strategy: RandomChoiceSelector  |  Dice: RANDOM  |  Seed: 42
 
 OUTCOMES
   VICTORY:      21
   INSTANT_DEATH:24
   STUCK:        0
   CYCLE:        5
+  GRID_ENTRY:   0  (grid navigation not simulated)
 
 COVERAGE
   120/170 sections (71%)
@@ -29,6 +30,8 @@ ENDINGS
   §141  VICTORY      2/50
   §145  VICTORY      5/50
   §159  VICTORY      12/50
+  §64   CYCLE        1/50
+  §78   CYCLE        4/50
 
 ITEM FLOW AT CHAPTER BOUNDARIES  (% of runs carrying item when entering chapter)
   — = not carried in any run at this boundary
@@ -42,25 +45,25 @@ ITEM FLOW AT CHAPTER BOUNDARIES  (% of runs carrying item when entering chapter)
 
 GOLD AND STATE DISTRIBUTION AT CHAPTER BOUNDARIES
   gold at ch1 entry: avg 0  range 0–0
-  spymasterDebt at ch1 entry: avg 0  range 0–0
   satchelOpened at ch1 entry:  false:100%
   contactAlive at ch1 entry:  true:100%
   suspicion at ch1 entry: avg 0  range 0–0
+  spymasterDebt at ch1 entry: avg 0  range 0–0
   gold at ch2 entry: avg 0  range 0–0
-  spymasterDebt at ch2 entry: avg 0  range 0–0
   satchelOpened at ch2 entry:  false:100%
   contactAlive at ch2 entry:  true:100%
   suspicion at ch2 entry: avg 0  range 0–0
+  spymasterDebt at ch2 entry: avg 0  range 0–0
   gold at ch3 entry: avg 0  range 0–0
-  spymasterDebt at ch3 entry: avg 1  range 0–2
   satchelOpened at ch3 entry:  false:100%
   contactAlive at ch3 entry:  true:100%
   suspicion at ch3 entry: avg 0  range 0–0
+  spymasterDebt at ch3 entry: avg 1  range 0–2
   gold at ch4 entry: avg 0  range 0–0
-  spymasterDebt at ch4 entry: avg 1  range 0–2
   satchelOpened at ch4 entry:  false:100%
   contactAlive at ch4 entry:  true:100%
   suspicion at ch4 entry: avg 0  range 0–0
+  spymasterDebt at ch4 entry: avg 1  range 0–2
   stalledLordsAgent at ch4 entry:  true:100%
   refusedLordsAgent at ch4 entry:  true:100%
 

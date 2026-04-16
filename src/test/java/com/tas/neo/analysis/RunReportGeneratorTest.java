@@ -170,6 +170,46 @@ class RunReportGeneratorTest {
     }
 
     // -------------------------------------------------------------------------
+    // CYCLE endings in ENDINGS section (B4-2)
+    // -------------------------------------------------------------------------
+
+    @Test
+    void cycle_run_shows_root_section_in_endings() {
+        Adventure adv = adventureWithItems();
+        JsonNode raw = noChaptersJson();
+        RunBatchResult result = new RunBatchResult(List.of(
+            new RunResult(RunOutcome.CYCLE, 1, List.of(1), List.of(), List.of())
+        ));
+
+        String report = RunReportGenerator.generate(adv, raw, result, config(1));
+
+        assertThat(report)
+                .as("ENDINGS must contain a CYCLE row identifying the root section §1")
+                .contains("CYCLE")
+                .contains("§1");
+    }
+
+    @Test
+    void cycle_runs_at_different_sections_each_get_own_endings_row() {
+        Adventure adv = adventureWithItems();
+        JsonNode raw = noChaptersJson();
+        RunBatchResult result = new RunBatchResult(List.of(
+            new RunResult(RunOutcome.CYCLE, 1, List.of(1), List.of(), List.of()),
+            new RunResult(RunOutcome.CYCLE, 1, List.of(1), List.of(), List.of()),
+            new RunResult(RunOutcome.CYCLE, 2, List.of(2), List.of(), List.of())
+        ));
+
+        String report = RunReportGenerator.generate(adv, raw, result, config(3));
+
+        assertThat(report)
+                .as("ENDINGS must show a CYCLE row for §1 (two runs cycled there)")
+                .containsPattern("§1 +CYCLE +2/3");
+        assertThat(report)
+                .as("ENDINGS must show a separate CYCLE row for §2 (one run cycled there)")
+                .containsPattern("§2 +CYCLE +1/3");
+    }
+
+    // -------------------------------------------------------------------------
     // Report header format (T3-4)
     // -------------------------------------------------------------------------
 
