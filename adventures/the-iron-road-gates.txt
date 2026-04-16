@@ -97,7 +97,7 @@ CH4  [§131–§170]
                     Player may carry 'Noble's Invitation'
                     Player may carry 'Relay Station Key'
                     Player may carry 'Bribe Purse'
-       state:       state.suspicion is an integer (0 = unsuspected; 5–9 = known; 10+ = actively hunted)
+       state:       state.suspicion is an integer (0 = unsuspected; 5 = known; 6+ = actively hunted)
                     state.satchelOpened may be true or false
                     state.contactAlive may be true or false
                     state.spymasterDebt is an integer >= 0

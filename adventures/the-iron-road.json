@@ -370,7 +370,7 @@
               "Player may carry 'Bribe Purse'"
             ],
             "assumedState": [
-              "state.suspicion is an integer (0 = unsuspected; 5–9 = known; 10+ = actively hunted)",
+              "state.suspicion is an integer (0 = unsuspected; 5 = known; 6+ = actively hunted)",
               "state.satchelOpened may be true or false",
               "state.contactAlive may be true or false",
               "state.spymasterDebt is an integer >= 0"
@@ -2640,7 +2640,7 @@
         }
       ],
       "scripts": {
-        "onEnter": "if state.get('suspicion') >= 7 then state.set('contactAlive', false) end"
+        "onEnter": "if state.get('suspicion') >= 5 then state.set('contactAlive', false) end"
       }
     },
     {
@@ -2927,7 +2927,7 @@
       "narrative": "The city gates rise ahead of you — two towers of dressed stone flanking an iron-banded arch wide enough for three coaches abreast. Guards in the capital livery stand at each side, checking papers and waving most travellers through. Most.\n\nYou join the queue. Your pulse is steady or it is not, but either way you keep your face composed. The Sealed Satchel — if you still carry it — is hidden beneath your coat. The city presses close: hawkers, porters, a sergeant shouting at a stopped cart.\n\nAs you near the front of the queue you take stock of how you look to these guards. How many eyes have marked you since the ambush on the Iron Road?",
       "events": [],
       "scripts": {
-        "onEnter": "local s = state.get('suspicion'); if s >= 10 then ctx.navigateTo(134) elseif s >= 5 then ctx.navigateTo(133) else ctx.navigateTo(132) end"
+        "onEnter": "local s = state.get('suspicion'); if s >= 6 then ctx.navigateTo(134) elseif s >= 5 then ctx.navigateTo(133) else ctx.navigateTo(132) end"
       },
       "choices": []
     },
@@ -3087,7 +3087,7 @@
       "narrative": "The market district spreads across the capital's central quarter — a roofed arcade of stalls giving way to open squares, then to covered halls thick with cloth merchants, spice traders, and the kind of booth that sells nothing visible but always has a man in the back room.\n\nYou know the Spymaster is here. Their letter — if you carry it — named this district, a covered stall near the south arcade. You have also heard that the Lord's Agent has a presence here, working through a factor who operates from the textile quarter.\n\nThe crowds are both cover and exposure. You move carefully.",
       "events": [],
       "scripts": {
-        "onEnter": "if state.get('suspicion') >= 10 then ctx.navigateTo(166) end"
+        "onEnter": "if state.get('suspicion') >= 6 then ctx.navigateTo(166) end"
       },
       "choices": [
         {
