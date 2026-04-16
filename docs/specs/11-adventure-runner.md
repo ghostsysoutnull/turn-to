@@ -182,19 +182,28 @@ ENDINGS  (<N> runs)
   Unreached VICTORY: none ✓  [or: §<n>, §<n>]
   Unreached INSTANT_DEATH: none ✓  [or: §<n>, §<n>]
 
+CHAPTER REACH RATES  (% of runs that entered the chapter)
+  <ch-id>: <pct>%  <ch-id>: <pct>%  <ch-id>: <pct>%  <ch-id>: <pct>%
+
 COVERAGE  (<N> runs)
   Sections reached: <M>/<total> (<pct>%)
 
+RUN LENGTH  (sections visited per run, STUCK/CYCLE excluded)
+  avg <val>  min <val>  max <val>
+
 ITEM FLOW AT CHAPTER BOUNDARIES  (% of runs carrying item when entering chapter)
+  — = not carried in any run at this boundary
                          <ch→ch>  <ch→ch>  <ch→ch>
   <item name>              <pct>%   <pct>%   <pct>%
   <item name>                 —     <pct>%   <pct>%
   [only items with at least one non-zero entry are shown]
 
-STATE DISTRIBUTION AT CHAPTER BOUNDARIES
+GOLD AND STATE DISTRIBUTION AT CHAPTER BOUNDARIES
+  gold at <ch> entry: avg <val>  range <min>–<max>
   <variableName> at <ch> entry: avg <val>  range <min>–<max>
   <variableName> at <ch> entry: true:<pct>%  false:<pct>%
-  [only variables with a set: entry in *-state.txt are shown]
+  [gold shown for every chapter with at least one run; state variables shown only
+   if set in at least one run; variables never set in any run are omitted]
 
 GATING
   Choices with condition never met in any run: none ✓  [or: §<n> "<text>"]
@@ -207,8 +216,9 @@ ISSUES
 
 - Section numbers appear as `§<n>` throughout.
 - No section narrative text appears anywhere in the report.
-- ITEM FLOW columns are right-aligned percentage values. A `—` indicates the item was not carried by any run at that boundary (e.g. not yet obtainable). Columns are the chapter-to-chapter transitions in adventure order.
-- STATE DISTRIBUTION shows numeric variables as `avg / range`; boolean variables as `true/false` percentages. Variables that were never set in any run are omitted.
+- CHAPTER REACH RATES: the first chapter is always 100% (every run starts there). Final chapter reach rate is a direct measure of how many runs survive to the ending.
+- ITEM FLOW columns are right-aligned percentage values. A `—` means the item was not carried by any run at that boundary. The footnote `— = not carried in any run at this boundary` appears once above the grid. Columns are chapter-to-chapter transitions in adventure order.
+- GOLD AND STATE DISTRIBUTION: gold is always shown (it gates real choices and is not a state variable). Numeric state variables use `avg / range`; boolean variables use `true/false` percentages. Variables never set in any run are omitted.
 - COVERAGE never-reached section list is omitted from the report body; unreached sections of type VICTORY or INSTANT_DEATH appear in ENDINGS, and unreached NORMAL sections appear only in ISSUES if they are structural problems.
 - GATING reports only choices whose condition was **never** satisfied in any run — a hard zero, not a low percentage. Low selection rates are not reported; they are a function of probability, not a structural problem.
 

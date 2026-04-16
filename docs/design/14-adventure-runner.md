@@ -77,6 +77,7 @@ public record ChapterSnapshot(
     String chapterId,
     int atSection,
     Set<String> inventory,
+    int gold,
     Map<String, Object> stateVariables
 ) {}
 ```
@@ -246,12 +247,32 @@ public class RunBatchResult {
      */
     public StateSummary stateDistribution(String chapterId, String variableName);
 
+    /**
+     * For runs that have a snapshot at the given chapter,
+     * returns a summary of the gold amount at that chapter entry.
+     */
+    public StateSummary goldDistribution(String chapterId);
+
+    /**
+     * Fraction of runs (0.0–1.0) that entered the given chapter at least once.
+     * The first chapter is always 1.0.
+     */
+    public double chapterReachRate(String chapterId);
+
+    /**
+     * Distribution of run lengths (section visit count) across all non-STUCK,
+     * non-CYCLE runs.
+     */
+    public RunLengthSummary runLengthSummary();
+
     /** Choices that were available in at least one run but never selected. */
     public List<NeverSelectedChoice> neverSelectedChoices();
 
     /** All warnings emitted across all runs, deduplicated. */
     public List<String> warnings();
 }
+
+public record RunLengthSummary(double average, int min, int max) {}
 
 public record StateSummary(OptionalDouble average, int min, int max,
                             Map<Object, Integer> valueCounts) {}
@@ -341,7 +362,7 @@ Produces the report format defined in the spec. No section narrative text appear
 | `ItemSeekingChoiceSelectorTest` | Choice with satisfied `HAS_ITEM` selected more often than unconditioned choice over 1000 trials |
 | `HighSuspicionChoiceSelectorTest` | Suspicion-raising choice preferred; non-suspicion choice preferred with `LowSuspicionChoiceSelector` |
 | `RunSimulatorTest` | VICTORY reached; INSTANT_DEATH reached; STUCK detected; CYCLE detected; ITEM_GAIN event applied to state; GOLD_CHANGE floored at 0; `navigateTo` in script overrides choice; chapter snapshot captured at entry section |
-| `RunBatchResultTest` | `coveredSections()` union of all runs; `itemCarryRate()` fraction; `neverSelectedChoices()` correct; `stateDistribution()` avg/min/max |
+| `RunBatchResultTest` | `coveredSections()` union of all runs; `itemCarryRate()` fraction; `neverSelectedChoices()` correct; `stateDistribution()` avg/min/max; `goldDistribution()` avg/min/max; `chapterReachRate()` fraction; `runLengthSummary()` avg/min/max excluding STUCK/CYCLE |
 | `AdventureRunnerIntegrationTest` | Runs 20 iterations against `the-iron-road.json` with `RANDOM` strategy and fixed seed; asserts at least one VICTORY reached; asserts all 170 sections appear in `coveredSections()` union within reasonable run count |
 
 All tests use `SeededDice` or `FixedDice` — no wall-clock randomness. No test reads from the filesystem except `AdventureRunnerIntegrationTest`, which uses `adventures/the-iron-road.json` as its fixture (same pattern as `AdventureValidationTest`).
