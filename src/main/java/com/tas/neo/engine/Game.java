@@ -25,6 +25,7 @@ import com.tas.neo.domain.player.Player;
 import com.tas.neo.io.GameInput;
 import com.tas.neo.io.GameLogger;
 import com.tas.neo.io.GameOutput;
+import com.tas.neo.io.OutputEvent;
 import com.tas.neo.loader.AdventureLoader;
 import com.tas.neo.loader.AdventureLoadException;
 import com.tas.neo.mechanics.DiceFormula;
@@ -86,6 +87,7 @@ public class Game {
 
         Section current = adventure.getSection(adventure.startSection());
         state.navigateTo(current);
+        logger.logNavigation(new NavigationEntry("START", "section:" + current.number(), "START"));
 
         runLoop(adventure, hooks);
     }
@@ -127,12 +129,14 @@ public class Game {
         if (type == SectionType.VICTORY) {
             hooks.fireAdventureHook(AdventureHook.ON_VICTORY, adventure);
             output.showVictory(section.narrative());
+            logger.logEvent(new OutputEvent.VictoryShown(section.narrative()));
             state.setVictory();
             return;
         }
 
         if (type == SectionType.INSTANT_DEATH) {
             output.showGameOver(section.narrative());
+            logger.logEvent(new OutputEvent.GameOverShown(section.narrative()));
             state.setGameOver();
             return;
         }
@@ -141,6 +145,7 @@ public class Game {
         output.clear();
         output.showStatus(state.getPlayer(), state.activePartyMembers());
         output.showNarrative(section.narrative());
+        logger.logEvent(new OutputEvent.NarrativeShown(section.narrative()));
 
         List<Choice> choices = new ArrayList<>(section.choices());
         hooks.fireSectionHook(SectionHook.ON_CHOICES, section, choices);
@@ -225,6 +230,7 @@ public class Game {
         output.clear();
         output.showStatus(state.getPlayer(), state.activePartyMembers());
         output.showNarrative(cell.narrative());
+        logger.logEvent(new OutputEvent.NarrativeShown(cell.narrative()));
         output.showChoices(choices);
 
         int chosen = input.readChoice(choices);

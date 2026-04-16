@@ -53,7 +53,9 @@ public class RecordingGameLogger implements GameLogger {
     @Override
     public void logNavigation(NavigationEntry entry) {
         if (closed) return;
-        path.add(entry);
+        if (!entry.from().equals("START")) {
+            path.add(entry);
+        }
     }
 
     @Override

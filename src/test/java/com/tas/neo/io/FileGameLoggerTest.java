@@ -276,6 +276,82 @@ class FileGameLoggerTest {
     }
 
     // -------------------------------------------------------------------------
+    // Text log: section narrative appears in location header
+    // -------------------------------------------------------------------------
+
+    @Test
+    void txt_log_section_header_includes_narrative(@TempDir Path sessionsDir) throws IOException {
+        FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
+        logger.logNavigation(new NavigationEntry("START", "section:1", "START"));
+        logger.logEvent(new OutputEvent.NarrativeShown("You stand before the entrance."));
+        logger.logNavigation(new NavigationEntry("section:1", "section:2", "Enter the mountain"));
+        logger.close();
+
+        String txt = readTxtLog(sessionsDir);
+        assertThat(txt)
+            .as("text log must include section number and narrative text in the location header")
+            .contains("[Section 1] You stand before the entrance.");
+    }
+
+    @Test
+    void txt_log_includes_departure_choice_line(@TempDir Path sessionsDir) throws IOException {
+        FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
+        logger.logNavigation(new NavigationEntry("START", "section:1", "START"));
+        logger.logEvent(new OutputEvent.NarrativeShown("You stand before the entrance."));
+        logger.logNavigation(new NavigationEntry("section:1", "section:2", "Enter the mountain"));
+        logger.close();
+
+        String txt = readTxtLog(sessionsDir);
+        assertThat(txt)
+            .as("text log must include departure choice and destination as an indented line")
+            .contains("  → Enter the mountain  (→ Section 2)");
+    }
+
+    @Test
+    void txt_log_grid_location_header_includes_narrative(@TempDir Path sessionsDir) throws IOException {
+        FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
+        logger.logNavigation(new NavigationEntry("section:1", "grid:vault-dungeon:1,0,0", "Enter the vault"));
+        logger.logEvent(new OutputEvent.NarrativeShown("Cold stone walls surround you."));
+        logger.close();
+
+        String txt = readTxtLog(sessionsDir);
+        assertThat(txt)
+            .as("text log must include grid id and coordinates in the location header")
+            .contains("[Grid: vault-dungeon (1,0,0)] Cold stone walls surround you.");
+    }
+
+    @Test
+    void txt_log_victory_section_shows_result_text(@TempDir Path sessionsDir) throws IOException {
+        FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
+        logger.logNavigation(new NavigationEntry("section:1", "section:2", "Finish"));
+        logger.logEvent(new OutputEvent.VictoryShown("You have won!"));
+        logger.setResult("VICTORY");
+        logger.close();
+
+        String txt = readTxtLog(sessionsDir);
+        assertThat(txt)
+            .as("text log must include VictoryShown text at the terminal section")
+            .contains("VICTORY — You have won!");
+    }
+
+    @Test
+    void txt_log_footer_contains_result_and_steps(@TempDir Path sessionsDir) throws IOException {
+        FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
+        logger.logNavigation(new NavigationEntry("START", "section:1", "START"));
+        logger.logNavigation(new NavigationEntry("section:1", "section:2", "Go"));
+        logger.setResult("VICTORY");
+        logger.close();
+
+        String txt = readTxtLog(sessionsDir);
+        assertThat(txt)
+            .as("text log footer must contain the result")
+            .contains("Result:      VICTORY");
+        assertThat(txt)
+            .as("text log footer must contain the step count (navigations excluding START)")
+            .contains("Steps:");
+    }
+
+    // -------------------------------------------------------------------------
     // Helper: read and parse the single .json file from the temp dir
     // -------------------------------------------------------------------------
 
@@ -285,5 +361,13 @@ class FileGameLoggerTest {
             .findFirst()
             .orElseThrow(() -> new AssertionError("No .json file found in " + sessionsDir));
         return MAPPER.readTree(jsonFile.toFile());
+    }
+
+    private String readTxtLog(Path sessionsDir) throws IOException {
+        Path txtFile = Files.list(sessionsDir)
+            .filter(p -> p.toString().endsWith(".txt"))
+            .findFirst()
+            .orElseThrow(() -> new AssertionError("No .txt file found in " + sessionsDir));
+        return Files.readString(txtFile);
     }
 }

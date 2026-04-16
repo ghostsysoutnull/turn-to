@@ -29,12 +29,12 @@ The JSON session log is mostly complete. The human-readable `.txt` log is sparse
 
 - **Where:** `src/main/java/com/tas/neo/io/FileGameLogger.java` — `writeTxt()` method
 - **What's needed:**
-  - Narrative text per section: `[Section 1] You stand before the entrance...`
-  - Combat lines: `COMBAT: Gate Guard (SKILL 7, STAMINA 8) — PLAYER VICTORY (4 rounds, -6 STAMINA)`
-  - Item events: `ITEM_GAIN: Guard's Pass`
-  - Stat changes: `STAT_CHANGE: STAMINA -4 (now 14)`
+  - ~~Narrative text per section~~ — done: `[Section N] narrative` and `[Grid: id (x,y,z)] narrative`
+  - Combat lines: `COMBAT: Gate Guard (SKILL 7, STAMINA 8) — PLAYER VICTORY (4 rounds, -6 STAMINA)` — deferred; needs richer event type or aggregation
+  - Item events: `ITEM_GAIN: Guard's Pass` — deferred; needs `logEvent` wiring in HookDispatcher
+  - Stat changes: `STAT_CHANGE: STAMINA -4 (now 14)` — deferred; same
 - **Spec:** `docs/specs/10-session-logging.md`
-- **Status:** [ ] open
+- **Status:** [x] partial — 2026-04-16 (narrative done; combat, items, stats deferred)
 
 ### T2-2: Adventure Runner report — missing sections (spec 11)
 
