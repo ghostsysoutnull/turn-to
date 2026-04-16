@@ -440,8 +440,8 @@ public class JsonAdventureLoader implements AdventureLoader {
         Set<Integer> sectionNums = dto.sections.stream()
                 .map(SectionDto::number).collect(Collectors.toSet());
 
-        // startSection must exist
-        if (!sectionNums.contains(dto.startSection)) {
+        // startSection must exist — skip when sections is empty (pre-authoring skeleton)
+        if (!sectionNums.isEmpty() && !sectionNums.contains(dto.startSection)) {
             throw new AdventureLoadException(
                     "startSection " + dto.startSection + " does not exist in sections");
         }

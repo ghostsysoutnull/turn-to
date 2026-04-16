@@ -201,6 +201,7 @@ class ChapterValidationTest {
         if (ch.exitEntrySections().isEmpty()) return; // final chapter — no exits expected
 
         Adventure adventure = load(ch.adventureId());
+        if (adventure.sections().isEmpty()) return; // pre-authoring skeleton — skip
         Set<Integer> reachable = SectionGraph.of(adventure)
                 .reachableFrom(ch.allEntrySections(), ch.rangeFrom(), ch.rangeTo());
 

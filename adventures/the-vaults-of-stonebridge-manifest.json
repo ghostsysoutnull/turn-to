@@ -1,0 +1,157 @@
+{
+  "adventureId": "the-vaults-of-stonebridge",
+  "items": [
+    {
+      "name": "Vault Key",
+      "description": "A heavy iron key carved with interlocking dwarf-runes. It fits the sealed door to the sorcerer's inner sanctum.",
+      "introducedInChapter": "grid:vault-dungeon"
+    },
+    {
+      "name": "Guard's Pass",
+      "description": "A worn token bearing the sorcerer's sigil, taken from a slain gate guard. It may grant passage through controlled checkpoints.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "Healing Potion",
+      "description": "A vial of red restorative liquid. Restores 4 STAMINA when drunk.",
+      "introducedInChapter": "ch1"
+    }
+  ],
+  "characters": [
+    {
+      "name": "Dorian",
+      "description": "A laconic, battle-hardened sell-sword down on his luck. Willing to share the risk for half the treasure. Recruited in ch1, participates in combat in the vault dungeon grid and potentially in the sorcerer fight.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "Vordan",
+      "description": "The rogue sorcerer who sealed and claimed the ancient vault beneath Stonebridge. Final antagonist encountered in the inner sanctum (section 26).",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "Gate Guard",
+      "description": "A brutish hired guard in mismatched armour stationed at the checkpoint blocking the vault entrance. Mandatory combat encounter in ch1.",
+      "introducedInChapter": "ch1"
+    }
+  ],
+  "locations": [
+    {
+      "name": "Stonebridge",
+      "description": "A dwarven mountain town, half-occupied by Vordan's hired guards. The ancient vault lies beneath it.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "The Broken Pick",
+      "description": "A rough inn at the edge of Stonebridge where travellers stop before the lower quarter checkpoint.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "Vault Entrance Gate",
+      "description": "The fortified checkpoint blocking the passage down to the ancient vault. Guarded by Vordan's men.",
+      "introducedInChapter": "ch1"
+    },
+    {
+      "name": "Vault Dungeon",
+      "description": "The 4x3 labyrinthine interior of the ancient dwarven vault beneath Stonebridge. The Vault Key is hidden here.",
+      "introducedInChapter": "grid:vault-dungeon"
+    },
+    {
+      "name": "Upper Sanctum Passages",
+      "description": "Carved dwarven corridors below the vault dungeon, now defaced with Vordan's sigils. Entry point from the grid at section 20.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "Sealed Chamber Door",
+      "description": "A massive iron door in the antechamber of Vordan's inner sanctum, sealed with the Vault Key.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "Vordan's Inner Sanctum",
+      "description": "The sorcerer's private chamber deep within the vault. Site of the final confrontation.",
+      "introducedInChapter": "ch2"
+    },
+    {
+      "name": "The Treasure Vault",
+      "description": "The ancient dwarven treasure vault beyond Vordan's sanctum. Reaching it is VICTORY.",
+      "introducedInChapter": "ch2"
+    }
+  ],
+  "stateVariables": [
+    {
+      "name": "companionSurvived",
+      "description": "Set to true at section 20 (ch2 entry from grid) if Dorian is still ACTIVE. False if he was defeated or never recruited. Used for narrative flavour in the sanctum.",
+      "introducedInChapter": "ch2",
+      "setInChapter": "ch2",
+      "initialValue": false
+    }
+  ],
+  "gridSpatialBriefs": [
+    {
+      "gridId": "vault-dungeon",
+      "dimensions": "4x3x1",
+      "spatialRole": "The labyrinthine interior of the ancient dwarven vault. The player's goal is to find the Vault Key and exit back to the upper sanctum passages. The dungeon is dangerous — at least one combat encounter, one SKILL_TEST on the critical path, and one hazard that may damage the player.",
+      "tone": "Ancient, oppressive dwarven stonework. Darkness broken by guttering torches. Evidence of Vordan's occupation — sigil-carved stones, scattered bones. Claustrophobic and lethal.",
+      "entryPoints": [
+        {
+          "cellId": "entrance",
+          "fromSection": 15,
+          "note": "Section 15 in ch1 sends the player to this grid via toGrid: 'vault-dungeon', toCell: 'entrance'. The entry cell must carry id 'entrance'."
+        }
+      ],
+      "exitPoints": [
+        {
+          "toSection": 20,
+          "note": "One or more cells near the bottom of the grid have a passage with toSection: 20. This represents the passage leading down to the upper sanctum. The player must pass through this exit to reach ch2."
+        }
+      ],
+      "arrivalState": {
+        "possible": [
+          "Player may have Dorian as ACTIVE party member",
+          "Player may carry Guard's Pass",
+          "Player may carry Healing Potion"
+        ],
+        "guaranteed": [
+          "Player does not carry Vault Key on arrival"
+        ]
+      },
+      "departureState": {
+        "goal": "Player should carry Vault Key on departure if they found it (required to progress in ch2)",
+        "possible": [
+          "Player may carry Vault Key (found at cell (2,1,0))",
+          "Dorian may be REMOVED (if defeated in grid combat)"
+        ]
+      },
+      "itemsInGrid": [
+        {
+          "name": "Vault Key",
+          "event": "ITEM_GAIN",
+          "location": "Cell (2,1,0) — a carved alcove in the central passage",
+          "note": "This is the only place the Vault Key can be gained. It is NOT conditional — any player who reaches this cell receives it."
+        }
+      ],
+      "skillTest": {
+        "location": "Cell (1,1,0) — a crumbling rope bridge over a shaft",
+        "note": "SKILL_TEST on the critical path from entrance to the Vault Key cell. No item or gold prerequisite. Failure routes to a damage consequence (STAT_CHANGE -2 STAMINA) and an alternate passage. Both routes eventually allow the player to continue — the test is a hazard, not a dead end.",
+        "successTarget": "cell (2,1,0) directly",
+        "failureTarget": "cell (1,2,0) — the long way round, with stamina penalty"
+      },
+      "namedCharacters": [
+        {
+          "name": "Vault Warden",
+          "description": "An undead dwarven guardian animated by Vordan's magic. Combat encounter in the grid.",
+          "combatLocation": "Cell (3,0,0) — the far eastern corridor"
+        }
+      ],
+      "combatEncounters": [
+        {
+          "opponent": "Vault Warden",
+          "skill": 8,
+          "stamina": 8,
+          "location": "Cell (3,0,0)",
+          "participantId": "dorian",
+          "note": "Dorian participates in this combat if ACTIVE. This satisfies the requirement that the companion participates in at least one combat."
+        }
+      ]
+    }
+  ]
+}

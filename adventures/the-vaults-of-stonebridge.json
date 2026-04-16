@@ -1,0 +1,121 @@
+{
+  "id": "the-vaults-of-stonebridge",
+  "title": "The Vaults of Stonebridge",
+  "description": "Rumours of an ancient vault beneath the dwarven town of Stonebridge have drawn you here. A rogue sorcerer has sealed it and claimed it for his own. A sell-sword companion falls in with you on the road. Together you must fight through the mountain's outer defences, navigate the vault's labyrinthine interior, and face the sorcerer in his sealed sanctum.",
+  "startSection": 1,
+  "initialProvisions": 10,
+  "scripts": {
+    "onLoad": "state.set('companionSurvived', false)",
+    "onStart": "ctx.showMessage('The dwarven town of Stonebridge rises from the mountain pass ahead. Somewhere beneath it lies an ancient vault — and the rogue sorcerer who has claimed it.')"
+  },
+  "items": [
+    {
+      "name": "Vault Key",
+      "description": "A heavy iron key carved with interlocking dwarf-runes. It fits the sealed door to the sorcerer's inner sanctum.",
+      "category": "KEY",
+      "countable": false,
+      "scripts": {}
+    },
+    {
+      "name": "Guard's Pass",
+      "description": "A worn token bearing the sorcerer's sigil, taken from a slain gate guard. It may grant passage through controlled checkpoints.",
+      "category": "KEY",
+      "countable": false,
+      "scripts": {}
+    },
+    {
+      "name": "Healing Potion",
+      "description": "A vial of red restorative liquid. Restores 4 STAMINA when drunk.",
+      "category": "USABLE",
+      "countable": false,
+      "scripts": {
+        "onUse": "ctx.modifyStat('STAMINA', 4); ctx.removeItem('Healing Potion'); ctx.showMessage('The potion burns your throat but warmth floods your limbs. You recover 4 STAMINA.')"
+      }
+    }
+  ],
+  "partyMembers": [
+    {
+      "id": "dorian",
+      "displayName": "Dorian the Sell-sword",
+      "lifeStat": "STAMINA",
+      "initialState": "WAITING",
+      "onDefeat": {
+        "type": "REMOVE",
+        "message": "Dorian falls, clutching a wound you cannot tend. He raises a hand in a bitter farewell as you press on alone."
+      },
+      "stats": {
+        "SKILL": { "formula": "1d6+6" },
+        "STAMINA": { "formula": "1d6+12" }
+      }
+    }
+  ],
+  "combatSystems": [],
+  "chapters": [
+    {
+      "id": "ch1",
+      "title": "The Road and the Outer Defences",
+      "sectionRange": { "from": 1, "to": 15 },
+      "brief": "The player arrives at the outskirts of Stonebridge. The dwarven town is half-occupied by the sorcerer Vordan's hired guards, who have sealed off the lower quarter and the entrance to the ancient vault beneath the mountain. This chapter accomplishes three things: it introduces Dorian the sell-sword as a companion the player can recruit, it establishes the lethality of the outer defences through at least one mandatory combat and one Luck Test, and it ends with the player standing at the vault entrance, ready to descend.\n\nSetting: The mountain road, the inn at the edge of town (The Broken Pick), the lower quarter of Stonebridge, the fortified gate to the vault entrance.\n\nNamed characters: Dorian the Sell-sword — a laconic, battle-hardened mercenary who is down on his luck and willing to split any treasure 50/50. He is recruited in sections 3–5. Vordan's Gate Guard — a brutish man in mismatched armour, stationed at the checkpoint leading to the vault entrance. He is the mandatory combat encounter.\n\nItems in this chapter: Guard's Pass (gained from the Gate Guard after combat), Healing Potion (optionally available in the inn if the player has gold or passes a test). The Vault Key is NOT in this chapter — it is found inside the dungeon grid.\n\nTone: Terse and atmospheric. Short paragraphs. Danger is immediate. Dwarven stonework is oppressive and ancient. The sorcerer's hired guards are an ugly human presence in a place that is not theirs.\n\nArc contribution: By the end of ch1 the player has a companion (or has chosen to go alone), has bypassed or fought through the outer defences, and is at the threshold of the vault. The player should feel that the easy part is over.\n\nSection range: 1–15.\n\nGate references: This chapter's entry is section 1 (no incoming gate — adventure start). This chapter's exit sends the player to the dungeon grid via a choice with toGrid: 'vault-dungeon' and toCell: 'entrance' (typically from section 15). The grid's exit passages return the player to section 20 in ch2.",
+      "gates": {
+        "entryGate": null,
+        "exitGates": [
+          {
+            "entrySection": 20,
+            "out": {
+              "guaranteed": [],
+              "possible": [
+                "Player may have Dorian as an ACTIVE party member (recruited in sections 3–5)",
+                "Player may carry 'Guard's Pass' (taken from Gate Guard after combat)",
+                "Player may carry 'Healing Potion' (purchased or found in inn)"
+              ],
+              "forbidden": [
+                "Player must not carry 'Vault Key' — it has not yet been found"
+              ]
+            },
+            "normalize": [
+              "Section 15 is the vault entrance threshold. The player exits ch1 via a choice with toGrid: 'vault-dungeon' and toCell: 'entrance'. The grid is explored and the Vault Key may be found within it. When the grid's exit passage is taken (toSection: 20), the player arrives at section 20 which is the true ch2 entry point.",
+              "Section 16 is internal to ch2 and is an INSTANT_DEATH stub ('you fell down the shaft') — it exists to fill the section range and will never be reached by normal play."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch2",
+      "title": "The Vault Interior and the Sorcerer's Sanctum",
+      "sectionRange": { "from": 16, "to": 30 },
+      "brief": "The player emerges from the vault dungeon grid into the deeper sanctum passages. They carry the Vault Key (found in the grid) if they found it; without it they cannot reach the sorcerer. This chapter handles three things: arrival from the grid into the upper sanctum (section 20), the sealed chamber door that requires the Vault Key, the sorcerer Vordan's combat encounter, and the VICTORY or INSTANT_DEATH outcomes.\n\nSetting: The upper sanctum passages (section 20 — carved dwarven corridors now defaced by Vordan's sigils), the sealed chamber door antechamber (section 22), Vordan's inner sanctum (section 26), and the treasure vault beyond (section 30).\n\nNamed characters: Vordan — the rogue sorcerer who has claimed the vault. He is encountered only in his inner sanctum (section 26). He is a formidable combat opponent. If Dorian is still ACTIVE, he participates in that combat. If Dorian was defeated in the grid or never recruited, the player faces Vordan alone.\n\nItems in this chapter: Vault Key (carried in from the grid — gained in the grid, not here). The sealed chamber door condition (section 22's gated choice) requires HAS_ITEM 'Vault Key'. Guard's Pass is irrelevant in ch2 and imposes no effects.\n\nState variable: 'companionSurvived' — section 20's onEnter script sets state.set('companionSurvived', ctx.isPartyMemberActive('dorian')) so that later narrative can reflect whether Dorian made it this far.\n\nTone: Claustrophobic and high-stakes. The sorcerer is genuinely dangerous. Lethality is at its peak here. Victory sections should feel hard-won.\n\nArc contribution: Ch2 delivers the climax. The player either uses the Vault Key to enter the sanctum, defeats Vordan, and claims the treasure — or dies trying.\n\nSection range: 16–30.\n\nGate references: Entry from the vault dungeon grid at section 20 (grid exit toSection: 20). Section 16 is an INSTANT_DEATH stub (fell down the shaft — unreachable in normal play, exists only to satisfy the gate entry section contract). No outgoing gates — sections 28, 29 are INSTANT_DEATH; section 30 is VICTORY.",
+      "gates": {
+        "entryGate": {
+          "entrySection": 20,
+          "in": {
+            "required": [],
+            "possible": [
+              "Player may carry 'Vault Key' (found inside the vault dungeon grid)",
+              "Player may carry 'Guard's Pass'",
+              "Player may carry 'Healing Potion'",
+              "Dorian may be ACTIVE (if recruited in ch1 and not defeated in the grid)"
+            ],
+            "assumedState": [
+              "state.companionSurvived has not yet been set to a meaningful value — set it at section 20 onEnter"
+            ]
+          },
+          "normalize": [
+            "Section 20 onEnter script must execute: state.set('companionSurvived', ctx.isPartyMemberActive('dorian'))"
+          ]
+        },
+        "exitGates": []
+      }
+    }
+  ],
+  "grids": [
+    {
+      "id": "vault-dungeon",
+      "width": 4,
+      "height": 3,
+      "floors": 1,
+      "cells": []
+    }
+  ],
+  "sections": []
+}
