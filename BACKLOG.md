@@ -94,7 +94,7 @@ from the source code.
 - **Where:** `docs/specs/` — no spec 12 or 13 (numbering has room)
 - **What's needed:** One spec document covering all four tools: purpose, report format, what each
   section means, when to use which tool. Can mirror the format of spec 11.
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16 (docs/specs/12-analysis-tools.md)
 
 ---
 
@@ -113,7 +113,7 @@ strings match the implementation (`STATE_EQUALS`), not the spec.
 - **Options:**
   - Update spec 11 to use `STATE_EQUALS` / `STATE_NOT_EQUALS` terminology (preferred — spec catches up to the richer implementation)
   - Or add `HAS_FLAG` / `LACKS_FLAG` as aliases in the loader (backwards-compat sugar)
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16 (spec updated to STATE_EQUALS/STATE_NOT_EQUALS)
 
 ### B3-2: the-warlock-of-firetop-mountain is a skeleton
 

@@ -105,8 +105,8 @@ Before a choice is presented to the selection strategy, it is filtered against t
 | `HAS_ITEM` | Choice is available if the item is in the simulated inventory |
 | `LACKS_ITEM` | Choice is available if the item is not in the simulated inventory |
 | `HAS_GOLD` | Choice is available if gold >= the required amount |
-| `HAS_FLAG` | Choice is available if the state variable is set to true |
-| `LACKS_FLAG` | Choice is available if the state variable is not set to true |
+| `STATE_EQUALS` | Choice is available if the state variable equals the specified value |
+| `STATE_NOT_EQUALS` | Choice is available if the state variable does not equal the specified value |
 | `SKILL_CONDITION` | Choice is available if SKILL >= the required value |
 | No condition | Choice is always available |
 
