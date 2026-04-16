@@ -5,8 +5,11 @@ import com.tas.neo.domain.adventure.SectionTarget;
 import com.tas.neo.domain.adventure.ScriptBlock;
 import com.tas.neo.domain.item.Item;
 import com.tas.neo.domain.item.ItemCategory;
+import com.tas.neo.domain.party.MemberState;
+import com.tas.neo.domain.party.PartyMember;
 import com.tas.neo.domain.player.AttributeType;
 import com.tas.neo.domain.player.Player;
+import com.tas.neo.engine.GameState;
 import com.tas.neo.io.GameOutput;
 
 import java.util.Iterator;
@@ -18,33 +21,35 @@ public class DefaultScriptContext implements ScriptContext {
     private enum Mode { SECTION, CHOICES, CELL }
 
     private final Player player;
+    private final GameState state;
     private final GameOutput output;
     private final List<Choice> choices;
     private final int sectionNumber;
     private final Mode mode;
 
-    private DefaultScriptContext(Player player, GameOutput output,
+    private DefaultScriptContext(Player player, GameState state, GameOutput output,
                                   List<Choice> choices, int sectionNumber, Mode mode) {
         this.player = player;
+        this.state = state;
         this.output = output;
         this.choices = choices;
         this.sectionNumber = sectionNumber;
         this.mode = mode;
     }
 
-    public static DefaultScriptContext forSection(Player player, GameOutput output,
+    public static DefaultScriptContext forSection(Player player, GameState state, GameOutput output,
                                                    List<Choice> choices, int sectionNumber) {
-        return new DefaultScriptContext(player, output, choices, sectionNumber, Mode.SECTION);
+        return new DefaultScriptContext(player, state, output, choices, sectionNumber, Mode.SECTION);
     }
 
-    public static DefaultScriptContext forChoices(Player player, GameOutput output,
+    public static DefaultScriptContext forChoices(Player player, GameState state, GameOutput output,
                                                    List<Choice> choices, int sectionNumber) {
-        return new DefaultScriptContext(player, output, choices, sectionNumber, Mode.CHOICES);
+        return new DefaultScriptContext(player, state, output, choices, sectionNumber, Mode.CHOICES);
     }
 
-    public static DefaultScriptContext forCell(Player player, GameOutput output,
+    public static DefaultScriptContext forCell(Player player, GameState state, GameOutput output,
                                                List<Choice> choices) {
-        return new DefaultScriptContext(player, output, choices, -1, Mode.CELL);
+        return new DefaultScriptContext(player, state, output, choices, -1, Mode.CELL);
     }
 
     @Override
@@ -100,15 +105,22 @@ public class DefaultScriptContext implements ScriptContext {
 
     @Override
     public PartyMemberProxy getPartyMember(String id) {
-        return PartyMemberProxy.unknown(id);
+        PartyMember member = state.getPartyMember(id);
+        return member != null ? PartyMemberProxy.of(member) : PartyMemberProxy.unknown(id);
     }
 
     @Override
     public void addPartyMember(String id) {
+        PartyMember member = state.getPartyMember(id);
+        if (member == null || member.state() == MemberState.ACTIVE) return;
+        member.setState(MemberState.ACTIVE);
     }
 
     @Override
     public void removePartyMember(String id) {
+        PartyMember member = state.getPartyMember(id);
+        if (member == null || member.state() != MemberState.ACTIVE) return;
+        member.setState(MemberState.REMOVED);
     }
 
     @Override

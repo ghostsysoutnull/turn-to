@@ -73,22 +73,22 @@ public class HookDispatcher {
     public void fireAdventureHook(AdventureHook hook, Adventure adventure) {
         adventure.scripts().get(hookKey(hook)).ifPresent(script ->
             runScript(script, DefaultScriptContext.forSection(
-                state.getPlayer(), output, List.of(), -1),
+                state.getPlayer(), state, output, List.of(), -1),
                 "adventure:" + hook.name().toLowerCase()));
     }
 
     public void fireSectionHook(SectionHook hook, Section section, List<Choice> mutableChoices) {
         section.scripts().get(hookKey(hook)).ifPresent(script -> {
             ScriptContext ctx = hook == SectionHook.ON_CHOICES
-                ? DefaultScriptContext.forChoices(state.getPlayer(), output, mutableChoices, section.number())
-                : DefaultScriptContext.forSection(state.getPlayer(), output, mutableChoices, section.number());
+                ? DefaultScriptContext.forChoices(state.getPlayer(), state, output, mutableChoices, section.number())
+                : DefaultScriptContext.forSection(state.getPlayer(), state, output, mutableChoices, section.number());
             runScript(script, ctx, "section:" + section.number());
         });
     }
 
     public void fireCellHook(SectionHook hook, Cell cell, List<Choice> mutableChoices) {
         cell.scripts().get(hookKey(hook)).ifPresent(script ->
-            runScript(script, DefaultScriptContext.forCell(state.getPlayer(), output, mutableChoices),
+            runScript(script, DefaultScriptContext.forCell(state.getPlayer(), state, output, mutableChoices),
                 "cell:" + cell.x() + "," + cell.y() + "," + cell.z()));
     }
 

@@ -3,15 +3,21 @@ package com.tas.neo.scripting;
 import com.tas.neo.domain.adventure.Choice;
 import com.tas.neo.domain.adventure.SectionTarget;
 import com.tas.neo.domain.item.Inventory;
+import com.tas.neo.domain.party.MemberState;
+import com.tas.neo.domain.party.PartyMember;
+import com.tas.neo.domain.party.PartyMemberStat;
+import com.tas.neo.domain.party.RemoveConsequence;
 import com.tas.neo.domain.player.Attribute;
 import com.tas.neo.domain.player.AttributeType;
 import com.tas.neo.domain.player.Player;
+import com.tas.neo.engine.GameState;
 import com.tas.neo.io.RecordingOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,11 +39,13 @@ class DefaultScriptContextTest {
 
     private RecordingOutput output;
     private Player player;
+    private GameState emptyState;
 
     @BeforeEach
     void setUp() {
         output = new RecordingOutput();
         player = playerWithStats(10, 20, 6);
+        emptyState = stateWithPlayer(player);
     }
 
     // -----------------------------------------------------------------------
@@ -47,7 +55,7 @@ class DefaultScriptContextTest {
     @Test
     void navigateTo_throws_when_context_is_in_choices_mode() {
         List<Choice> choices = new ArrayList<>();
-        DefaultScriptContext ctx = DefaultScriptContext.forChoices(player, output, choices, 1);
+        DefaultScriptContext ctx = DefaultScriptContext.forChoices(player, emptyState, output, choices, 1);
 
         assertThatThrownBy(() -> ctx.navigateTo(5))
             .as("navigateTo must be disallowed in the onChoices hook context")
@@ -60,7 +68,7 @@ class DefaultScriptContextTest {
 
     @Test
     void currentSection_returns_minus_one_from_cell_context() {
-        DefaultScriptContext ctx = DefaultScriptContext.forCell(player, output, new ArrayList<>());
+        DefaultScriptContext ctx = DefaultScriptContext.forCell(player, emptyState, output, new ArrayList<>());
 
         assertThat(ctx.currentSection())
             .as("currentSection() must return -1 when context is a grid cell (no section number)")
@@ -73,7 +81,7 @@ class DefaultScriptContextTest {
 
     @Test
     void currentSection_returns_section_number_from_section_context() {
-        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, output, new ArrayList<>(), 7);
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, emptyState, output, new ArrayList<>(), 7);
 
         assertThat(ctx.currentSection())
             .as("currentSection() must return the section number passed at construction")
@@ -90,7 +98,7 @@ class DefaultScriptContextTest {
         choices.add(new Choice("Go north", new SectionTarget(2), Optional.empty(), Optional.of("go-north")));
         choices.add(new Choice("Go south", new SectionTarget(3), Optional.empty(), Optional.of("go-south")));
 
-        DefaultScriptContext ctx = DefaultScriptContext.forChoices(player, output, choices, 1);
+        DefaultScriptContext ctx = DefaultScriptContext.forChoices(player, emptyState, output, choices, 1);
 
         ctx.hideChoice("go-north");
 
@@ -107,7 +115,7 @@ class DefaultScriptContextTest {
         List<Choice> choices = new ArrayList<>();
         choices.add(new Choice("Go west", new SectionTarget(4), Optional.empty(), Optional.of("go-west")));
 
-        DefaultScriptContext ctx = DefaultScriptContext.forChoices(player, output, choices, 1);
+        DefaultScriptContext ctx = DefaultScriptContext.forChoices(player, emptyState, output, choices, 1);
 
         ctx.hideChoice("nonexistent-id");
 
@@ -121,7 +129,7 @@ class DefaultScriptContextTest {
         List<Choice> choices = new ArrayList<>();
         choices.add(new Choice("Unnamed", new SectionTarget(5), Optional.empty(), Optional.empty()));
 
-        DefaultScriptContext ctx = DefaultScriptContext.forChoices(player, output, choices, 1);
+        DefaultScriptContext ctx = DefaultScriptContext.forChoices(player, emptyState, output, choices, 1);
 
         ctx.hideChoice("some-id");
 
@@ -136,7 +144,7 @@ class DefaultScriptContextTest {
 
     @Test
     void showMessage_writes_to_output() {
-        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, output, new ArrayList<>(), 1);
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, emptyState, output, new ArrayList<>(), 1);
 
         ctx.showMessage("Hello from script");
 
@@ -151,7 +159,7 @@ class DefaultScriptContextTest {
 
     @Test
     void modifyStat_adjusts_player_attribute() {
-        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, output, new ArrayList<>(), 1);
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, emptyState, output, new ArrayList<>(), 1);
 
         ctx.modifyStat("SKILL", -1);
 
@@ -166,13 +174,144 @@ class DefaultScriptContextTest {
 
     @Test
     void modifyGold_and_getGold_round_trip() {
-        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, output, new ArrayList<>(), 1);
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, emptyState, output, new ArrayList<>(), 1);
 
         ctx.modifyGold(5);
 
         assertThat(ctx.getGold())
             .as("modifyGold must update player gold; getGold must reflect the new amount")
             .isEqualTo(5);
+    }
+
+    // -----------------------------------------------------------------------
+    // addPartyMember
+    // -----------------------------------------------------------------------
+
+    @Test
+    void addPartyMember_activates_waiting_member() {
+        GameState state = stateWithMember("dorian", MemberState.WAITING);
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, state, output, new ArrayList<>(), 1);
+
+        ctx.addPartyMember("dorian");
+
+        assertThat(state.getPartyMember("dorian").state())
+            .as("addPartyMember must move a WAITING member to ACTIVE")
+            .isEqualTo(MemberState.ACTIVE);
+    }
+
+    @Test
+    void addPartyMember_reactivates_removed_member_preserving_stats() {
+        GameState state = stateWithMember("dorian", MemberState.REMOVED);
+        state.getPartyMember("dorian").modifyStat("STAMINA", -4); // stat changed before removal
+        int statBeforeRejoin = state.getPartyMember("dorian").getStat("STAMINA");
+
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, state, output, new ArrayList<>(), 1);
+        ctx.addPartyMember("dorian");
+
+        assertThat(state.getPartyMember("dorian").state())
+            .as("addPartyMember must move a REMOVED member back to ACTIVE")
+            .isEqualTo(MemberState.ACTIVE);
+        assertThat(state.getPartyMember("dorian").getStat("STAMINA"))
+            .as("stats must be preserved at the values held at removal — not re-rolled")
+            .isEqualTo(statBeforeRejoin);
+    }
+
+    @Test
+    void addPartyMember_is_noop_when_member_already_active() {
+        GameState state = stateWithMember("dorian", MemberState.ACTIVE);
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, state, output, new ArrayList<>(), 1);
+
+        ctx.addPartyMember("dorian");
+
+        assertThat(state.getPartyMember("dorian").state())
+            .as("addPartyMember must not change state of an already-ACTIVE member")
+            .isEqualTo(MemberState.ACTIVE);
+    }
+
+    @Test
+    void addPartyMember_is_noop_for_unknown_id() {
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, emptyState, output, new ArrayList<>(), 1);
+
+        // must not throw
+        ctx.addPartyMember("ghost");
+    }
+
+    // -----------------------------------------------------------------------
+    // removePartyMember
+    // -----------------------------------------------------------------------
+
+    @Test
+    void removePartyMember_removes_active_member() {
+        GameState state = stateWithMember("dorian", MemberState.ACTIVE);
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, state, output, new ArrayList<>(), 1);
+
+        ctx.removePartyMember("dorian");
+
+        assertThat(state.getPartyMember("dorian").state())
+            .as("removePartyMember must move an ACTIVE member to REMOVED")
+            .isEqualTo(MemberState.REMOVED);
+    }
+
+    @Test
+    void removePartyMember_is_noop_when_member_is_waiting() {
+        GameState state = stateWithMember("dorian", MemberState.WAITING);
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, state, output, new ArrayList<>(), 1);
+
+        ctx.removePartyMember("dorian");
+
+        assertThat(state.getPartyMember("dorian").state())
+            .as("removePartyMember must not affect a WAITING member who has not yet joined")
+            .isEqualTo(MemberState.WAITING);
+    }
+
+    @Test
+    void removePartyMember_is_noop_when_member_already_removed() {
+        GameState state = stateWithMember("dorian", MemberState.REMOVED);
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, state, output, new ArrayList<>(), 1);
+
+        ctx.removePartyMember("dorian");
+
+        assertThat(state.getPartyMember("dorian").state())
+            .as("removePartyMember must not change state of an already-REMOVED member")
+            .isEqualTo(MemberState.REMOVED);
+    }
+
+    @Test
+    void removePartyMember_is_noop_for_unknown_id() {
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, emptyState, output, new ArrayList<>(), 1);
+
+        // must not throw
+        ctx.removePartyMember("ghost");
+    }
+
+    // -----------------------------------------------------------------------
+    // getPartyMember
+    // -----------------------------------------------------------------------
+
+    @Test
+    void getPartyMember_returns_real_proxy_for_known_member() {
+        GameState state = stateWithMember("dorian", MemberState.ACTIVE);
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, state, output, new ArrayList<>(), 1);
+
+        PartyMemberProxy proxy = ctx.getPartyMember("dorian");
+
+        assertThat(proxy.isActive())
+            .as("getPartyMember must return a live proxy reflecting the member's current state")
+            .isTrue();
+    }
+
+    @Test
+    void getPartyMember_returns_unknown_proxy_for_missing_id() {
+        DefaultScriptContext ctx = DefaultScriptContext.forSection(player, emptyState, output, new ArrayList<>(), 1);
+
+        PartyMemberProxy proxy = ctx.getPartyMember("ghost");
+
+        assertThat(proxy.isActive())
+            .as("getPartyMember must return an unknown no-op proxy when id is not in GameState")
+            .isFalse();
+        assertThat(proxy.getStat("STAMINA"))
+            .as("unknown proxy must return 0 for any stat query")
+            .isZero();
     }
 
     // -----------------------------------------------------------------------
@@ -185,5 +324,22 @@ class DefaultScriptContextTest {
         attributes.put(AttributeType.STAMINA, new Attribute(AttributeType.STAMINA, stamina, stamina));
         attributes.put(AttributeType.LUCK, new Attribute(AttributeType.LUCK, luck, luck));
         return new Player(attributes, new Inventory(), 0, 0);
+    }
+
+    private static GameState stateWithPlayer(Player player) {
+        GameState state = new GameState();
+        state.setPlayer(player);
+        return state;
+    }
+
+    private static GameState stateWithMember(String id, MemberState initialState) {
+        Map<String, PartyMemberStat> stats = new LinkedHashMap<>();
+        stats.put("STAMINA", new PartyMemberStat("STAMINA", 12, 12));
+        PartyMember member = new PartyMember(id, "Dorian", "STAMINA", stats,
+                                             new RemoveConsequence("Dorian falls."), initialState);
+        GameState state = new GameState();
+        state.setPlayer(playerWithStats(10, 20, 6));
+        state.addPartyMember(member);
+        return state;
     }
 }

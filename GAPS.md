@@ -17,7 +17,7 @@ Audited: 2026-04-16. Three tiers by impact. Each item follows the standard pipel
   - `removePartyMember(id)` — ACTIVE → REMOVED; must NOT trigger `onDefeat`
   - `getPartyMember(id)` — return real proxy bound to the live `PartyMember` instance, not `PartyMemberProxy.unknown()`
 - **Specs:** `docs/specs/05-scripting.md` (ScriptContext API), `docs/specs/07-party-members.md` (lifecycle)
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16
 
 ---
 
