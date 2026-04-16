@@ -1,7 +1,7 @@
 {
   "id": "the-warlock-of-firetop-mountain",
   "title": "The Warlock of Firetop Mountain",
-  "description": "A classic Fighting Fantasy adventure.",
+  "description": "SKELETON — 6-section demo loop. Not a playable adventure. Exists for test fixtures and engine demonstrations only. See B3-2 in BACKLOG.md for authoring status.",
   "startSection": 1,
   "initialProvisions": 10,
   "sections": [

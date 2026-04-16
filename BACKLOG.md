@@ -124,7 +124,7 @@ adventure.
 - **Where:** `adventures/the-warlock-of-firetop-mountain.json`
 - **Options:** Author it fully using the pipeline, or explicitly mark it as a
   reference/demo skeleton in the file so it is not confused with a complete adventure.
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16 (marked as skeleton in description field)
 
 ### B3-3: the-vaults-of-stonebridge runner incompatibility note
 
