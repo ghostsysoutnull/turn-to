@@ -11,12 +11,15 @@ import com.tas.neo.domain.adventure.ScriptBlock;
 import com.tas.neo.domain.adventure.Section;
 import com.tas.neo.domain.adventure.SectionTarget;
 import com.tas.neo.domain.adventure.SectionType;
+import com.tas.neo.domain.adventure.event.CombatEvent;
 import com.tas.neo.domain.adventure.event.GoldChangeEvent;
 import com.tas.neo.domain.adventure.event.ItemAction;
 import com.tas.neo.domain.adventure.event.ItemEvent;
+import com.tas.neo.domain.adventure.event.LuckTestEvent;
 import com.tas.neo.domain.adventure.event.NavigateEvent;
 import com.tas.neo.domain.adventure.event.SectionEvent;
 import com.tas.neo.domain.adventure.event.SkillTestEvent;
+import com.tas.neo.domain.combat.Creature;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -443,6 +446,244 @@ class AdventureSectionInspectorTest {
         assertThat(output)
             .as("gate output must include the entrySection value")
             .contains("41");
+    }
+
+    // -------------------------------------------------------------------------
+    // inspectDeadEnds — chapter filter (bug fix: chId was silently ignored)
+    // -------------------------------------------------------------------------
+
+    @Test
+    void inspectDeadEnds_chapter_filter_excludes_dead_ends_outside_range() {
+        // §10 is a dead end in ch1 (1-9); §15 is a dead end in ch2 (10-20)
+        Section s1  = normalSection(1,  List.of(), List.of(choiceTo(10), choiceTo(15)), ScriptBlock.empty());
+        Section s10 = new Section(10, ".", List.of(), List.of(), SectionType.NORMAL, ScriptBlock.empty());
+        Section s15 = new Section(15, ".", List.of(), List.of(), SectionType.NORMAL, ScriptBlock.empty());
+        Adventure adv = adventureWith(s1, s10, s15);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        ObjectNode ch1 = chapterJson("ch1", 1, 9, MAPPER.createObjectNode());
+        ObjectNode raw = adventureJsonWithChapters(
+            new ObjectNode[]{sectionJson(1), sectionJson(10), sectionJson(15)},
+            new ObjectNode[]{ch1}
+        );
+
+        String output = AdventureSectionInspector.inspectDeadEnds(adv, graph, raw, "ch1");
+
+        assertThat(output)
+            .as("ch1 filter (range 1-9) must not include §10 (outside range)")
+            .doesNotContain("§10");
+        assertThat(output)
+            .as("ch1 filter (range 1-9) must not include §15 (outside range)")
+            .doesNotContain("§15");
+    }
+
+    @Test
+    void inspectDeadEnds_chapter_filter_includes_dead_ends_within_range() {
+        // §5 is a dead end in ch1 (1-9)
+        Section s1 = normalSection(1, List.of(), List.of(choiceTo(5)), ScriptBlock.empty());
+        Section s5 = new Section(5, ".", List.of(), List.of(), SectionType.NORMAL, ScriptBlock.empty());
+        Adventure adv = adventureWith(s1, s5);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        ObjectNode ch1 = chapterJson("ch1", 1, 9, MAPPER.createObjectNode());
+        ObjectNode raw = adventureJsonWithChapters(
+            new ObjectNode[]{sectionJson(1), sectionJson(5)},
+            new ObjectNode[]{ch1}
+        );
+
+        String output = AdventureSectionInspector.inspectDeadEnds(adv, graph, raw, "ch1");
+
+        assertThat(output)
+            .as("§5 is within ch1 range (1-9) and has no successors — must appear")
+            .contains("§5");
+    }
+
+    @Test
+    void inspectDeadEnds_null_chapter_includes_all_sections() {
+        Section s1 = normalSection(1, List.of(), List.of(choiceTo(5)), ScriptBlock.empty());
+        Section s5 = new Section(5, ".", List.of(), List.of(), SectionType.NORMAL, ScriptBlock.empty());
+        Adventure adv = adventureWith(s1, s5);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        // Null chapterId = no filter — existing behaviour preserved
+        String output = AdventureSectionInspector.inspectDeadEnds(adv, graph, MAPPER.createObjectNode(), null);
+
+        assertThat(output)
+            .as("null chapterId must not filter — §5 must appear")
+            .contains("§5");
+    }
+
+    // -------------------------------------------------------------------------
+    // inspectRefs — link type annotation
+    // -------------------------------------------------------------------------
+
+    @Test
+    void inspectRefs_shows_choice_link_type() {
+        Section s1 = normalSection(1, List.of(), List.of(Choice.to("go north", new SectionTarget(2))), ScriptBlock.empty());
+        Section s2 = victorySection(2);
+        Adventure adv = adventureWith(s1, s2);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        String output = AdventureSectionInspector.inspectRefs(adv, graph, 2);
+
+        assertThat(output)
+            .as("choice link must be annotated with its text")
+            .containsIgnoringCase("go north");
+    }
+
+    @Test
+    void inspectRefs_shows_combat_failure_link_type() {
+        CombatEvent combat = new CombatEvent("default", List.of(),
+            List.of(new Creature("Guard", 6, 8)), false, Map.of(),
+            ScriptBlock.empty(), 3, 2);
+        Section s1 = normalSection(1, List.of(combat), List.of(), ScriptBlock.empty());
+        Section s2 = victorySection(2);
+        Section s3 = victorySection(3);
+        Adventure adv = adventureWith(s1, s2, s3);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        String output = AdventureSectionInspector.inspectRefs(adv, graph, 2);
+
+        assertThat(output)
+            .as("combat failure link to §2 must be annotated as combat failure")
+            .containsIgnoringCase("combat")
+            .containsIgnoringCase("fail");
+    }
+
+    @Test
+    void inspectRefs_shows_combat_success_link_type() {
+        CombatEvent combat = new CombatEvent("default", List.of(),
+            List.of(new Creature("Guard", 6, 8)), false, Map.of(),
+            ScriptBlock.empty(), 2, 3);
+        Section s1 = normalSection(1, List.of(combat), List.of(), ScriptBlock.empty());
+        Section s2 = victorySection(2);
+        Section s3 = victorySection(3);
+        Adventure adv = adventureWith(s1, s2, s3);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        String output = AdventureSectionInspector.inspectRefs(adv, graph, 2);
+
+        assertThat(output)
+            .as("combat success link to §2 must be annotated as combat success")
+            .containsIgnoringCase("combat")
+            .containsIgnoringCase("success");
+    }
+
+    @Test
+    void inspectRefs_shows_navigate_event_link_type() {
+        Section s1 = normalSection(1, List.of(new NavigateEvent(2)), List.of(), ScriptBlock.empty());
+        Section s2 = victorySection(2);
+        Adventure adv = adventureWith(s1, s2);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        String output = AdventureSectionInspector.inspectRefs(adv, graph, 2);
+
+        assertThat(output)
+            .as("navigate event link must be annotated as NavigateEvent")
+            .containsIgnoringCase("navigate");
+    }
+
+    @Test
+    void inspectRefs_shows_skill_test_link_type() {
+        Section s1 = normalSection(1, List.of(new SkillTestEvent(2, 3)), List.of(), ScriptBlock.empty());
+        Section s2 = victorySection(2);
+        Section s3 = victorySection(3);
+        Adventure adv = adventureWith(s1, s2, s3);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        String output = AdventureSectionInspector.inspectRefs(adv, graph, 2);
+
+        assertThat(output)
+            .as("skill test success link must be annotated as skill test")
+            .containsIgnoringCase("skill");
+    }
+
+    @Test
+    void inspectRefs_shows_script_navigate_link_type() {
+        Section s1 = normalSection(1, List.of(), List.of(choiceTo(3)),
+            onEnter("ctx.navigateTo(2)"));
+        Section s2 = victorySection(2);
+        Section s3 = victorySection(3);
+        Adventure adv = adventureWith(s1, s2, s3);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        String output = AdventureSectionInspector.inspectRefs(adv, graph, 2);
+
+        assertThat(output)
+            .as("script navigateTo link must be annotated as script")
+            .containsIgnoringCase("script");
+    }
+
+    // -------------------------------------------------------------------------
+    // inspectUnreached — sections not reachable from start
+    // -------------------------------------------------------------------------
+
+    @Test
+    void inspectUnreached_reports_section_with_no_inbound_path_from_start() {
+        // §1 → §2; §99 has no inbound edges from start
+        Section s1  = normalSection(1, List.of(), List.of(choiceTo(2)), ScriptBlock.empty());
+        Section s2  = victorySection(2);
+        Section s99 = victorySection(99);
+        Adventure adv = adventureWith(s1, s2, s99);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        String output = AdventureSectionInspector.inspectUnreached(adv, graph, MAPPER.createObjectNode());
+
+        assertThat(output)
+            .as("§99 has no path from start and must appear in unreached output")
+            .contains("99");
+    }
+
+    @Test
+    void inspectUnreached_does_not_report_reachable_sections() {
+        Section s1 = normalSection(1, List.of(), List.of(choiceTo(2)), ScriptBlock.empty());
+        Section s2 = victorySection(2);
+        Adventure adv = adventureWith(s1, s2);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        String output = AdventureSectionInspector.inspectUnreached(adv, graph, MAPPER.createObjectNode());
+
+        assertThat(output)
+            .as("§1 and §2 are both reachable and must not appear in unreached output")
+            .doesNotContain("§1")
+            .doesNotContain("§2");
+    }
+
+    @Test
+    void inspectUnreached_all_reachable_reports_none() {
+        Section s1 = normalSection(1, List.of(), List.of(choiceTo(2)), ScriptBlock.empty());
+        Section s2 = victorySection(2);
+        Adventure adv = adventureWith(s1, s2);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        String output = AdventureSectionInspector.inspectUnreached(adv, graph, MAPPER.createObjectNode());
+
+        assertThat(output)
+            .as("when all sections are reachable, output must confirm none unreached")
+            .containsIgnoringCase("none");
+    }
+
+    @Test
+    void inspectUnreached_groups_by_chapter_when_chapter_data_present() {
+        // §99 is unreached, falls in ch2 range (90-100)
+        Section s1  = normalSection(1, List.of(), List.of(choiceTo(2)), ScriptBlock.empty());
+        Section s2  = victorySection(2);
+        Section s99 = victorySection(99);
+        Adventure adv = adventureWith(s1, s2, s99);
+        SectionGraph graph = SectionGraph.of(adv);
+
+        ObjectNode ch2 = chapterJson("ch2", 90, 100, MAPPER.createObjectNode());
+        ObjectNode raw = adventureJsonWithChapters(
+            new ObjectNode[]{sectionJson(1), sectionJson(2), sectionJson(99)},
+            new ObjectNode[]{ch2}
+        );
+
+        String output = AdventureSectionInspector.inspectUnreached(adv, graph, raw);
+
+        assertThat(output)
+            .as("§99 unreached and in ch2 range — output must group it under ch2")
+            .contains("ch2")
+            .contains("99");
     }
 
     @Test

@@ -15,13 +15,16 @@ import com.tas.neo.domain.adventure.event.NavigateEvent;
 import com.tas.neo.domain.adventure.event.SectionEvent;
 import com.tas.neo.domain.adventure.event.SkillTestEvent;
 import com.tas.neo.domain.adventure.event.StatChangeEvent;
+import com.tas.neo.domain.adventure.SectionTarget;
 import com.tas.neo.loader.AdventureLoadException;
 import com.tas.neo.loader.JsonAdventureLoader;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -117,9 +120,49 @@ public class AdventureSectionInspector {
 
         for (int predNum : preds) {
             Section s = adventure.getSection(predNum);
-            sb.append(String.format("  §%-4d  [%s]%n", predNum, s.type()));
+            String linkType = linkDescription(s, target);
+            sb.append(String.format("  §%-4d  [%s]  %s%n", predNum, s.type(), linkType));
         }
         return sb.toString();
+    }
+
+    /**
+     * Describes how {@code source} links to {@code target} — e.g.
+     * "via choice: 'go north'", "via CombatEvent failure", "via script".
+     */
+    private static String linkDescription(Section source, int target) {
+        // Choice links
+        for (var choice : source.choices()) {
+            if (choice.target() instanceof SectionTarget st && st.sectionNumber() == target) {
+                return "via choice: '" + choice.text() + "'";
+            }
+        }
+        // Event links
+        for (SectionEvent event : source.events()) {
+            switch (event) {
+                case NavigateEvent e when e.targetSection() == target ->
+                    { return "via NavigateEvent"; }
+                case SkillTestEvent e when e.successSection() == target ->
+                    { return "via SkillTestEvent success"; }
+                case SkillTestEvent e when e.failSection() == target ->
+                    { return "via SkillTestEvent failure"; }
+                case LuckTestEvent e when e.successSection() == target ->
+                    { return "via LuckTestEvent success"; }
+                case LuckTestEvent e when e.failSection() == target ->
+                    { return "via LuckTestEvent failure"; }
+                case CombatEvent e when e.successSection() == target ->
+                    { return "via CombatEvent success"; }
+                case CombatEvent e when e.failureSection() == target ->
+                    { return "via CombatEvent failure"; }
+                default -> {}
+            }
+        }
+        // onEnter script
+        if (source.scripts().get("onEnter")
+                .map(sc -> sc.contains("navigateTo(" + target + ")")).orElse(false)) {
+            return "via script (onEnter)";
+        }
+        return "via unknown";
     }
 
     /**
@@ -192,15 +235,37 @@ public class AdventureSectionInspector {
      * (read from {@code rawJson}). Pass {@code null} to inspect the whole adventure.
      */
     public static String inspectDeadEnds(Adventure adventure, SectionGraph graph) {
+        return inspectDeadEnds(adventure, graph, null, null);
+    }
+
+    /**
+     * Returns NORMAL sections with no successors. If {@code chapterId} is non-null,
+     * restricts output to sections within that chapter's declared range.
+     */
+    public static String inspectDeadEnds(Adventure adventure, SectionGraph graph,
+                                          JsonNode rawJson, String chapterId) {
+        int rangeFrom = -1, rangeTo = -1;
+        if (chapterId != null && rawJson != null) {
+            JsonNode ch = findChapterJson(rawJson, chapterId);
+            if (ch != null) {
+                rangeFrom = ch.path("sectionRange").path("from").asInt(-1);
+                rangeTo   = ch.path("sectionRange").path("to").asInt(-1);
+            }
+        }
+        final int from = rangeFrom, to = rangeTo;
+
         List<Integer> deadEnds = adventure.sections().stream()
             .filter(s -> s.type() == SectionType.NORMAL)
             .filter(s -> graph.successors(s.number()).isEmpty())
             .map(Section::number)
+            .filter(n -> from < 0 || (n >= from && n <= to))
             .sorted()
             .toList();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("== Dead-end NORMAL sections ==\n\n");
+        sb.append("== Dead-end NORMAL sections");
+        if (chapterId != null) sb.append(" (").append(chapterId).append(")");
+        sb.append(" ==\n\n");
 
         if (deadEnds.isEmpty()) {
             sb.append("  none \u2713\n");
@@ -208,6 +273,57 @@ public class AdventureSectionInspector {
             for (int n : deadEnds) {
                 sb.append(String.format("  §%-4d  NORMAL  (no successors)%n", n));
             }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Returns all sections not reachable from the adventure's start section via any
+     * path through choices, events, or onEnter scripts. Groups output by chapter if
+     * chapter data is present in {@code rawJson}.
+     */
+    public static String inspectUnreached(Adventure adventure, SectionGraph graph, JsonNode rawJson) {
+        Set<Integer> reachable = graph.reachableFrom(adventure.startSection());
+
+        List<Integer> unreached = adventure.sections().stream()
+            .map(Section::number)
+            .filter(n -> !reachable.contains(n))
+            .sorted()
+            .toList();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("== Unreachable sections ==\n\n");
+
+        if (unreached.isEmpty()) {
+            sb.append("  none \u2713\n");
+            return sb.toString();
+        }
+
+        // Group by chapter if chapter data is available
+        JsonNode chapters = rawJson.path("chapters");
+        if (chapters.isArray() && chapters.size() > 0) {
+            Map<String, List<Integer>> byChapter = new LinkedHashMap<>();
+            byChapter.put("(no chapter)", new ArrayList<>());
+            for (JsonNode ch : chapters) byChapter.put(ch.path("id").asText(), new ArrayList<>());
+
+            for (int n : unreached) {
+                String chId = "(no chapter)";
+                for (JsonNode ch : chapters) {
+                    int from = ch.path("sectionRange").path("from").asInt(-1);
+                    int to   = ch.path("sectionRange").path("to").asInt(-1);
+                    if (from > 0 && n >= from && n <= to) { chId = ch.path("id").asText(); break; }
+                }
+                byChapter.get(chId).add(n);
+            }
+            byChapter.forEach((chId, sections) -> {
+                if (!sections.isEmpty()) {
+                    sb.append(String.format("  %-8s", chId));
+                    sections.forEach(n -> sb.append(" §").append(n));
+                    sb.append("\n");
+                }
+            });
+        } else {
+            unreached.forEach(n -> sb.append(String.format("  §%d%n", n)));
         }
         return sb.toString();
     }
@@ -295,7 +411,7 @@ public class AdventureSectionInspector {
         if (args.length < 2) {
             System.err.println("Usage: AdventureSectionInspector <adventure.json> <mode> [params...]");
             System.err.println("Modes: <N> [N...] | <N-M> | --refs N | --has-event TYPE [--item NAME]");
-            System.err.println("       --has-condition TYPE | --dead-ends [chId] | --state VAR | --gate chId [in|out]");
+            System.err.println("       --has-condition TYPE | --dead-ends [chId] | --unreached | --state VAR | --gate chId [in|out]");
             System.exit(1);
         }
 
@@ -335,7 +451,12 @@ public class AdventureSectionInspector {
         }
 
         if (mode.equals("--dead-ends")) {
-            return inspectDeadEnds(adventure, graph);
+            String chapterId = args.length > 2 && !args[2].startsWith("-") ? args[2] : null;
+            return inspectDeadEnds(adventure, graph, rawJson, chapterId);
+        }
+
+        if (mode.equals("--unreached")) {
+            return inspectUnreached(adventure, graph, rawJson);
         }
 
         if (mode.equals("--state")) {
