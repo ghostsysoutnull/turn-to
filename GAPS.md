@@ -65,7 +65,7 @@ The runner simulates correctly. Three report sections defined in spec 11 are not
   - `toSection` in passages references a declared section
 - **Where:** `src/main/java/com/tas/neo/loader/JsonAdventureLoader.java` — `validateGridDto()` method (exists, add checks)
 - **Spec:** `docs/specs/09-location-networks.md`
-- **Status:** [ ] open
+- **Status:** [x] already done — all five checks present in validateGridDto() and covered by JsonAdventureLoaderTest. GAPS entry was stale.
 
 ### T3-2: Default passage labels (spec 09)
 
