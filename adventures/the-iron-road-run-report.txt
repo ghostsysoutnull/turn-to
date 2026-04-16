@@ -1,5 +1,5 @@
 == Adventure Run Report: the-iron-road ==
-Runs: 50  Seed: 20260415  Strategy: SurvivalChoiceSelector  MaxVisits: 20
+Runs: 50  Seed: 20260415  Strategy: AvoidSectionsChoiceSelector  MaxVisits: 20
 
 OUTCOMES
   VICTORY:      27

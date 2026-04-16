@@ -9,9 +9,12 @@ import com.tas.neo.scripting.LuaScriptEngine;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AdventureRunner {
 
@@ -48,10 +51,13 @@ public class AdventureRunner {
         int runs = 50;
         long seed = System.currentTimeMillis();
         String strategy = "random";
+        Set<Integer> avoided = Set.of();
         for (int i = 1; i < args.length - 1; i++) {
-            if ("--runs".equals(args[i])) runs = Integer.parseInt(args[i + 1]);
-            if ("--seed".equals(args[i])) seed = Long.parseLong(args[i + 1]);
+            if ("--runs".equals(args[i]))     runs    = Integer.parseInt(args[i + 1]);
+            if ("--seed".equals(args[i]))     seed    = Long.parseLong(args[i + 1]);
             if ("--strategy".equals(args[i])) strategy = args[i + 1];
+            if ("--avoid".equals(args[i]))    avoided = Arrays.stream(args[i + 1].split(","))
+                .map(String::trim).map(Integer::parseInt).collect(Collectors.toSet());
         }
 
         Adventure adventure = new JsonAdventureLoader(adventuresDir).load(adventureId);
@@ -62,6 +68,10 @@ public class AdventureRunner {
             case "item-seeking" -> new ItemSeekingChoiceSelector();
             default             -> new RandomChoiceSelector();
         };
+
+        if (!avoided.isEmpty()) {
+            selector = new AvoidSectionsChoiceSelector(avoided, selector);
+        }
 
         RunConfiguration config = new RunConfiguration(
             runs, selector, new com.tas.neo.mechanics.SeededDice(seed),
