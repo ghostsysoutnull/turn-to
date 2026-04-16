@@ -19,6 +19,8 @@ public class RunReportGenerator {
         int runs = config.runs();
         String id = adventure.id();
 
+        JsonNode chapters = rawJson.path("chapters");
+
         sb.append("== Adventure Run Report: ").append(id).append(" ==\n");
         sb.append("Runs: ").append(runs)
           .append("  Seed: ").append(config.seed())
@@ -36,8 +38,43 @@ public class RunReportGenerator {
         Set<Integer> covered = result.coveredSections();
         int total = adventure.sections().size();
         sb.append("COVERAGE\n");
-        sb.append(String.format("  %d/%d sections (%.0f%%)\n\n",
+        sb.append(String.format("  %d/%d sections (%.0f%%)\n",
             covered.size(), total, 100.0 * covered.size() / total));
+
+        List<Integer> unreached = adventure.sections().stream()
+            .map(s -> s.number())
+            .filter(n -> !covered.contains(n))
+            .sorted()
+            .toList();
+        if (!unreached.isEmpty()) {
+            // Group by chapter if chapter data available
+            Map<String, List<Integer>> byChapter = new LinkedHashMap<>();
+            byChapter.put("(unknown)", new ArrayList<>());
+            if (chapters.isArray()) {
+                for (JsonNode ch : chapters) {
+                    byChapter.put(ch.path("id").asText(), new ArrayList<>());
+                }
+            }
+            for (int n : unreached) {
+                String chId = "(unknown)";
+                if (chapters.isArray()) {
+                    for (JsonNode ch : chapters) {
+                        int from = ch.path("sectionRange").path("from").asInt(-1);
+                        int to   = ch.path("sectionRange").path("to").asInt(-1);
+                        if (from > 0 && n >= from && n <= to) { chId = ch.path("id").asText(); break; }
+                    }
+                }
+                byChapter.get(chId).add(n);
+            }
+            byChapter.forEach((chId, sections) -> {
+                if (!sections.isEmpty()) {
+                    sb.append(String.format("  unreached %-6s", chId));
+                    sections.forEach(n -> sb.append(" §").append(n));
+                    sb.append("\n");
+                }
+            });
+        }
+        sb.append("\n");
 
         // Run length
         RunLengthSummary len = result.runLengthSummary();
@@ -45,7 +82,6 @@ public class RunReportGenerator {
         sb.append(String.format("  avg=%.1f  min=%d  max=%d\n\n", len.average(), len.min(), len.max()));
 
         // Chapter reach rates
-        JsonNode chapters = rawJson.path("chapters");
         if (chapters.isArray() && chapters.size() > 0) {
             sb.append("CHAPTER REACH RATES\n");
             for (JsonNode ch : chapters) {

@@ -9,6 +9,10 @@ OUTCOMES
 
 COVERAGE
   133/170 sections (78%)
+  unreached ch1    §4 §15 §18 §26 §37 §40
+  unreached ch2    §48 §62 §74 §75 §76 §77 §79 §89
+  unreached ch3    §92 §97 §114 §118 §119 §124 §125
+  unreached ch4    §133 §134 §135 §136 §137 §141 §156 §160 §161 §162 §163 §166 §167 §168 §169 §170
 
 RUN LENGTH (excl STUCK/CYCLE)
   avg=73.9  min=29  max=163
@@ -27,3 +31,10 @@ ENDINGS
 
 ISSUES
   ✗ CYCLE runs: 10
+  ⚠ Conditioned choices never selected (condition may be unachievable):
+      §113   "Present the Courier's Token"
+      §146   "Present your Relay Station Key at the checkpoint"
+      §140   "Hand over the Sealed Satchel"
+      §51    "Produce the Courier's Token and say nothing else"
+  ⚠ SKILL uninitialised — combat used default value 10
+  ⚠ STAMINA uninitialised — combat used default value 10
