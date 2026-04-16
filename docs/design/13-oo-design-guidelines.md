@@ -10,6 +10,26 @@ It is not a patterns catalog. Generic OO theory is out of scope. Every example h
 
 ---
 
+## Definition: What a Refactoring Is
+
+A refactoring is a structural change that leaves all observable behaviour identical. The
+enforcement mechanism is the test suite: **if all existing tests pass unchanged after the
+change, and no test was added or modified to make them pass, it was a refactoring. If any
+test had to change, or any new test was needed, behaviour changed — and it is no longer a
+refactoring.**
+
+A refactoring that changes observable behaviour is a bug.
+
+This means:
+- Builder validation that rejects states the constructor silently accepted is a behaviour change — even if it is an improvement.
+- Default values in a Builder that differ from what callers were previously passing are a behaviour change.
+- Any new exception, any new null-check, any new clamping — behaviour change.
+
+If the structural change reveals that existing behaviour was wrong, fix the behaviour
+separately first (as a bug fix with its own test), then do the structural change.
+
+---
+
 ## Rule Zero: Default to Not Refactoring
 
 Refactoring has a cost: it generates test churn, risks introducing bugs, and consumes agent context. The default answer to "should I refactor this?" is **no**.
@@ -20,6 +40,28 @@ Apply a refactoring only when:
 - The change is fully covered by existing or new tests before any structural move begins
 
 If there is no failing test that motivates the refactoring, it is speculative. Do not proceed.
+
+---
+
+## Raising a Refactoring Detected During Unrelated Work
+
+When a smell is detected while implementing something else — a feature, a bug fix, a test
+gap — **do not refactor inline**. The cost of a mid-task structural change is higher than
+the cost of deferring it: it expands scope, risks introducing bugs into the original task,
+and bypasses the TDD sequence required for safe structural moves.
+
+Instead:
+
+1. **Complete the original task** without the refactoring. Work around the smell if needed.
+2. **Append an entry to `REFACTORING-BACKLOG.md`** using the format defined there. Include:
+   - What task triggered the observation
+   - Which smell and threshold it meets (reference the section below by name)
+   - The affected file(s) and scope (narrow / medium / broad)
+   - The fix pattern to apply
+3. **Report it explicitly** in the session or agent summary so the user is aware.
+
+A medium or broad refactoring (touching more than one class or more than a handful of call
+sites) must never be started without the user's explicit approval in a dedicated effort.
 
 ---
 

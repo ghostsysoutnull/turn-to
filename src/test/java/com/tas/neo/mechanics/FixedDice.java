@@ -1,5 +1,7 @@
 package com.tas.neo.mechanics;
 
+import com.tas.neo.domain.Dice;
+
 /**
  * Test double implementing {@link Dice} that returns a fixed value for every roll.
  *

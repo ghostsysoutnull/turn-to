@@ -199,3 +199,5 @@ The Adventure Architect Agent always runs alone, before any chapter authors.
 | Asking the Code Agent to write tests | Violates the TDD contract; the agent's own tests have no independent authority | Use the Test Agent |
 | Giving a chapter author incomplete gate contracts | Chapter will invent its own cross-chapter assumptions, breaking continuity | Architect produces complete gates before any chapter author starts |
 | Updating a spec without re-running downstream agents | Design, tests, and code may now contradict the spec | Assess blast radius and re-run affected stages |
+| Making code or test changes directly in conversation without invoking agents | TDD contract broken; tests written after the code have no independent authority; design doc test strategy rows may be added retroactively | Invoke the correct agent explicitly — even for small gaps; the pipeline cost is lower than the cost of undisciplined drift |
+| Starting work without reading LESSONS.md and relevant design docs | Repeats mistakes already paid for; violates established patterns silently | Always follow the session start protocol in CLAUDE.md before any work begins |

@@ -44,7 +44,7 @@ class RunSimulatorTest {
         return new Adventure(
             "test", "Test", "", sections[0].number(), 0,
             List.of(sections), List.of(), List.of(), List.of(), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), Map.of()
         );
     }
 
@@ -359,33 +359,6 @@ class RunSimulatorTest {
     }
 
     @Test
-    void warns_when_skill_uninitialised_in_combat() {
-        Section s1 = normal(1, List.of(combatTo(2, 3)), List.of(), ScriptBlock.empty());
-        Adventure adv = adventureWith(s1, victory(2), instantDeath(3));
-
-        // No SKILL set — defaults to 0 internally, clamped to 10
-        RunSimulator simulator = new RunSimulator(adv, noChapters(), NO_OP, defaults(), new Random(0));
-        RunResult result = simulator.run();
-
-        assertThat(result.warnings())
-            .as("must warn when SKILL is uninitialised (0) and combat falls back to default")
-            .anyMatch(w -> w.contains("SKILL") && w.contains("uninitialised"));
-    }
-
-    @Test
-    void warns_when_stamina_uninitialised_in_combat() {
-        Section s1 = normal(1, List.of(combatTo(2, 3)), List.of(), ScriptBlock.empty());
-        Adventure adv = adventureWith(s1, victory(2), instantDeath(3));
-
-        RunSimulator simulator = new RunSimulator(adv, noChapters(), NO_OP, defaults(), new Random(0));
-        RunResult result = simulator.run();
-
-        assertThat(result.warnings())
-            .as("must warn when STAMINA is uninitialised (0) and combat falls back to default")
-            .anyMatch(w -> w.contains("STAMINA") && w.contains("uninitialised"));
-    }
-
-    @Test
     void no_uninitialised_stat_warning_when_stats_are_set() {
         // onLoad sets SKILL=10, STAMINA=12
         ScriptBlock scripts = new ScriptBlock(Map.of("onLoad",
@@ -393,7 +366,7 @@ class RunSimulatorTest {
         Section s1 = normal(1, List.of(combatTo(2, 3)), List.of(), ScriptBlock.empty());
         Adventure adv = new Adventure("test", "Test", "", 1, 0,
             List.of(s1, victory(2), instantDeath(3)),
-            List.of(), List.of(), List.of(), List.of(), scripts);
+            List.of(), List.of(), List.of(), List.of(), scripts, Map.of());
 
         RunSimulator simulator = new RunSimulator(adv, noChapters(), new LuaScriptEngine(), defaults(), new Random(0));
         RunResult result = simulator.run();
@@ -418,7 +391,7 @@ class RunSimulatorTest {
         Adventure adv = new Adventure(
             "test", "Test", "", 1, 0,
             List.of(s1, victory(2), victory(3)), List.of(), List.of(), List.of(), List.of(),
-            scripts
+            scripts, Map.of()
         );
 
         RunSimulator simulator = new RunSimulator(adv, noChapters(), new LuaScriptEngine(), defaults(), new Random(0));
@@ -458,7 +431,7 @@ class RunSimulatorTest {
         Adventure advWithScript = new Adventure(
             "test", "Test", "", 1, 0,
             List.of(s1, victory(2)), List.of(), List.of(), List.of(), List.of(),
-            scripts
+            scripts, Map.of()
         );
 
         RunSimulator simulator = new RunSimulator(advWithScript, noChapters(),

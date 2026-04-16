@@ -1,4 +1,4 @@
-package com.tas.neo.mechanics;
+package com.tas.neo.domain;
 
 public interface Dice {
     int roll(int sides);

@@ -170,6 +170,7 @@ Sections of type VICTORY or INSTANT_DEATH with choices produce a warning — the
 | Valid adventure loads | Fixture JSON → assert `Adventure` fields correct |
 | Each validation rule | Corresponding malformed fixture → assert `AdventureLoadException` |
 | Party member stat resolution | Fixture with dice-formula stat, `FixedDice` → assert expected value |
+| `playerStats` field parsed correctly | Fixture JSON with `playerStats` block → assert `adventure.playerStats()` contains SKILL, STAMINA, LUCK with correct formulas |
 | Valid grid loads | Fixture JSON with grid → assert grid id, dimensions, cell count, passage structure correct |
 | Each grid validation rule | Corresponding malformed fixture → assert `AdventureLoadException` |
 | `toGrid`/`toCell` choice resolves | Fixture with section choice targeting a named grid cell → assert resolves without error |

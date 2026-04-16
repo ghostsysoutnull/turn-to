@@ -1,5 +1,6 @@
 package com.tas.neo.mechanics;
 
+import com.tas.neo.domain.DiceFormula;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

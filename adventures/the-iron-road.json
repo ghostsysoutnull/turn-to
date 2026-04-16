@@ -4,6 +4,11 @@
   "description": "You witness the assassination of a royal courier on the Iron Road. The satchel he carried falls at your feet. The killers turn toward you. You run. What you carry could change the fate of three kingdoms — if you survive long enough to deliver it.",
   "startSection": 1,
   "initialProvisions": 10,
+  "playerStats": {
+    "SKILL":   {"formula": "1d6+6"},
+    "STAMINA": {"formula": "2d6+12"},
+    "LUCK":    {"formula": "1d6+6"}
+  },
   "scripts": {
     "onLoad": "state.set('suspicion', 0); state.set('satchelOpened', false); state.set('spymasterDebt', 0); state.set('contactAlive', true)",
     "onStart": "ctx.showMessage('The Iron Road stretches before you — three kingdoms, countless enemies, and a sealed satchel whose contents could end you.')"

@@ -1,4 +1,4 @@
-package com.tas.neo.mechanics;
+package com.tas.neo.domain;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

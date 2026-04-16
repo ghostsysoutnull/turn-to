@@ -28,6 +28,7 @@ import com.tas.neo.domain.player.Player;
 import com.tas.neo.io.RecordingGameLogger;
 import com.tas.neo.io.RecordingOutput;
 import com.tas.neo.io.ScriptedInput;
+import com.tas.neo.domain.Dice;
 import com.tas.neo.mechanics.FixedDice;
 import com.tas.neo.scripting.AdventureScriptState;
 import com.tas.neo.scripting.NoOpScriptEngine;
@@ -97,7 +98,7 @@ class HookDispatcherProcessEventTest {
         return new Adventure(
             "test", "Test Adventure", "", sections[0].number(), 0,
             List.of(sections), List.of(), List.of(), List.of(), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), Map.of()
         );
     }
 
@@ -397,7 +398,7 @@ class HookDispatcherProcessEventTest {
                             HookDispatcher hooks,
                             com.tas.neo.io.GameInput inp,
                             com.tas.neo.io.GameOutput out,
-                            com.tas.neo.mechanics.Dice dice) {
+                            Dice dice) {
                         return new CombatOutcome(CombatOutcomeType.DEFEAT, Optional.empty());
                     }
                 };
@@ -441,7 +442,7 @@ class HookDispatcherProcessEventTest {
                             HookDispatcher hooks,
                             com.tas.neo.io.GameInput inp,
                             com.tas.neo.io.GameOutput out,
-                            com.tas.neo.mechanics.Dice dice) {
+                            Dice dice) {
                         return new CombatOutcome(CombatOutcomeType.DEFEAT, Optional.empty());
                     }
                 };
@@ -484,7 +485,7 @@ class HookDispatcherProcessEventTest {
                             HookDispatcher hooks,
                             com.tas.neo.io.GameInput inp,
                             com.tas.neo.io.GameOutput out,
-                            com.tas.neo.mechanics.Dice dice) {
+                            Dice dice) {
                         return new CombatOutcome(CombatOutcomeType.VICTORY, Optional.empty());
                     }
                 };
@@ -568,7 +569,7 @@ class HookDispatcherProcessEventTest {
                             java.util.Map<String, Object> params,
                             CombatSystemRegistry reg, HookDispatcher hooks,
                             com.tas.neo.io.GameInput inp, com.tas.neo.io.GameOutput out,
-                            com.tas.neo.mechanics.Dice dice) {
+                            Dice dice) {
                         return new CombatOutcome(CombatOutcomeType.VICTORY, Optional.empty(),
                             Optional.of(combatResult));
                     }

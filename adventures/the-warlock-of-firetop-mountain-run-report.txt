@@ -1,0 +1,24 @@
+== Adventure Run Report: the-warlock-of-firetop-mountain ==
+Generated: 2026-04-16  |  Runs: 50  |  Strategy: RandomChoiceSelector  |  Dice: RANDOM  |  Seed: 1776372619749
+
+OUTCOMES
+  VICTORY:      50
+  INSTANT_DEATH:0
+  STUCK:        0
+  CYCLE:        0
+  GRID_ENTRY:   0  (grid navigation not simulated)
+
+COVERAGE
+  6/6 sections (100%)
+
+RUN LENGTH (excl STUCK/CYCLE)
+  avg=7.3  min=5  max=15
+
+ENDINGS
+  §400  VICTORY      50/50
+
+GATING
+  Choices with condition never met in any run: none ✓
+
+ISSUES
+  none ✓

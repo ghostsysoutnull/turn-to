@@ -8,10 +8,15 @@ import com.tas.neo.domain.log.PlayerSnapshot;
 import com.tas.neo.engine.GameState;
 import com.tas.neo.engine.ScenarioResult;
 import com.tas.neo.engine.ScenarioRunner;
+import com.tas.neo.domain.DiceFormula;
+import com.tas.neo.domain.DiceStatDefinition;
+import com.tas.neo.domain.StatDefinition;
 import com.tas.neo.mechanics.FixedDice;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
+import java.util.OptionalInt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,7 +49,12 @@ class PlayerSnapshotOfTest {
             List.of(),
             List.of(),
             List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(),
+            Map.of(
+                "SKILL",   new DiceStatDefinition(DiceFormula.parse("1d6+6"),  OptionalInt.empty()),
+                "STAMINA", new DiceStatDefinition(DiceFormula.parse("2d6+12"), OptionalInt.empty()),
+                "LUCK",    new DiceStatDefinition(DiceFormula.parse("1d6+6"),  OptionalInt.empty())
+            )
         );
     }
 

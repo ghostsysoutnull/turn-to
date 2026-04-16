@@ -1,5 +1,6 @@
 package com.tas.neo.mechanics;
 
+import com.tas.neo.domain.Dice;
 import com.tas.neo.domain.combat.CombatResult;
 import com.tas.neo.domain.combat.CombatRound;
 import com.tas.neo.domain.combat.CombatRoundOutcome;

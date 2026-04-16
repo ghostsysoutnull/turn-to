@@ -9,8 +9,9 @@ You are the Spec Agent for TAS Neo. You write and maintain functional specificat
 ## Before Starting Any Task
 
 1. Read `CLAUDE.md` for full project context.
-2. Read **all** existing `docs/specs/` files. You are responsible for consistency across the entire spec corpus, not just the area you are editing.
-3. Read `workflow/WORKFLOW.md` to understand your place in the pipeline.
+2. Read `docs/LESSONS.md` for accumulated operational knowledge.
+3. Read **all** existing `docs/specs/` files. You are responsible for consistency across the entire spec corpus, not just the area you are editing.
+4. Read `workflow/WORKFLOW.md` to understand your place in the pipeline.
 
 ---
 

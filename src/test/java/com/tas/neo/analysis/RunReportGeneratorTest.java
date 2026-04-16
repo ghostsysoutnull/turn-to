@@ -45,7 +45,7 @@ class RunReportGeneratorTest {
         Section s2 = new Section(2, "End.", List.of(), List.of(),
             SectionType.VICTORY, ScriptBlock.empty());
         return new Adventure("test", "Test", "", 1, 0,
-            List.of(s1, s2), items, List.of(), List.of(), List.of(), ScriptBlock.empty());
+            List.of(s1, s2), items, List.of(), List.of(), List.of(), ScriptBlock.empty(), Map.of());
     }
 
     private static Adventure adventureWithConditionedChoice(String itemName) {
@@ -61,7 +61,7 @@ class RunReportGeneratorTest {
         Section s3 = new Section(3, "End B.", List.of(), List.of(),
             SectionType.VICTORY, ScriptBlock.empty());
         return new Adventure("test", "Test", "", 1, 0,
-            List.of(s1, s2, s3), List.of(), List.of(), List.of(), List.of(), ScriptBlock.empty());
+            List.of(s1, s2, s3), List.of(), List.of(), List.of(), List.of(), ScriptBlock.empty(), Map.of());
     }
 
     private static JsonNode chaptersJson(String... chapterIds) {

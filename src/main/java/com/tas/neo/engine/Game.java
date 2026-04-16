@@ -28,11 +28,10 @@ import com.tas.neo.io.GameOutput;
 import com.tas.neo.io.OutputEvent;
 import com.tas.neo.loader.AdventureLoader;
 import com.tas.neo.loader.AdventureLoadException;
-import com.tas.neo.mechanics.DiceFormula;
-import com.tas.neo.mechanics.Dice;
-import com.tas.neo.mechanics.DiceStatDefinition;
-import com.tas.neo.mechanics.FixedStatDefinition;
-import com.tas.neo.mechanics.StatDefinition;
+import com.tas.neo.domain.Dice;
+import com.tas.neo.domain.DiceStatDefinition;
+import com.tas.neo.domain.FixedStatDefinition;
+import com.tas.neo.domain.StatDefinition;
 import com.tas.neo.scripting.AdventureScriptState;
 import com.tas.neo.scripting.ScriptEngine;
 
@@ -338,14 +337,19 @@ public class Game {
     private Player createPlayer(Adventure adventure) {
         Map<AttributeType, Attribute> attributes = new EnumMap<>(AttributeType.class);
 
-        int skill = DiceFormula.parse("1d6+6").roll(dice);
-        attributes.put(AttributeType.SKILL, new Attribute(AttributeType.SKILL, skill, skill));
-
-        int stamina = DiceFormula.parse("2d6+12").roll(dice);
-        attributes.put(AttributeType.STAMINA, new Attribute(AttributeType.STAMINA, stamina, stamina));
-
-        int luck = DiceFormula.parse("1d6+6").roll(dice);
-        attributes.put(AttributeType.LUCK, new Attribute(AttributeType.LUCK, luck, luck));
+        for (AttributeType type : AttributeType.values()) {
+            StatDefinition def = adventure.playerStats().get(type.name());
+            if (def == null) continue;
+            int initial = switch (def) {
+                case DiceStatDefinition d -> d.resolveInitial(dice);
+                case FixedStatDefinition f -> f.resolveInitial(dice);
+            };
+            int max = switch (def) {
+                case DiceStatDefinition d -> d.fixedMax().isPresent() ? d.fixedMax().getAsInt() : initial;
+                case FixedStatDefinition f -> f.resolveMax(dice);
+            };
+            attributes.put(type, new Attribute(type, initial, max));
+        }
 
         return new Player(attributes, new Inventory(), 0, adventure.initialProvisions());
     }

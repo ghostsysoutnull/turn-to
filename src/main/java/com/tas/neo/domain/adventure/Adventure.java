@@ -1,9 +1,11 @@
 package com.tas.neo.domain.adventure;
 
+import com.tas.neo.domain.StatDefinition;
 import com.tas.neo.domain.item.Item;
 import com.tas.neo.domain.location.Grid;
 import com.tas.neo.domain.party.PartyMemberDefinition;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class Adventure {
@@ -19,13 +21,14 @@ public class Adventure {
     private final List<String> combatSystems;
     private final List<Grid> grids;
     private final ScriptBlock scripts;
+    private final Map<String, StatDefinition> playerStats;
 
     public Adventure(String id, String title, String description,
                      int startSection, int initialProvisions,
                      List<Section> sections, List<Item> items,
                      List<PartyMemberDefinition> partyMemberDefinitions,
                      List<String> combatSystems, List<Grid> grids,
-                     ScriptBlock scripts) {
+                     ScriptBlock scripts, Map<String, StatDefinition> playerStats) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -37,6 +40,7 @@ public class Adventure {
         this.combatSystems = combatSystems;
         this.grids = grids;
         this.scripts = scripts;
+        this.playerStats = playerStats;
     }
 
     public String id() { return id; }
@@ -75,4 +79,5 @@ public class Adventure {
 
     public List<Grid> grids() { return grids; }
     public ScriptBlock scripts() { return scripts; }
+    public Map<String, StatDefinition> playerStats() { return playerStats; }
 }

@@ -1,6 +1,6 @@
 package com.tas.neo.analysis;
 
-import com.tas.neo.mechanics.Dice;
+import com.tas.neo.domain.Dice;
 
 import java.util.OptionalInt;
 

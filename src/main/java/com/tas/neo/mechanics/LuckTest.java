@@ -1,5 +1,6 @@
 package com.tas.neo.mechanics;
 
+import com.tas.neo.domain.Dice;
 import com.tas.neo.domain.player.AttributeType;
 import com.tas.neo.domain.player.Player;
 

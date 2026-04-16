@@ -37,7 +37,7 @@ class AdventureTest {
             List.<PartyMemberDefinition>of(),
             List.of(),
             grids,
-            ScriptBlock.empty()
+            ScriptBlock.empty(), Map.of()
         );
     }
 

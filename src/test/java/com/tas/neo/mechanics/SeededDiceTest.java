@@ -13,6 +13,7 @@ import com.tas.neo.engine.ScenarioRunner;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,7 +53,7 @@ class SeededDiceTest {
             List.of(),
             List.of(),
             List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), Map.of()
         );
     }
 
@@ -95,7 +96,7 @@ class SeededDiceTest {
             List.of(),
             List.of(),
             List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), Map.of()
         );
     }
 

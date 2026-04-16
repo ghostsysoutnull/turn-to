@@ -31,7 +31,7 @@ class SectionGraphTest {
         return new Adventure(
             "test", "Test", "", sections[0].number(), 0,
             List.of(sections), List.of(), List.of(), List.of(), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), Map.of()
         );
     }
 

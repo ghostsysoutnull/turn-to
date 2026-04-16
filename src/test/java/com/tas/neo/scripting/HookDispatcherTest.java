@@ -9,7 +9,7 @@ import com.tas.neo.engine.GameState;
 import com.tas.neo.engine.SectionHook;
 import com.tas.neo.io.RecordingOutput;
 import com.tas.neo.io.ScriptedInput;
-import com.tas.neo.mechanics.Dice;
+import com.tas.neo.domain.Dice;
 import com.tas.neo.mechanics.FixedDice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

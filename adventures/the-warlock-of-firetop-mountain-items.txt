@@ -1,0 +1,4 @@
+== Item Lifecycle Report: the-warlock-of-firetop-mountain ==
+Generated: 2026-04-16  |  Items: 1
+
+  Iron Key                      GAIN:§4  LOSS:—

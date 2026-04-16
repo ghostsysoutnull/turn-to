@@ -1,5 +1,8 @@
 package com.tas.neo.mechanics;
 
+import com.tas.neo.domain.DiceFormula;
+import com.tas.neo.domain.DiceStatDefinition;
+import com.tas.neo.domain.FixedStatDefinition;
 import java.util.OptionalInt;
 import org.junit.jupiter.api.Test;
 

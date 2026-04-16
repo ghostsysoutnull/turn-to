@@ -1,5 +1,7 @@
 package com.tas.neo.mechanics;
 
+import com.tas.neo.domain.Dice;
+
 /**
  * Test double implementing {@link Dice} that returns values from a predefined sequence
  * in order. Throws {@link AssertionError} when the sequence is exhausted — that

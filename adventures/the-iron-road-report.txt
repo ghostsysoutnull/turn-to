@@ -8,7 +8,7 @@ SECTION TYPES
   NORMAL: 158  VICTORY: 6  INSTANT_DEATH: 6
 
 ITEMS  (12 defined)
-  All items referenced in sections ✓
+  All items referenced in sections or grids ✓
 
 CHAPTERS  (4)
   ch1    [   1–  40]  entry:1     exits:[41]  coverage:40/40 ✓  exits-reachable:✓

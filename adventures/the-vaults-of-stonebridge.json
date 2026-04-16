@@ -4,6 +4,11 @@
   "description": "Rumours of an ancient vault beneath the dwarven town of Stonebridge have drawn you here. A rogue sorcerer has sealed it and claimed it for his own. A sell-sword companion falls in with you on the road. Together you must fight through the mountain's outer defences, navigate the vault's labyrinthine interior, and face the sorcerer in his sealed sanctum.",
   "startSection": 1,
   "initialProvisions": 10,
+  "playerStats": {
+    "SKILL":   {"formula": "1d6+6"},
+    "STAMINA": {"formula": "2d6+12"},
+    "LUCK":    {"formula": "1d6+6"}
+  },
   "scripts": {
     "onLoad": "state.set('companionSurvived', false)",
     "onStart": "ctx.showMessage('The dwarven town of Stonebridge rises from the mountain pass ahead. Somewhere beneath it lies an ancient vault \u2014 and the rogue sorcerer who has claimed it.')"

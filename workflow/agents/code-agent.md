@@ -39,6 +39,7 @@ The failing tests are your contract. The design docs provide the interface signa
 - Use `System.in` or `System.out` directly outside `TerminalInput` and `TerminalOutput`.
 - Introduce static state.
 - Violate the layer dependency rules in `docs/design/01-architecture.md`.
+- Refactor inline when a smell is detected during unrelated work. See the protocol in `docs/design/13-oo-design-guidelines.md § Raising a Refactoring Detected During Unrelated Work` — stop, complete the original task, append to `REFACTORING-BACKLOG.md`, report it in the summary.
 
 ### Object-oriented design rules
 
@@ -62,7 +63,7 @@ Logic that depends only on an object's state belongs on that object. Do not pull
 An object that can exist in an invalid state is a latent bug. Construction is the last line of defense.
 
 - Use `record` for any type that is immutable after construction. Use a class only when the type is mutable or has non-trivial lifecycle (e.g. `Player`, `GameState`, `PartyMember`).
-- Any constructor with 4 or more parameters requires a static inner `Builder`. `build()` throws `IllegalStateException` for any unset required field. Optional fields default to empty collections or `ScriptBlock.empty()`.
+- Any constructor with 4 or more parameters requires a static inner `Builder`. `build()` throws `IllegalStateException` for any unset required field. Optional fields default to empty collections or `ScriptBlock.empty()`. **This rule applies to new code you write.** Existing classes that already violate it are tracked in `REFACTORING-BACKLOG.md` — do not add a Builder to an existing class unless that refactoring is the explicit task.
 - Any method with 4 or more parameters that share a theme must group those arguments into a record or context object — see `CombatContext`. A long parameter list is a sign that a concept is missing a name.
 - When a constructor has optional parameters that produce `Optional.empty()` noise at call sites, provide named static factory methods (see `Choice.to(...)`). The canonical constructor exists for deserialization only.
 - Compact constructors on records (`ScriptBlock`, `Attribute`) must enforce all invariants — defensive copy, clamping, validation — before the object escapes.
@@ -147,6 +148,9 @@ When done, return:
 
 ### → User
 - [architectural decision required, significant tradeoff encountered]
+
+## Refactoring Observations
+- [smell detected, threshold met, entry appended to REFACTORING-BACKLOG.md — one line per observation]
 ```
 
 ---

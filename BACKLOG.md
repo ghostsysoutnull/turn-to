@@ -7,7 +7,7 @@ from run-report analysis and acceptance test work.
 
 ## Tier 1 — Wrong or misleading output
 
-### B4-1: Runner uses default SKILL/STAMINA when adventure doesn't configure fixed values
+### ~~B4-1: Runner uses default SKILL/STAMINA when adventure doesn't configure fixed values~~ ✓ done 2026-04-16
 
 When `config.fixedSkill()` / `config.fixedStamina()` are absent (the normal case), the
 runner leaves SKILL and STAMINA at 0 in `SimulatedGameState`. When combat fires, lines
@@ -36,7 +36,7 @@ The run report for the iron road already shows the symptom:
 
 ## Tier 2 — Incomplete features
 
-### B4-2: Runner CYCLE report omits the termination section
+### ~~B4-2: Runner CYCLE report omits the termination section~~ ✓ done 2026-04-16
 
 When a run ends as CYCLE, the report records the count but not which section was the
 cycle root. To diagnose a cycle an author must cross-reference the section graph manually.
@@ -107,6 +107,42 @@ from playable content.
     appropriate if it is the next content target
   - Move it to `src/test/resources/` where it belongs as a test fixture, and remove it
     from the `adventures/` directory — appropriate if content work is not imminent
+
+### B4-7: Acceptance test coverage is shallow — iron road stops at §16, vaults has none
+
+`IronRoadAcceptanceTest` contains three tests that all exit before §20 (ch1 only). No
+test exercises real Lua behavior in ch2, ch3, or ch4. The Vaults of Stonebridge adventure
+has no acceptance tests at all despite having grid navigation and party member mechanics
+that are only exercised by synthetic adventures in `GameTest`.
+
+- **Where:** `src/test/java/com/tas/neo/acceptance/IronRoadAcceptanceTest.java` — three
+  tests covering §1→§2→§4, §1→§2→§4 (item log), §1→§2→§3→§8→§16
+- **What's needed:**
+  - At minimum one iron road path that reaches ch2 and exercises a Lua script with real
+    state (e.g. `suspicion` increment at §41 or `contactAlive` check at §113)
+  - At minimum one Vaults acceptance test exercising the grid entry and party member
+    mechanic (`Dorian` recruited → grid traversal → §20 `companionSurvived` script)
+  - Scripted paths must use `SequenceDice` to control stat rolls and event outcomes
+    deterministically; dice comments must document which rolls go where
+
+### B4-6: Adventure constructor has 12 parameters — needs a Builder
+
+`Adventure` has 12 constructor parameters, violating the OO rule that any constructor
+with 4+ parameters requires a static inner Builder. The issue surfaced when `playerStats`
+was added as the 12th argument: ~15 test fixtures now pass a naked `Map.of()` whose
+intent ("this test doesn't care about player stats") is invisible at the call site.
+A Builder would let tests write `Adventure.builder().id("x").startSection(1).build()`
+with a sensible default for unused fields, eliminating the opaque positional arguments.
+
+- **Where:** `src/main/java/com/tas/neo/domain/adventure/Adventure.java` — constructor;
+  all test fixtures that construct `Adventure` directly; `JsonAdventureLoader`
+- **What's needed:**
+  - Add a static inner `Builder` to `Adventure`; keep the existing constructor private
+  - Update all call sites: test fixtures, `JsonAdventureLoader`, any engine wiring
+  - Builder default for `playerStats` should be an empty map (tests that don't roll stats
+    pass naturally; `Game.createPlayer()` already tolerates missing entries via `continue`)
+- **Note:** Discuss broad-refactor workflow with specialized agents before starting —
+  this touches domain, loader, and ~20 test files simultaneously.
 
 ---
 

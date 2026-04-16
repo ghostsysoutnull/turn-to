@@ -1,70 +1,72 @@
 == Adventure Run Report: the-iron-road ==
-Generated: 2026-04-16  |  Runs: 50  |  Strategy: RandomChoiceSelector  |  Dice: RANDOM  |  Seed: 42
+Generated: 2026-04-16  |  Runs: 50  |  Strategy: RandomChoiceSelector  |  Dice: RANDOM  |  Seed: 1776372606546
 
 OUTCOMES
-  VICTORY:      21
-  INSTANT_DEATH:24
+  VICTORY:      34
+  INSTANT_DEATH:9
   STUCK:        0
-  CYCLE:        5
+  CYCLE:        7
   GRID_ENTRY:   0  (grid navigation not simulated)
 
 COVERAGE
-  120/170 sections (71%)
-  unreached ch1    §15 §32 §37 §40
-  unreached ch2    §48 §55 §62 §65 §73 §74 §75 §76 §77 §79 §81 §82 §89 §90
+  126/170 sections (74%)
+  unreached ch1    §18 §31 §32 §40
+  unreached ch2    §48 §62 §65 §74 §75 §76 §77 §79 §81 §82 §89
   unreached ch3    §91 §92 §97 §113 §114 §115 §116 §117 §118 §119 §124 §125
-  unreached ch4    §133 §134 §135 §136 §137 §150 §151 §153 §154 §155 §156 §160 §161 §162 §163 §166 §167 §168 §169 §170
+  unreached ch4    §133 §134 §135 §136 §137 §153 §154 §155 §156 §160 §161 §162 §163 §166 §167 §168 §170
 
 RUN LENGTH (excl STUCK/CYCLE)
-  avg=37.9  min=3  max=139
+  avg=57.7  min=3  max=166
 
 CHAPTER REACH RATES
   ch1    100%
-  ch2    52%
-  ch3    42%
-  ch4    38%
+  ch2    82%
+  ch3    68%
+  ch4    62%
 
 ENDINGS
-  §4    INSTANT_DEATH 24/50
-  §104  VICTORY      2/50
-  §141  VICTORY      2/50
+  §4    INSTANT_DEATH 9/50
+  §104  VICTORY      3/50
+  §141  VICTORY      3/50
   §145  VICTORY      5/50
-  §159  VICTORY      12/50
-  §64   CYCLE        1/50
+  §151  VICTORY      5/50
+  §159  VICTORY      18/50
+  §64   CYCLE        3/50
   §78   CYCLE        4/50
 
 ITEM FLOW AT CHAPTER BOUNDARIES  (% of runs carrying item when entering chapter)
   — = not carried in any run at this boundary
                         ch1    ch2    ch3    ch4
   Sealed Satchel          —   100%   100%   100%
-  Spymaster's Letter      —      —    33%    37%
-  Traveller's Cloak       —    69%    67%    74%
-  Healing Potion          —    50%    52%    58%
-  Assassin's Blade        —    19%    19%    21%
-  Noble's Invitation      —      —      —     5%
+  Spymaster's Letter      —      —    18%    16%
+  Traveller's Cloak       —    59%    56%    55%
+  Healing Potion          —    56%    56%    58%
+  Assassin's Blade        —     2%     3%     3%
+  Spy Ring Cipher         —      —     3%     3%
+  Noble's Invitation      —      —      —     3%
 
 GOLD AND STATE DISTRIBUTION AT CHAPTER BOUNDARIES
   gold at ch1 entry: avg 0  range 0–0
-  satchelOpened at ch1 entry:  false:100%
   contactAlive at ch1 entry:  true:100%
   suspicion at ch1 entry: avg 0  range 0–0
   spymasterDebt at ch1 entry: avg 0  range 0–0
+  satchelOpened at ch1 entry:  false:100%
   gold at ch2 entry: avg 0  range 0–0
-  satchelOpened at ch2 entry:  false:100%
   contactAlive at ch2 entry:  true:100%
   suspicion at ch2 entry: avg 0  range 0–0
   spymasterDebt at ch2 entry: avg 0  range 0–0
+  satchelOpened at ch2 entry:  false:100%
   gold at ch3 entry: avg 0  range 0–0
-  satchelOpened at ch3 entry:  false:100%
   contactAlive at ch3 entry:  true:100%
-  suspicion at ch3 entry: avg 0  range 0–0
-  spymasterDebt at ch3 entry: avg 1  range 0–2
+  suspicion at ch3 entry: avg 0  range 0–3
+  spymasterDebt at ch3 entry: avg 0  range 0–4
+  satchelOpened at ch3 entry:  false:100%
   gold at ch4 entry: avg 0  range 0–0
-  satchelOpened at ch4 entry:  false:100%
-  contactAlive at ch4 entry:  true:100%
-  suspicion at ch4 entry: avg 0  range 0–0
-  spymasterDebt at ch4 entry: avg 1  range 0–2
   stalledLordsAgent at ch4 entry:  true:100%
+  spymasterDebt at ch4 entry: avg 0  range 0–3
+  satchelOpened at ch4 entry:  false:100%
+  suspicion at ch4 entry: avg 0  range 0–2
+  contactAlive at ch4 entry:  true:100%
   refusedLordsAgent at ch4 entry:  true:100%
 
 GATING
@@ -84,8 +86,6 @@ GATING
     §88   "Accept the letter and also take a Forged Border Pass (3 gold)"
     §88   "Ask about the Spy Ring Cipher and the border pass (3 gold)"
     §90   "Head to the customs gate and cross with your Forged Border Pass"
-    §90   "You still need a border pass — return to find one"
-    §106  "Go to Goldmere Estate — the spy ring may have cover or information"
     §106  "Head to the Relay Station — the Courier's Contact may be there"
     §113  "Present the Courier's Token"
     §124  "Offer a Bribe Purse to smooth things over"
@@ -97,15 +97,13 @@ GATING
     §134  "Reach for your Assassin's Blade"
     §146  "Present your Courier's Token at the checkpoint"
     §146  "Present your Relay Station Key at the checkpoint"
-    §150  "Take the coin — hand over the Sealed Satchel"
     §150  "Refuse and draw the Assassin's Blade"
     §158  "Tell them the satchel no longer exists"
     §160  "Hand over the Sealed Satchel to the intelligence officer"
     §160  "Tell him the satchel no longer exists"
     §162  "Go back — surrender the satchel on your terms"
-    §169  "Give the satchel to the Spymaster"
 
 ISSUES
-  ✗ CYCLE runs: 5
-  ⚠ SKILL uninitialised — combat used default value 10
-  ⚠ STAMINA uninitialised — combat used default value 10
+  ✗ CYCLE runs: 7
+  ⚠ Conditioned choices never selected (condition may be unachievable):
+      §169   "Give the satchel to the Spymaster"

@@ -1,5 +1,6 @@
 package com.tas.neo.mechanics;
 
+import com.tas.neo.domain.Dice;
 import java.util.Random;
 
 public class SeededDice implements Dice {

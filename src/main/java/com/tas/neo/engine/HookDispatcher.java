@@ -26,7 +26,7 @@ import com.tas.neo.io.GameInput;
 import com.tas.neo.io.GameLogger;
 import com.tas.neo.io.GameOutput;
 import com.tas.neo.io.NoOpGameLogger;
-import com.tas.neo.mechanics.Dice;
+import com.tas.neo.domain.Dice;
 import com.tas.neo.scripting.AdventureScriptState;
 import com.tas.neo.scripting.DefaultScriptContext;
 import com.tas.neo.scripting.PartyMemberProxy;

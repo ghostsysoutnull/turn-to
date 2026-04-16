@@ -12,7 +12,7 @@ import com.tas.neo.io.TerminalOutput;
 import com.tas.neo.loader.AdventureLoader;
 import com.tas.neo.loader.JsonAdventureLoader;
 import com.tas.neo.mechanics.CombatEngine;
-import com.tas.neo.mechanics.Dice;
+import com.tas.neo.domain.Dice;
 import com.tas.neo.mechanics.RandomDice;
 import com.tas.neo.mechanics.SeededDice;
 import com.tas.neo.scripting.LuaScriptEngine;

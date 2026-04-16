@@ -34,12 +34,14 @@
 │ Combat       │  └───────────────────────────────┘
 │ Events       │
 │ Combat       │
+│ Dice (iface) │
+│ DiceFormula  │
+│ StatDefinition│
 └───────┬──────┘
         │
 ┌───────▼──────────────────────────────────────────┐
 │              Mechanics Layer                     │
-│  Dice (interface), RandomDice                    │
-│  DiceFormula, StatDefinition                     │
+│  RandomDice, SeededDice                          │
 │  CombatEngine, LuckTest, SkillTest               │
 └───────┬──────────────────────────────────────────┘
         │
@@ -73,6 +75,11 @@
 com.tas.neo
 ├── Main.java
 ├── domain
+│   ├── Dice.java                          # interface
+│   ├── DiceFormula.java                   # record
+│   ├── StatDefinition.java                # sealed interface
+│   ├── DiceStatDefinition.java            # record
+│   ├── FixedStatDefinition.java           # record
 │   ├── player
 │   │   ├── Player.java
 │   │   ├── Attribute.java                 # record
@@ -113,11 +120,8 @@ com.tas.neo
 │       ├── GameError.java                 # record
 │       └── SessionLog.java                # record
 ├── mechanics
-│   ├── Dice.java                          # interface
 │   ├── RandomDice.java
 │   ├── SeededDice.java
-│   ├── DiceFormula.java
-│   ├── StatDefinition.java                # sealed interface
 │   ├── CombatEngine.java
 │   ├── LuckTest.java
 │   └── SkillTest.java

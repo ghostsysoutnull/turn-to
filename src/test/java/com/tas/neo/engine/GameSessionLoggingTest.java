@@ -15,6 +15,9 @@ import com.tas.neo.io.RecordingGameLogger;
 import com.tas.neo.io.RecordingOutput;
 import com.tas.neo.io.ScriptedInput;
 import com.tas.neo.loader.InMemoryAdventureLoader;
+import com.tas.neo.domain.DiceFormula;
+import com.tas.neo.domain.DiceStatDefinition;
+import com.tas.neo.domain.StatDefinition;
 import com.tas.neo.mechanics.CombatEngine;
 import com.tas.neo.mechanics.FixedDice;
 import com.tas.neo.scripting.LuaScriptEngine;
@@ -25,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,7 +61,15 @@ class GameSessionLoggingTest {
             first.number(), 0,
             List.of(first, second),
             List.of(), List.of(), List.of("personal"), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), standardPlayerStats()
+        );
+    }
+
+    private static Map<String, StatDefinition> standardPlayerStats() {
+        return Map.of(
+            "SKILL",   new DiceStatDefinition(DiceFormula.parse("1d6+6"),  OptionalInt.empty()),
+            "STAMINA", new DiceStatDefinition(DiceFormula.parse("2d6+12"), OptionalInt.empty()),
+            "LUCK",    new DiceStatDefinition(DiceFormula.parse("1d6+6"),  OptionalInt.empty())
         );
     }
 
@@ -151,7 +163,7 @@ class GameSessionLoggingTest {
             "test-adventure", "Test", "A test adventure", 1, 0,
             List.of(broken),
             List.of(), List.of(), List.of("personal"), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), standardPlayerStats()
         );
 
         RecordingGameLogger logger = new RecordingGameLogger();
@@ -174,7 +186,7 @@ class GameSessionLoggingTest {
             "test-adventure", "Test", "A test adventure", 1, 0,
             List.of(broken),
             List.of(), List.of(), List.of("personal"), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), standardPlayerStats()
         );
 
         RecordingGameLogger logger = new RecordingGameLogger();

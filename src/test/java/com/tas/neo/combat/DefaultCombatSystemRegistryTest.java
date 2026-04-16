@@ -9,7 +9,7 @@ import com.tas.neo.engine.HookDispatcher;
 import com.tas.neo.io.GameInput;
 import com.tas.neo.io.GameOutput;
 import com.tas.neo.mechanics.CombatEngine;
-import com.tas.neo.mechanics.Dice;
+import com.tas.neo.domain.Dice;
 import com.tas.neo.mechanics.FixedDice;
 import java.util.List;
 import java.util.Map;

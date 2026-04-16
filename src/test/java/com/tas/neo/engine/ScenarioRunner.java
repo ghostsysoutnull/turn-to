@@ -12,7 +12,7 @@ import com.tas.neo.io.RecordingOutput;
 import com.tas.neo.io.ScriptedInput;
 import com.tas.neo.loader.InMemoryAdventureLoader;
 import com.tas.neo.mechanics.CombatEngine;
-import com.tas.neo.mechanics.Dice;
+import com.tas.neo.domain.Dice;
 import com.tas.neo.scripting.NoOpScriptEngine;
 import com.tas.neo.scripting.ScriptEngine;
 

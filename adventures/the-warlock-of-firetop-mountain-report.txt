@@ -1,0 +1,14 @@
+== Adventure Report: the-warlock-of-firetop-mountain ==
+Generated: 2026-04-16  |  Title: The Warlock of Firetop Mountain  |  Sections: 6  |  Items: 1
+
+REACHABILITY
+  All 6 sections reachable from start (1) ✓
+
+SECTION TYPES
+  NORMAL: 5  VICTORY: 1
+
+ITEMS  (1 defined)
+  All items referenced in sections or grids ✓
+
+ISSUES
+  none ✓

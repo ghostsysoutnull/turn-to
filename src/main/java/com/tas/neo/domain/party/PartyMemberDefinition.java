@@ -1,6 +1,6 @@
 package com.tas.neo.domain.party;
 
-import com.tas.neo.mechanics.StatDefinition;
+import com.tas.neo.domain.StatDefinition;
 import java.util.Map;
 
 public class PartyMemberDefinition {

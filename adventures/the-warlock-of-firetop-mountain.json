@@ -4,6 +4,11 @@
   "description": "SKELETON — 6-section demo loop. Not a playable adventure. Exists for test fixtures and engine demonstrations only. See B3-2 in BACKLOG.md for authoring status.",
   "startSection": 1,
   "initialProvisions": 10,
+  "playerStats": {
+    "SKILL":   {"formula": "1d6+6"},
+    "STAMINA": {"formula": "2d6+12"},
+    "LUCK":    {"formula": "1d6+6"}
+  },
   "sections": [
     {
       "number": 1,

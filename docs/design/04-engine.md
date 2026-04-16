@@ -131,6 +131,8 @@ Player death (STAMINA == 0) is detected by `HookDispatcher` immediately after an
 | System choices injected | Any normal section | "Check inventory" and "Quit" always present |
 | Navigation follows choice | `ScriptedInput` selecting choice 1 | `state.currentSection()` == target |
 | Party member created | Adventure with dice-formula stat | Stat within expected range |
+| Player stats rolled from adventure formulas | `standardPlayerStats()` + `FixedDice(1)` | `player.getSkill() == 7`, `player.getStamina() == 14`, `player.getLuck() == 7` |
+| Player max stats equal initial rolled value | `standardPlayerStats()` + `FixedDice(1)` | `player.getMaxStamina() == 14` (max fixed at creation, never exceeds initial roll) |
 | Enter grid via choice | `InMemoryAdventureLoader` with grid, choice using `GridTarget` | `state.isInGrid() == true`, `state.currentCell()` == entry cell |
 | Exit grid via passage `toSection` | Player in grid, selects exit passage | `state.isInGrid() == false`, `state.currentSection()` == target |
 | Cell events fire on entry | Cell with `StatChangeEvent` | Player stat modified |

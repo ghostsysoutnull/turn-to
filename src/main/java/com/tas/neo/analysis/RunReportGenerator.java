@@ -305,7 +305,7 @@ public class RunReportGenerator {
     // Helpers
     // -------------------------------------------------------------------------
 
-    private static String diceName(com.tas.neo.mechanics.Dice dice) {
+    private static String diceName(com.tas.neo.domain.Dice dice) {
         return switch (dice.getClass().getSimpleName()) {
             case "SeededDice", "RandomDice" -> "RANDOM";
             case "FixedDice" -> "FIXED";

@@ -25,13 +25,16 @@ This file is auto-loaded by every agent and session. It defines the project, con
 ## Repository Layout
 
 ```
-docs/specs/         Functional specifications — behaviour and rules, no implementation
-docs/design/        Technical design — interfaces, signatures, data formats, rationale
-workflow/           Agent role definitions and pipeline documentation
-src/main/java/      Production source code
-src/test/java/      Test source code (test doubles live here too)
-src/test/resources/ Fixture files for loader tests
-adventures/         Adventure JSON files
+docs/specs/              Functional specifications — behaviour and rules, no implementation
+docs/design/             Technical design — interfaces, signatures, data formats, rationale
+docs/LESSONS.md          Accumulated operational gotchas — read before every session
+workflow/                Agent role definitions and pipeline documentation
+src/main/java/           Production source code
+src/test/java/           Test source code (test doubles live here too)
+src/test/resources/      Fixture files for loader tests
+adventures/              Adventure JSON files
+BACKLOG.md               Prioritised work items — bugs, features, content gaps
+REFACTORING-BACKLOG.md   Structural improvements deferred for dedicated effort
 ```
 
 ---
@@ -162,6 +165,34 @@ mvn exec:java -Dexec.mainClass=com.tas.neo.analysis.AdventureSectionDigest     -
 
 ---
 
+## Session Start Protocol
+
+Before any code or documentation work begins — in every session, every agent invocation:
+
+1. Read `docs/LESSONS.md` — accumulated operational gotchas. Skipping this repeats mistakes already paid for.
+2. Read `BACKLOG.md` — understand what is in progress, what is next, and what is deliberately deferred.
+3. Read `REFACTORING-BACKLOG.md` — know which structural debts exist so they are not accidentally fixed inline during unrelated work.
+4. Read the relevant `docs/design/` files for the area being changed.
+5. Read the relevant `docs/specs/` files if the change touches behaviour.
+
+This applies to all agents and to conversational sessions alike.
+
+### Session opening summary (conversational sessions only)
+
+After completing the reads above, produce a session opening summary covering:
+
+1. **Next steps** — the top open items from `BACKLOG.md` in priority order, one line each.
+2. **Coding standards reminder** — a brief recap of the non-negotiable rules active in this project:
+   - Pipeline discipline: Spec → Design → Test → Code; no inline code or test changes
+   - Refactoring rule: structural smells go to `REFACTORING-BACKLOG.md`, never fixed inline; a refactoring never changes observable behaviour
+   - OO rules: objects own their decisions; construction produces valid objects; encapsulate what varies
+   - Testability: every change must be fully exercisable by the test suite; `mvn -q test` must pass before and after
+   - Adventure JSON changes: regenerate all reports after every edit
+
+This summary keeps both the user and the assistant aligned at the start of every session without needing to ask.
+
+---
+
 ## Agent Workflow
 
 This project uses a four-agent pipeline. See `workflow/WORKFLOW.md` for the full process.
@@ -174,3 +205,18 @@ This project uses a four-agent pipeline. See `workflow/WORKFLOW.md` for the full
 | Code | Implements to make tests pass | `src/main/java/` |
 
 Each agent stays strictly within its own output boundary. Violations of scope are not permitted.
+
+### Refactoring detected during unrelated work
+
+When a structural smell is identified while working on something else, do not refactor inline. Complete the original task, append an entry to `REFACTORING-BACKLOG.md`, and report it explicitly. Medium and broad refactors require the user's explicit approval in a dedicated effort. See `docs/design/13-oo-design-guidelines.md § Raising a Refactoring Detected During Unrelated Work` for the full protocol.
+
+### Pipeline discipline in conversational sessions
+
+The pipeline applies even when working conversationally, not through formal agent invocations:
+
+- Changes to `src/main/java/` → Code Agent
+- Changes to `src/test/java/` → Test Agent
+- Changes to `docs/design/` → Design Agent
+- Changes to `docs/specs/` → Spec Agent
+
+Inline code or test changes made directly in conversation violate the TDD contract: tests written after the fact have no independent authority, and design doc test strategy tables may be bypassed or added retroactively. When in doubt, invoke the agent explicitly rather than doing the work inline.

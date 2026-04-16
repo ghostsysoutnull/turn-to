@@ -87,7 +87,7 @@ When `fixedMax` is absent on a `DiceStatDefinition`, max equals the rolled initi
 
 ## DiceFormula
 
-Parses and evaluates dice expressions. Lives in `mechanics` — shared with player character creation.
+Parses and evaluates dice expressions. Lives in `domain` — shared with player character creation.
 
 ```java
 public record DiceFormula(int diceCount, int diceSides, int modifier) {

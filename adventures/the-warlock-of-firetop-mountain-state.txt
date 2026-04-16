@@ -1,0 +1,4 @@
+== State Variable Report: the-warlock-of-firetop-mountain ==
+Generated: 2026-04-16  |  Variables: 0
+
+  (no state variables found)

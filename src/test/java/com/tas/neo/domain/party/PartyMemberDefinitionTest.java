@@ -1,7 +1,7 @@
 package com.tas.neo.domain.party;
 
-import com.tas.neo.mechanics.FixedStatDefinition;
-import com.tas.neo.mechanics.StatDefinition;
+import com.tas.neo.domain.FixedStatDefinition;
+import com.tas.neo.domain.StatDefinition;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;

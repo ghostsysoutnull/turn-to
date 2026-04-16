@@ -18,8 +18,9 @@ import com.tas.neo.domain.player.AttributeType;
 import com.tas.neo.io.OutputEvent;
 import com.tas.neo.io.RecordingGameLogger;
 import com.tas.neo.io.NoOpGameLogger;
-import com.tas.neo.mechanics.DiceFormula;
-import com.tas.neo.mechanics.DiceStatDefinition;
+import com.tas.neo.domain.DiceFormula;
+import com.tas.neo.domain.DiceStatDefinition;
+import com.tas.neo.domain.StatDefinition;
 import com.tas.neo.mechanics.FixedDice;
 import org.junit.jupiter.api.Test;
 
@@ -58,7 +59,7 @@ class GameTest {
             section.number(), 0,
             List.of(section),
             List.of(), List.of(), List.of("personal"), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), standardPlayerStats()
         );
     }
 
@@ -68,7 +69,15 @@ class GameTest {
             first.number(), 0,
             List.of(first, second),
             List.of(), List.of(), List.of("personal"), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), standardPlayerStats()
+        );
+    }
+
+    private static Map<String, StatDefinition> standardPlayerStats() {
+        return Map.of(
+            "SKILL",   new DiceStatDefinition(DiceFormula.parse("1d6+6"),  OptionalInt.empty()),
+            "STAMINA", new DiceStatDefinition(DiceFormula.parse("2d6+12"), OptionalInt.empty()),
+            "LUCK",    new DiceStatDefinition(DiceFormula.parse("1d6+6"),  OptionalInt.empty())
         );
     }
 
@@ -287,7 +296,7 @@ class GameTest {
             "test-adventure", "Test", "A test adventure", 1, 0,
             List.of(start, target, other),
             List.of(), List.of(), List.of("personal"), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), Map.of()
         );
 
         // Choice 1 → go to section 2 (the first authored choice)
@@ -318,7 +327,7 @@ class GameTest {
             "test-adventure", "Test", "A test adventure", 1, 0,
             List.of(victorySection(1)),
             List.of(), List.of(def), List.of("personal"), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), Map.of()
         );
 
         // FixedDice(3) → 1d6+4 = 3+4 = 7
@@ -345,7 +354,7 @@ class GameTest {
             "test-adventure", "Test", "A test adventure", 1, 0,
             List.of(victorySection(1)),
             List.of(), List.of(waitingDef), List.of("personal"), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), Map.of()
         );
 
         ScenarioResult result = ScenarioRunner.scripted(adventure, new FixedDice(4)).run();
@@ -372,7 +381,7 @@ class GameTest {
             "test-adventure", "Test", "A test adventure", 1, 0,
             List.of(victorySection(1)),
             List.of(), List.of(def), List.of("personal"), List.of(),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), Map.of()
         );
 
         ScenarioResult result = ScenarioRunner.scripted(adventure, new FixedDice(3)).run();
@@ -380,6 +389,49 @@ class GameTest {
         int hp = result.finalState().getPartyMember("warrior").getStat("hp");
         assertThat(hp)
             .as("Party member stat must be within the range defined by the DiceFormula (1d6+4 with FixedDice(3) = 7)")
+            .isEqualTo(7);
+    }
+
+    // -----------------------------------------------------------------------
+    // Player creation — stats rolled from adventure-defined formulas
+    // -----------------------------------------------------------------------
+
+    @Test
+    void player_skill_is_rolled_from_adventure_stat_formula_on_game_start() {
+        // FixedDice(1): SKILL = 1d6+6 = 1+6 = 7
+        ScenarioResult result = ScenarioRunner
+            .scripted(singleSectionAdventure(victorySection(1)), new FixedDice(1))
+            .run();
+
+        assertThat(result.finalState().player().getSkill())
+            .as("Player SKILL must be rolled from adventure playerStats formula (1d6+6) — " +
+                "FixedDice(1) produces 1+6=7; zero means createPlayer() ignored the formula")
+            .isEqualTo(7);
+    }
+
+    @Test
+    void player_stamina_is_rolled_from_adventure_stat_formula_on_game_start() {
+        // FixedDice(1): STAMINA = 2d6+12 = 1+1+12 = 14
+        ScenarioResult result = ScenarioRunner
+            .scripted(singleSectionAdventure(victorySection(1)), new FixedDice(1))
+            .run();
+
+        assertThat(result.finalState().player().getStamina())
+            .as("Player STAMINA must be rolled from adventure playerStats formula (2d6+12) — " +
+                "FixedDice(1) produces 1+1+12=14; zero means createPlayer() ignored the formula")
+            .isEqualTo(14);
+    }
+
+    @Test
+    void player_luck_is_rolled_from_adventure_stat_formula_on_game_start() {
+        // FixedDice(1): LUCK = 1d6+6 = 1+6 = 7
+        ScenarioResult result = ScenarioRunner
+            .scripted(singleSectionAdventure(victorySection(1)), new FixedDice(1))
+            .run();
+
+        assertThat(result.finalState().player().getLuck())
+            .as("Player LUCK must be rolled from adventure playerStats formula (1d6+6) — " +
+                "FixedDice(1) produces 1+6=7; zero means createPlayer() ignored the formula")
             .isEqualTo(7);
     }
 
@@ -402,7 +454,7 @@ class GameTest {
                 Choice.to("Enter dungeon", new com.tas.neo.domain.adventure.GridTarget("dungeon", "entrance"))
             ))),
             List.of(), List.of(), List.of("personal"), List.of(dungeon),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), standardPlayerStats()
         );
 
         // Choice 1 → enter dungeon
@@ -428,7 +480,7 @@ class GameTest {
                 Choice.to("Enter dungeon", new com.tas.neo.domain.adventure.GridTarget("dungeon", "entrance"))
             ))),
             List.of(), List.of(), List.of("personal"), List.of(dungeon),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), standardPlayerStats()
         );
 
         ScenarioResult result = ScenarioRunner.scripted(adventure, new FixedDice(3), 1).run();
@@ -465,7 +517,7 @@ class GameTest {
             "test-adventure", "Test", "A test adventure", 1, 0,
             List.of(entrySection, exitSection),
             List.of(), List.of(), List.of("personal"), List.of(dungeon),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), standardPlayerStats()
         );
 
         // Choice 1 → enter dungeon, then choice 1 in grid → exit via north passage
@@ -498,7 +550,7 @@ class GameTest {
             "test-adventure", "Test", "A test adventure", 1, 0,
             List.of(entrySection, exitSection),
             List.of(), List.of(), List.of("personal"), List.of(dungeon),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), standardPlayerStats()
         );
 
         ScenarioResult result = ScenarioRunner.scripted(adventure, new FixedDice(3), 1, 1).run();
@@ -533,7 +585,7 @@ class GameTest {
             "test-adventure", "Test", "A test adventure", 1, 0,
             List.of(entrySection),
             List.of(), List.of(), List.of("personal"), List.of(dungeon),
-            ScriptBlock.empty()
+            ScriptBlock.empty(), standardPlayerStats()
         );
 
         // Choice 1 → enter dungeon

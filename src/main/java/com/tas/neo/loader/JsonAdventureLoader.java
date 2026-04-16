@@ -18,10 +18,10 @@ import com.tas.neo.domain.party.NavigateConsequence;
 import com.tas.neo.domain.party.PartyMemberDefinition;
 import com.tas.neo.domain.party.RemoveConsequence;
 import com.tas.neo.domain.player.AttributeType;
-import com.tas.neo.mechanics.DiceFormula;
-import com.tas.neo.mechanics.DiceStatDefinition;
-import com.tas.neo.mechanics.FixedStatDefinition;
-import com.tas.neo.mechanics.StatDefinition;
+import com.tas.neo.domain.DiceFormula;
+import com.tas.neo.domain.DiceStatDefinition;
+import com.tas.neo.domain.FixedStatDefinition;
+import com.tas.neo.domain.StatDefinition;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -75,9 +75,10 @@ public class JsonAdventureLoader implements AdventureLoader {
         List<String> combatSystems = parseStringList(root.path("combatSystems"));
         List<GridDto> grids = parseGrids(root.path("grids"));
         ScriptBlock scripts = parseScriptBlock(root.path("scripts"));
+        Map<String, StatDefinition> playerStats = parseStats(root.path("playerStats"));
 
         return new AdventureDto(id, title, description, startSection, initialProvisions,
-                sections, items, partyMembers, combatSystems, grids, scripts);
+                sections, items, partyMembers, combatSystems, grids, scripts, playerStats);
     }
 
     private List<SectionDto> parseSections(JsonNode node) throws AdventureLoadException {
@@ -685,7 +686,8 @@ public class JsonAdventureLoader implements AdventureLoader {
                 .collect(Collectors.toList());
 
         return new Adventure(dto.id, dto.title, dto.description, dto.startSection,
-                dto.initialProvisions, sections, items, partyDefs, dto.combatSystems, grids, dto.scripts);
+                dto.initialProvisions, sections, items, partyDefs, dto.combatSystems, grids,
+                dto.scripts, dto.playerStats);
     }
 
     private Grid buildGrid(GridDto dto) {
@@ -775,7 +777,8 @@ public class JsonAdventureLoader implements AdventureLoader {
                                  int startSection, int initialProvisions,
                                  List<SectionDto> sections, List<ItemDto> items,
                                  List<PartyMemberDto> partyMembers, List<String> combatSystems,
-                                 List<GridDto> grids, ScriptBlock scripts) {}
+                                 List<GridDto> grids, ScriptBlock scripts,
+                                 Map<String, StatDefinition> playerStats) {}
 
     private record SectionDto(int number, SectionType type, String narrative,
                                List<SectionEventDto> events, List<ChoiceDto> choices,

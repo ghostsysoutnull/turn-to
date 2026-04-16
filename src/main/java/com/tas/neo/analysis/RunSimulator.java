@@ -15,6 +15,9 @@ import com.tas.neo.domain.adventure.event.NavigateEvent;
 import com.tas.neo.domain.adventure.event.SectionEvent;
 import com.tas.neo.domain.adventure.event.SkillTestEvent;
 import com.tas.neo.domain.combat.Creature;
+import com.tas.neo.domain.DiceStatDefinition;
+import com.tas.neo.domain.FixedStatDefinition;
+import com.tas.neo.domain.StatDefinition;
 import com.tas.neo.domain.party.PartyMemberDefinition;
 import com.tas.neo.scripting.AdventureScriptState;
 import com.tas.neo.scripting.LuaScriptEngine;
@@ -22,6 +25,7 @@ import com.tas.neo.scripting.ScriptEngine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -89,7 +93,14 @@ public class RunSimulator {
     public RunResult run() {
         SimulatedGameState state = new SimulatedGameState();
 
-        // Apply fixed stats if configured
+        // Roll initial player stats from adventure definitions, then apply fixed overrides
+        for (Map.Entry<String, StatDefinition> entry : adventure.playerStats().entrySet()) {
+            int value = switch (entry.getValue()) {
+                case DiceStatDefinition d -> d.resolveInitial(config.dice());
+                case FixedStatDefinition f -> f.resolveInitial(config.dice());
+            };
+            state.setStat(entry.getKey(), value);
+        }
         config.fixedSkill().ifPresent(v -> state.setStat("SKILL", v));
         config.fixedStamina().ifPresent(v -> state.setStat("STAMINA", v));
 
@@ -230,12 +241,8 @@ public class RunSimulator {
      * Returns the successSection or failureSection accordingly.
      */
     private int simulateCombat(CombatEvent event, SimulatedGameState state) {
-        int rawSkill   = state.stat("SKILL");
-        int rawStamina = state.stat("STAMINA");
-        if (rawSkill   == 0) runWarnings.add("SKILL uninitialised — combat used default value 10");
-        if (rawStamina == 0) runWarnings.add("STAMINA uninitialised — combat used default value 10");
-        int playerSkill   = Math.max(rawSkill,   10);
-        int playerStamina = Math.max(rawStamina, 10);
+        int playerSkill   = state.stat("SKILL");
+        int playerStamina = state.stat("STAMINA");
 
         // Take the first opponent (multi-opponent combat simplified to sequential)
         List<Creature> opponents = event.opponents();
