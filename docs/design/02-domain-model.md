@@ -57,6 +57,7 @@ public class Adventure {
     public String description();
     public int startSection();
     public int initialProvisions();
+    public int initialGold();
     public Section getSection(int number);   // throws IllegalArgumentException if not found
     public boolean hasItem(String name);
     public Item getItem(String name);        // throws IllegalArgumentException if not found

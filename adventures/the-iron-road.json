@@ -4,6 +4,7 @@
   "description": "You witness the assassination of a royal courier on the Iron Road. The satchel he carried falls at your feet. The killers turn toward you. You run. What you carry could change the fate of three kingdoms — if you survive long enough to deliver it.",
   "startSection": 1,
   "initialProvisions": 10,
+  "initialGold": 10,
   "playerStats": {
     "SKILL":   {"formula": "1d6+6"},
     "STAMINA": {"formula": "2d6+12"},

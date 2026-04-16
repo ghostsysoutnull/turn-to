@@ -80,6 +80,16 @@ class JsonAdventureLoaderTest {
         assertThat(adventure.title()).isEqualTo("Minimal Adventure");
         assertThat(adventure.startSection()).isEqualTo(1);
         assertThat(adventure.initialProvisions()).isEqualTo(5);
+        assertThat(adventure.initialGold()).isEqualTo(8);
+    }
+
+    @Test
+    void initial_gold_defaults_to_ten_when_field_absent() throws AdventureLoadException {
+        Adventure adventure = loader.load("valid-with-grid");
+
+        assertThat(adventure.initialGold())
+                .as("initialGold must default to 10 when the JSON field is absent")
+                .isEqualTo(10);
     }
 
     @Test

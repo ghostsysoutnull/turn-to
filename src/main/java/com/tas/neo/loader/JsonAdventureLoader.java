@@ -68,6 +68,7 @@ public class JsonAdventureLoader implements AdventureLoader {
         }
         int startSection = root.get("startSection").asInt();
         int initialProvisions = root.path("initialProvisions").asInt(0);
+        int initialGold = root.path("initialGold").asInt(10);
 
         List<SectionDto> sections = parseSections(root.path("sections"));
         List<ItemDto> items = parseItems(root.path("items"));
@@ -77,7 +78,7 @@ public class JsonAdventureLoader implements AdventureLoader {
         ScriptBlock scripts = parseScriptBlock(root.path("scripts"));
         Map<String, StatDefinition> playerStats = parseStats(root.path("playerStats"));
 
-        return new AdventureDto(id, title, description, startSection, initialProvisions,
+        return new AdventureDto(id, title, description, startSection, initialProvisions, initialGold,
                 sections, items, partyMembers, combatSystems, grids, scripts, playerStats);
     }
 
@@ -686,8 +687,8 @@ public class JsonAdventureLoader implements AdventureLoader {
                 .collect(Collectors.toList());
 
         return new Adventure(dto.id, dto.title, dto.description, dto.startSection,
-                dto.initialProvisions, sections, items, partyDefs, dto.combatSystems, grids,
-                dto.scripts, dto.playerStats);
+                dto.initialProvisions, dto.initialGold, sections, items, partyDefs,
+                dto.combatSystems, grids, dto.scripts, dto.playerStats);
     }
 
     private Grid buildGrid(GridDto dto) {
@@ -774,7 +775,7 @@ public class JsonAdventureLoader implements AdventureLoader {
     // -------------------------------------------------------------------------
 
     private record AdventureDto(String id, String title, String description,
-                                 int startSection, int initialProvisions,
+                                 int startSection, int initialProvisions, int initialGold,
                                  List<SectionDto> sections, List<ItemDto> items,
                                  List<PartyMemberDto> partyMembers, List<String> combatSystems,
                                  List<GridDto> grids, ScriptBlock scripts,

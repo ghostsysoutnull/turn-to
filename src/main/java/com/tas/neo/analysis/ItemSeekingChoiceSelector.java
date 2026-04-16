@@ -1,14 +1,15 @@
 package com.tas.neo.analysis;
 
 import com.tas.neo.domain.adventure.Choice;
+import com.tas.neo.domain.adventure.GoldCondition;
 import com.tas.neo.domain.adventure.HasItemCondition;
 
 import java.util.List;
 import java.util.Random;
 
 /**
- * Prefers choices that are gated by a satisfied HAS_ITEM condition (weight 2 vs 1).
- * The intent is to exercise item-gated paths more frequently, surfacing unreachable items.
+ * Prefers choices that are gated by a satisfied HAS_ITEM or GoldCondition (weight 2 vs 1).
+ * The intent is to exercise condition-gated paths more frequently, surfacing unreachable gates.
  */
 public class ItemSeekingChoiceSelector implements ChoiceSelector {
 
@@ -21,10 +22,13 @@ public class ItemSeekingChoiceSelector implements ChoiceSelector {
         for (int i = 0; i < choices.size(); i++) {
             Choice choice = choices.get(i);
             int weight = 1;
-            if (choice.condition().isPresent()
-                    && choice.condition().get() instanceof HasItemCondition c
-                    && state.hasItem(c.itemName())) {
-                weight = 2;
+            if (choice.condition().isPresent()) {
+                boolean conditionMet = switch (choice.condition().get()) {
+                    case HasItemCondition c -> state.hasItem(c.itemName());
+                    case GoldCondition c -> state.gold() >= c.minimum();
+                    default -> false;
+                };
+                if (conditionMet) weight = 2;
             }
             weights[i] = weight;
             totalWeight += weight;

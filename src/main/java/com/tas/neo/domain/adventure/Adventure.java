@@ -15,6 +15,7 @@ public class Adventure {
     private final String description;
     private final int startSection;
     private final int initialProvisions;
+    private final int initialGold;
     private final List<Section> sections;
     private final List<Item> items;
     private final List<PartyMemberDefinition> partyMemberDefinitions;
@@ -29,11 +30,22 @@ public class Adventure {
                      List<PartyMemberDefinition> partyMemberDefinitions,
                      List<String> combatSystems, List<Grid> grids,
                      ScriptBlock scripts, Map<String, StatDefinition> playerStats) {
+        this(id, title, description, startSection, initialProvisions, 10,
+             sections, items, partyMemberDefinitions, combatSystems, grids, scripts, playerStats);
+    }
+
+    public Adventure(String id, String title, String description,
+                     int startSection, int initialProvisions, int initialGold,
+                     List<Section> sections, List<Item> items,
+                     List<PartyMemberDefinition> partyMemberDefinitions,
+                     List<String> combatSystems, List<Grid> grids,
+                     ScriptBlock scripts, Map<String, StatDefinition> playerStats) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.startSection = startSection;
         this.initialProvisions = initialProvisions;
+        this.initialGold = initialGold;
         this.sections = sections;
         this.items = items;
         this.partyMemberDefinitions = partyMemberDefinitions;
@@ -48,6 +60,7 @@ public class Adventure {
     public String description() { return description; }
     public int startSection() { return startSection; }
     public int initialProvisions() { return initialProvisions; }
+    public int initialGold() { return initialGold; }
 
     public List<Section> sections() { return sections; }
     public List<Item> items() { return items; }

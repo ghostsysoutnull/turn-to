@@ -104,6 +104,8 @@ public class RunSimulator {
         config.fixedSkill().ifPresent(v -> state.setStat("SKILL", v));
         config.fixedStamina().ifPresent(v -> state.setStat("STAMINA", v));
 
+        state.modifyGold(adventure.initialGold());
+
         // Initialise party member states from definitions
         for (PartyMemberDefinition def : adventure.partyMemberDefinitions()) {
             state.initPartyMember(def.id(), def.initialState());

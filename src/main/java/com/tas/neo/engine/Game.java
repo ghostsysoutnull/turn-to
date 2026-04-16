@@ -351,7 +351,7 @@ public class Game {
             attributes.put(type, new Attribute(type, initial, max));
         }
 
-        return new Player(attributes, new Inventory(), 0, adventure.initialProvisions());
+        return new Player(attributes, new Inventory(), adventure.initialGold(), adventure.initialProvisions());
     }
 
     private void createPartyMembers(Adventure adventure) {

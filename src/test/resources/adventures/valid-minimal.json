@@ -4,6 +4,7 @@
   "description": "A minimal valid adventure for loader tests.",
   "startSection": 1,
   "initialProvisions": 5,
+  "initialGold": 8,
   "sections": [
     {
       "number": 1,

@@ -435,6 +435,23 @@ class GameTest {
             .isEqualTo(7);
     }
 
+    @Test
+    void player_gold_is_initialised_from_adventure_initial_gold_on_game_start() {
+        Adventure adventure = new Adventure(
+            "test-adventure", "Test", "A test adventure", 1, 0, 15,
+            List.of(victorySection(1)),
+            List.of(), List.of(), List.of("personal"), List.of(),
+            ScriptBlock.empty(), standardPlayerStats()
+        );
+
+        ScenarioResult result = ScenarioRunner.scripted(adventure, new FixedDice(1)).run();
+
+        assertThat(result.finalState().player().getGold())
+            .as("Player gold must be initialised from adventure initialGold (15) — " +
+                "zero means createPlayer() ignored initialGold")
+            .isEqualTo(15);
+    }
+
     // -----------------------------------------------------------------------
     // Grid navigation — enter grid via GridTarget choice
     // -----------------------------------------------------------------------
