@@ -66,6 +66,12 @@ public class Game {
         this.logger = logger;
     }
 
+    private AdventureScriptState scriptState;
+
+    public AdventureScriptState scriptState() {
+        return scriptState;
+    }
+
     public void run(String adventureId) {
         Adventure adventure;
         try {
@@ -78,7 +84,7 @@ public class Game {
         state.setPlayer(createPlayer(adventure));
         createPartyMembers(adventure);
 
-        AdventureScriptState scriptState = new AdventureScriptState();
+        scriptState = new AdventureScriptState();
         HookDispatcher hooks = new HookDispatcher(
             scriptEngine, input, output, state, scriptState, combatRegistry, dice, logger);
 

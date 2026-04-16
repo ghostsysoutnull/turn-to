@@ -187,7 +187,7 @@ public class HookDispatcher {
     private void runScript(String script, ScriptContext ctx, String source) {
         ErrorCapturingContext wrapped = new ErrorCapturingContext(ctx, source);
         try {
-            scriptEngine.execute(script, wrapped);
+            scriptEngine.execute(script, wrapped, scriptState);
         } catch (ScriptException e) {
             logger.logError(new GameError(source, "ScriptError", e.getMessage(),
                 PlayerSnapshot.of(state)));

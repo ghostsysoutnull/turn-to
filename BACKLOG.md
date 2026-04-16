@@ -126,6 +126,21 @@ adventure.
   reference/demo skeleton in the file so it is not confused with a complete adventure.
 - **Status:** [x] done — 2026-04-16 (marked as skeleton in description field)
 
+### B3-4: onLoad script state binding was broken — fixed by acceptance tests
+
+`HookDispatcher.runScript()` called `scriptEngine.execute(script, ctx)` — the two-arg form that
+never binds `scriptState` to Lua globals. All adventure-level scripts (`onLoad`, `onStart`) had
+`state` as nil, so any `state.set(...)` call would throw "attempt to index a nil value".
+
+The bug was silent because `NoOpScriptEngine` discards scripts entirely and no unit tests
+used `LuaScriptEngine` with an adventure that has `onLoad` scripts. Discovered when
+`IronRoadAcceptanceTest` ran with real Lua.
+
+- **Fix:** Added `execute(String, ScriptContext, AdventureScriptState)` default method to
+  `ScriptEngine` interface; `LuaScriptEngine` already had the three-arg overload. Updated
+  `HookDispatcher.runScript()` to call the three-arg form.
+- **Status:** [x] done — 2026-04-16 (found and fixed during acceptance test implementation)
+
 ### B3-3: the-vaults-of-stonebridge runner incompatibility note
 
 The vaults adventure routes through a grid at §15, making the runner report 100% STUCK. The

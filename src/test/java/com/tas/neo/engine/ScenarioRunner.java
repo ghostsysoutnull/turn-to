@@ -76,7 +76,8 @@ public class ScenarioRunner {
             output,
             recording.sessionLog(),
             state.isVictory(),
-            state.isGameOver()
+            state.isGameOver(),
+            game.scriptState()
         );
     }
 

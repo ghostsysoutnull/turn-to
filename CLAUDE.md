@@ -58,7 +58,7 @@ These rules are absolute. Violations are bugs, not style preferences.
 
 - `TerminalInput` and `TerminalOutput` **never** appear in test code. Tests always use `ScriptedInput` and `RecordingOutput`.
 - No test may use `System.in`, `System.out`, or `System.err` directly.
-- No test may read from or write to the filesystem except `JsonAdventureLoaderTest`, which uses fixture files under `src/test/resources/`.
+- No test may read from or write to the filesystem except: `JsonAdventureLoaderTest` (fixture files under `src/test/resources/`), `AdventureValidationTest`, `ChapterValidationTest`, and acceptance tests in `src/test/java/com/tas/neo/acceptance/` — all of which load production adventures from `adventures/`.
 - No test may have a non-deterministic outcome. All dice rolls use `FixedDice` or `SequenceDice`.
 - No test may `Thread.sleep`, use wall-clock time, or depend on execution order across test classes.
 

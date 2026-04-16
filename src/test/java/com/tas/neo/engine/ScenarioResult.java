@@ -2,6 +2,7 @@ package com.tas.neo.engine;
 
 import com.tas.neo.domain.log.SessionLog;
 import com.tas.neo.io.RecordingOutput;
+import com.tas.neo.scripting.AdventureScriptState;
 import java.util.Optional;
 
 /**
@@ -14,7 +15,8 @@ public record ScenarioResult(
     RecordingOutput output,
     SessionLog sessionLog,
     boolean victory,
-    boolean gameOver
+    boolean gameOver,
+    AdventureScriptState scriptState
 ) {
 
     /** Returns the final section number, or -1 if the player is in a grid at end. */
