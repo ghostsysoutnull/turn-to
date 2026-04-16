@@ -134,6 +134,24 @@ public class RunBatchResult {
             .toList();
     }
 
+    /** All conditioned choices that were available (condition met) in at least one run. */
+    public Set<NeverSelectedChoice> conditionedChoicesEverAvailable() {
+        return Set.copyOf(everAvailable);
+    }
+
+    /** All state variable keys seen in chapter snapshots for the given chapter. */
+    public Set<String> stateVariableKeys(String chapterId) {
+        Set<String> keys = new LinkedHashSet<>();
+        for (RunResult run : runs) {
+            for (ChapterSnapshot s : run.chapterSnapshots()) {
+                if (s.chapterId().equals(chapterId)) {
+                    keys.addAll(s.stateVariables().keySet());
+                }
+            }
+        }
+        return keys;
+    }
+
     public Set<String> warnings() {
         Set<String> all = new LinkedHashSet<>();
         for (RunResult run : runs) {

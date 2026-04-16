@@ -47,7 +47,7 @@ The runner simulates correctly. Three report sections defined in spec 11 are not
   - `GATING` — choices with conditions that were never met across all N runs (dead gates)
 - **Data available:** `RunBatchResult`, `ChapterSnapshot` already accumulate inventory and state at boundaries; gating requires tracking condition evaluations per run
 - **Spec:** `docs/specs/11-adventure-runner.md`
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16
 
 ---
 

@@ -269,6 +269,62 @@ class RunBatchResultTest {
     }
 
     // -------------------------------------------------------------------------
+    // conditionedChoicesEverAvailable
+    // -------------------------------------------------------------------------
+
+    @Test
+    void conditionedChoicesEverAvailable_returns_choices_that_were_available() {
+        NeverSelectedChoice choice = new NeverSelectedChoice(5, "Use sword");
+        RunBatchResult batch = new RunBatchResult(
+            List.of(victory(2, List.of(1, 2), List.of())),
+            Set.of(choice),
+            Set.of()
+        );
+
+        assertThat(batch.conditionedChoicesEverAvailable())
+            .as("conditionedChoicesEverAvailable must return choices that passed condition " +
+                "filtering in at least one run")
+            .containsExactly(choice);
+    }
+
+    @Test
+    void conditionedChoicesEverAvailable_empty_with_default_constructor() {
+        RunBatchResult batch = new RunBatchResult(List.of(
+            victory(2, List.of(1, 2), List.of())
+        ));
+        assertThat(batch.conditionedChoicesEverAvailable())
+            .as("conditionedChoicesEverAvailable must be empty when no tracking data provided")
+            .isEmpty();
+    }
+
+    // -------------------------------------------------------------------------
+    // stateVariableKeys
+    // -------------------------------------------------------------------------
+
+    @Test
+    void stateVariableKeys_returns_all_keys_seen_at_chapter() {
+        RunBatchResult batch = new RunBatchResult(List.of(
+            victory(5, List.of(), List.of(snapshot("ch2", 41, Set.of(), 0, Map.of("suspicion", 3)))),
+            victory(5, List.of(), List.of(snapshot("ch2", 41, Set.of(), 0, Map.of("suspicion", 7, "hasKey", true))))
+        ));
+
+        assertThat(batch.stateVariableKeys("ch2"))
+            .as("stateVariableKeys must return all unique state variable keys seen in ch2 snapshots")
+            .containsExactlyInAnyOrder("suspicion", "hasKey");
+    }
+
+    @Test
+    void stateVariableKeys_empty_when_no_state_set() {
+        RunBatchResult batch = new RunBatchResult(List.of(
+            victory(5, List.of(), List.of(snapshot("ch2", 41, Set.of(), 0, Map.of())))
+        ));
+
+        assertThat(batch.stateVariableKeys("ch2"))
+            .as("stateVariableKeys must be empty when no state variables were set at ch2")
+            .isEmpty();
+    }
+
+    // -------------------------------------------------------------------------
     // Warnings
     // -------------------------------------------------------------------------
 
