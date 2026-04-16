@@ -12,7 +12,7 @@ CH1  [§1–§15]
 CH2  [§16–§30]
   IN   §20
        possible:    Player may carry 'Vault Key' (found inside the vault dungeon grid)
-                    Player may carry 'Guard's Pass'
+                    Player may carry 'Guard's Pass' (used at §18 vault checkpoint to bypass the guard without confrontation)
                     Player may carry 'Healing Potion'
                     Dorian may be ACTIVE (if recruited in ch1 and not defeated in the grid)
        state:       state.companionSurvived has not yet been set to a meaningful value — set it at section 20 onEnter

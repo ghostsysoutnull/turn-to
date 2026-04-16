@@ -1,6 +1,6 @@
 == Item Lifecycle Report: the-vaults-of-stonebridge ==
 Generated: 2026-04-16  |  Items: 3
 
-  Guard's Pass                  GAIN:§10  LOSS:—
+  Guard's Pass                  GAIN:§10  LOSS:—  REQUIRED:§18
   Healing Potion                GAIN:§6  LOSS:—
   Vault Key                     GAIN:—  LOSS:—  REQUIRED:§22  FORBIDDEN:§22

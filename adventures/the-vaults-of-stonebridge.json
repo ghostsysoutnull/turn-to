@@ -102,7 +102,7 @@
             "required": [],
             "possible": [
               "Player may carry 'Vault Key' (found inside the vault dungeon grid)",
-              "Player may carry 'Guard's Pass'",
+              "Player may carry 'Guard's Pass' (used at §18 vault checkpoint to bypass the guard without confrontation)",
               "Player may carry 'Healing Potion'",
               "Dorian may be ACTIVE (if recruited in ch1 and not defeated in the grid)"
             ],
@@ -664,12 +664,20 @@
     {
       "number": 18,
       "type": "NORMAL",
-      "narrative": "The passage opens into a low hall \u2014 a guardroom, once, to judge by the stone benches built into the walls. The benches are bare now. An overturned brazier has left a black burn across the flags. The southern wall holds a single heavy door, iron-bound and set with a ring handle. No lock. No visible trap.\n\nBeyond the door, faintly, you hear a sound. A slow, deliberate scraping. Something moving in a large space.",
+      "narrative": "The passage opens into a low hall \u2014 a guardroom, to judge by the stone benches built into the walls and the vault guard sitting on one of them. He straightens when he hears you, hand moving to a short blade at his hip. His tabard bears Vordan's sigil: the same mark as the token you took from the gate guard outside.\n\n'Pass token,' he says flatly. 'Show it or turn back.'\n\nThe southern wall holds a single heavy door, iron-bound and set with a ring handle.",
       "events": [],
       "scripts": {},
       "choices": [
         {
-          "text": "Open the iron door and pass through",
+          "text": "Show the Guard's Pass \u2014 the guard nods and steps aside",
+          "targetSection": 22,
+          "condition": {
+            "type": "HAS_ITEM",
+            "itemName": "Guard's Pass"
+          }
+        },
+        {
+          "text": "Rush the guard and force through the iron door before he can raise an alarm",
           "targetSection": 22
         },
         {
