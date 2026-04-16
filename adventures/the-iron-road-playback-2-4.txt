@@ -1,0 +1,49 @@
+The Iron Road stretches before you — three kingdoms, countless enemies, and a sealed satchel whose contents could end you.
+
+─────────────────────────────────────────────────────
+  SKILL: 8   STAMINA: 19/19   LUCK: 7   Gold: 0
+─────────────────────────────────────────────────────
+The Iron Road runs wide and straight through the forest, paved in pale grey stone worn smooth by a thousand years of trade. You are a traveller — unremarkable, unhurried — walking the verge when the carriage ahead of you stops without warning.
+
+There is no drama in what happens next. Four figures step from the treeline. They do not shout. They do not run. They move with the quiet efficiency of men who have done this before. The coachman goes first, a single blow, and then the door swings open and a plainly dressed man of middle years is dragged into the road.
+
+A royal courier. You recognise the cut of his coat even from here.
+
+He struggles. He does not beg. Something falls from his hand — a leather satchel, sealed with dark wax — and skids across the stone toward your feet.
+
+The four figures look up. The nearest one, the commander, meets your eyes. He speaks in a flat voice: "Don't."
+
+You pick up the satchel anyway.
+1. Run into the forest — now, before they reach you
+2. Stand your ground and face the commander
+3. Eat a provision (restores 4 STAMINA)
+4. Check inventory
+5. Quit
+
+─────────────────────────────────────────────────────
+  SKILL: 8   STAMINA: 19/19   LUCK: 7   Gold: 0
+─────────────────────────────────────────────────────
+You hold the satchel and you do not move. It is a foolish choice, or a brave one — you cannot tell from the inside.
+
+The commander walks toward you. He is unhurried. The others fan out to cut off the road in both directions. He stops three paces away and looks you over with the detached interest of a man appraising livestock.
+
+"Give us the satchel," he says, "and walk away. You were never here. You saw nothing. We have no quarrel with travellers."
+
+His voice is almost kind. His eyes are not.
+1. Hand over the satchel
+2. Refuse and run for the forest
+3. Ask him who he works for
+4. Eat a provision (restores 4 STAMINA)
+5. Check inventory
+6. Quit
+You set the satchel down on the road between you.
+
+The commander picks it up. He checks the wax seal — intact — and tucks it under his arm. Then he looks back at you, and something changes in his expression: a small, flat appraisal.
+
+"Thank you," he says.
+
+He nods once to the man on his left.
+
+You do not feel the blow. There is only the road rising toward you, and then nothing.
+
+A traveller who knows nothing and can identify no one is still a witness. The Iron Road does not forgive loose ends.
