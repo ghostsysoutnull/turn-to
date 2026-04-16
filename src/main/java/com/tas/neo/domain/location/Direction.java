@@ -27,6 +27,10 @@ public enum Direction {
         };
     }
 
+    public String defaultLabel() {
+        return "Go " + name().toLowerCase();
+    }
+
     public Direction opposite() {
         return switch (this) {
             case NORTH -> SOUTH;

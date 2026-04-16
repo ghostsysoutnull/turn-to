@@ -102,6 +102,45 @@ class RunReportGeneratorTest {
     }
 
     // -------------------------------------------------------------------------
+    // Report header format (T3-4)
+    // -------------------------------------------------------------------------
+
+    @Test
+    void report_header_contains_generated_date() {
+        Adventure adv = adventureWithItems();
+        JsonNode raw = noChaptersJson();
+        RunBatchResult result = new RunBatchResult(List.of(victory(List.of())));
+
+        String report = RunReportGenerator.generate(adv, raw, result, config(1));
+
+        assertThat(report)
+            .as("report header must contain 'Generated:' with a date")
+            .containsPattern("Generated: \\d{4}-\\d{2}-\\d{2}");
+    }
+
+    @Test
+    void report_header_contains_strategy_and_dice_and_seed() {
+        Adventure adv = adventureWithItems();
+        JsonNode raw = noChaptersJson();
+        RunBatchResult result = new RunBatchResult(List.of(victory(List.of())));
+
+        String report = RunReportGenerator.generate(adv, raw, result, config(5));
+
+        assertThat(report)
+            .as("report header must contain Strategy label")
+            .contains("Strategy:");
+        assertThat(report)
+            .as("report header must contain Dice label")
+            .contains("Dice:");
+        assertThat(report)
+            .as("report header must contain Seed label")
+            .contains("Seed:");
+        assertThat(report)
+            .as("report header must contain Runs count")
+            .contains("Runs: 5");
+    }
+
+    // -------------------------------------------------------------------------
     // ITEM FLOW AT CHAPTER BOUNDARIES
     // -------------------------------------------------------------------------
 

@@ -205,7 +205,7 @@ public class Game {
         List<Choice> choices = new ArrayList<>(cell.choices());
         for (Map.Entry<Direction, Passage> entry : cell.passages().entrySet()) {
             Passage passage = entry.getValue();
-            String label = passage.label().orElse(entry.getKey().name());
+            String label = passage.label().orElse(entry.getKey().defaultLabel());
             if (passage.toSection().isPresent()) {
                 choices.add(Choice.to(label, new SectionTarget(passage.toSection().get())));
             } else {

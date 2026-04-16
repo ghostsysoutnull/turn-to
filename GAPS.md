@@ -74,7 +74,7 @@ Passages with no explicit label display the direction enum name (e.g. `NORTH`) i
 - **Where:** `src/main/java/com/tas/neo/engine/Game.java` line ~203 — `passage.label().orElse(entry.getKey().name())`
 - **Fix:** Add `defaultLabel()` to `Direction` enum (e.g. `NORTH → "Go north"`) or format inline
 - **Spec:** `docs/specs/09-location-networks.md`
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16
 
 ### T3-3: Grid location format in error snapshots (spec 10)
 
@@ -91,4 +91,4 @@ Minor format mismatch vs. spec. Current header omits date and dice mode label.
 
 - **Spec format:** `Generated: <date>  |  Runs: <N>  |  Strategy: <strategy>  |  Dice: <mode>  |  Seed: <seed>`
 - **Where:** `src/main/java/com/tas/neo/analysis/RunReportGenerator.java`
-- **Status:** [ ] open
+- **Status:** [x] done — 2026-04-16

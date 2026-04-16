@@ -5,6 +5,7 @@ import com.tas.neo.domain.adventure.Adventure;
 import com.tas.neo.domain.adventure.SectionType;
 import com.tas.neo.domain.item.Item;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -26,10 +27,11 @@ public class RunReportGenerator {
         JsonNode chapters = rawJson.path("chapters");
 
         sb.append("== Adventure Run Report: ").append(id).append(" ==\n");
-        sb.append("Runs: ").append(runs)
-          .append("  Seed: ").append(config.seed())
-          .append("  Strategy: ").append(config.choiceSelector().name())
-          .append("  MaxVisits: ").append(config.maxVisitsPerSection()).append("\n\n");
+        sb.append("Generated: ").append(LocalDate.now())
+          .append("  |  Runs: ").append(runs)
+          .append("  |  Strategy: ").append(config.choiceSelector().name())
+          .append("  |  Dice: ").append(diceName(config.dice()))
+          .append("  |  Seed: ").append(config.seed()).append("\n\n");
 
         // Outcomes
         sb.append("OUTCOMES\n");
@@ -296,6 +298,14 @@ public class RunReportGenerator {
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
+
+    private static String diceName(com.tas.neo.mechanics.Dice dice) {
+        return switch (dice.getClass().getSimpleName()) {
+            case "SeededDice", "RandomDice" -> "RANDOM";
+            case "FixedDice" -> "FIXED";
+            default -> dice.getClass().getSimpleName();
+        };
+    }
 
     private static List<String> chapterIdList(JsonNode chapters) {
         List<String> ids = new ArrayList<>();

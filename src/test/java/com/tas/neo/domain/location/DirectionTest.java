@@ -65,4 +65,26 @@ class DirectionTest {
         assertThat(Direction.UP.opposite()).isEqualTo(Direction.DOWN);
         assertThat(Direction.DOWN.opposite()).isEqualTo(Direction.UP);
     }
+
+    @Test
+    void defaultLabel_returns_human_readable_string_for_each_direction() {
+        assertThat(Direction.NORTH.defaultLabel())
+            .as("NORTH default label must be 'Go north'")
+            .isEqualTo("Go north");
+        assertThat(Direction.SOUTH.defaultLabel())
+            .as("SOUTH default label must be 'Go south'")
+            .isEqualTo("Go south");
+        assertThat(Direction.EAST.defaultLabel())
+            .as("EAST default label must be 'Go east'")
+            .isEqualTo("Go east");
+        assertThat(Direction.WEST.defaultLabel())
+            .as("WEST default label must be 'Go west'")
+            .isEqualTo("Go west");
+        assertThat(Direction.UP.defaultLabel())
+            .as("UP default label must be 'Go up'")
+            .isEqualTo("Go up");
+        assertThat(Direction.DOWN.defaultLabel())
+            .as("DOWN default label must be 'Go down'")
+            .isEqualTo("Go down");
+    }
 }
