@@ -131,13 +131,17 @@ public class HookDispatcher {
             case LuckTestEvent e -> {
                 int roll = dice.roll2d6();
                 int luck = state.player().getLuck();
+                boolean passed = roll <= luck;
+                output.showLuckTest(roll, luck, passed);
                 state.player().modifyAttribute(AttributeType.LUCK, -1);
-                navigateTo(adventure, roll <= luck ? e.successSection() : e.failSection());
+                navigateTo(adventure, passed ? e.successSection() : e.failSection());
             }
             case SkillTestEvent e -> {
                 int roll = dice.roll2d6();
                 int skill = state.player().getSkill();
-                navigateTo(adventure, roll <= skill ? e.successSection() : e.failSection());
+                boolean passed = roll <= skill;
+                output.showSkillTest(roll, skill, passed);
+                navigateTo(adventure, passed ? e.successSection() : e.failSection());
             }
             case CombatEvent e -> {
                 CombatOutcome outcome = combatRegistry.get(e.system()).run(

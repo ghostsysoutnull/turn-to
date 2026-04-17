@@ -127,6 +127,7 @@ public class Game {
         for (SectionEvent event : section.events()) {
             hooks.processEvent(event, adventure);
             if (state.isTerminal()) return;
+            if (state.isInGrid() || state.currentSection() != section) return;
         }
 
         SectionType type = section.type();
@@ -205,6 +206,7 @@ public class Game {
         for (SectionEvent event : cell.events()) {
             hooks.processEvent(event, adventure);
             if (state.isTerminal()) return;
+            if (!state.isInGrid() || state.currentCell().orElse(null) != cell) return;
         }
 
         List<Choice> choices = new ArrayList<>(cell.choices());

@@ -136,3 +136,7 @@ Player death (STAMINA == 0) is detected by `HookDispatcher` immediately after an
 | engine-integration | Enter grid via choice | `InMemoryAdventureLoader` with grid, choice using `GridTarget` | `state.isInGrid() == true`, `state.currentCell()` == entry cell |
 | engine-integration | Exit grid via passage `toSection` | Player in grid, selects exit passage | `state.isInGrid() == false`, `state.currentSection()` == target |
 | engine-integration | Cell events fire on entry | Cell with `StatChangeEvent` | Player stat modified |
+| `HookDispatcher` | Lucky luck test emits `LuckTestShown` | `FixedDice(3)`, LUCK=8, `LuckTestEvent(§2,§3)`, no adventure | `LuckTestShown(6, 8, true)` in `RecordingOutput.events()`; LUCK decremented to 7 |
+| `HookDispatcher` | Unlucky luck test emits `LuckTestShown` | `FixedDice(6)`, LUCK=8, `LuckTestEvent(§2,§3)`, no adventure | `LuckTestShown(12, 8, false)` in `RecordingOutput.events()` |
+| `HookDispatcher` | Skill test pass emits `SkillTestShown` | `FixedDice(3)`, SKILL=10, `SkillTestEvent(§2,§3)`, no adventure | `SkillTestShown(6, 10, true)` in `RecordingOutput.events()` |
+| `HookDispatcher` | Skill test fail emits `SkillTestShown` | `FixedDice(6)`, SKILL=10, `SkillTestEvent(§2,§3)`, no adventure | `SkillTestShown(12, 10, false)` in `RecordingOutput.events()` |

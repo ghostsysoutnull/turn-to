@@ -57,7 +57,9 @@ Structured event hierarchy. `RecordingOutput` records one `OutputEvent` per `Gam
 public sealed interface OutputEvent
     permits NarrativeShown, MessageShown, CombatRoundShown,
             ChoicesShown, VictoryShown, GameOverShown,
-            StatusShown, InventoryShown, ScreenCleared {}
+            StatusShown, InventoryShown, ScreenCleared,
+            OutputEvent.LuckTestShown,
+            OutputEvent.SkillTestShown {}
 
 public record NarrativeShown(String text)         implements OutputEvent {}
 public record MessageShown(String text)           implements OutputEvent {}
@@ -68,6 +70,8 @@ public record GameOverShown(String message)       implements OutputEvent {}
 public record StatusShown(int sectionNumber, Player player, List<PartyMember> activeMembers) implements OutputEvent {}
 public record InventoryShown(List<ItemStack> stacks, int gold, int provisions) implements OutputEvent {}
 public record ScreenCleared()                   implements OutputEvent {}
+record LuckTestShown(int roll, int luck, boolean passed)   implements OutputEvent {}
+record SkillTestShown(int roll, int skill, boolean passed)  implements OutputEvent {}
 ```
 
 ### `RecordingOutput`

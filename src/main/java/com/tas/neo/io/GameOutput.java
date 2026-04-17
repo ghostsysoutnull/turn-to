@@ -17,4 +17,6 @@ public interface GameOutput {
     void showGameOver(String message);
     void showVictory(String message);
     void clear();
+    void showLuckTest(int roll, int luck, boolean passed);
+    void showSkillTest(int roll, int skill, boolean passed);
 }

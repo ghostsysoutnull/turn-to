@@ -74,4 +74,16 @@ public class TerminalOutput implements GameOutput {
     public void clear() {
         out.println();
     }
+
+    @Override
+    public void showLuckTest(int roll, int luck, boolean passed) {
+        String result = passed ? "Lucky!" : "Unlucky!";
+        showMessage("Test your LUCK — rolled " + roll + " against LUCK " + luck + ": " + result + " (LUCK now " + (luck - 1) + ")");
+    }
+
+    @Override
+    public void showSkillTest(int roll, int skill, boolean passed) {
+        String result = passed ? "Skilful!" : "Unskilful!";
+        showMessage("Test your SKILL — rolled " + roll + " against SKILL " + skill + ": " + result);
+    }
 }

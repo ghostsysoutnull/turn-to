@@ -127,7 +127,6 @@ class IronRoadAcceptanceTest {
      *   readChoice  §1   : 2 → §2
      *   readChoice  §2   : 2 → §3  (choices: §4, §3, §5, provision)
      *   readChoice  §3   : 3 → §8  (choices: §6, §7, §8, provision)
-     *   readChoice  §8   : 1 → eat provision  (§8 has no section choices after LUCK_TEST navigates)
      *   readChoice  §16  : 1 → §4  (INSTANT_DEATH)
      * </pre>
      *
@@ -140,7 +139,7 @@ class IronRoadAcceptanceTest {
         SequenceDice dice = new SequenceDice(1, 1, 1, 1, 6, 6);
 
         ScenarioResult result = ScenarioRunner
-                .scripted(IRON_ROAD, dice, 2, 2, 3, 1, 1)
+                .scripted(IRON_ROAD, dice, 2, 2, 3, 1)
                 .withScriptEngine(new LuaScriptEngine())
                 .run();
 

@@ -88,4 +88,14 @@ public class RecordingOutput implements GameOutput {
     public void clear() {
         events.add(new OutputEvent.ScreenCleared());
     }
+
+    @Override
+    public void showLuckTest(int roll, int luck, boolean passed) {
+        events.add(new OutputEvent.LuckTestShown(roll, luck, passed));
+    }
+
+    @Override
+    public void showSkillTest(int roll, int skill, boolean passed) {
+        events.add(new OutputEvent.SkillTestShown(roll, skill, passed));
+    }
 }

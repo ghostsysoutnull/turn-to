@@ -46,10 +46,10 @@ class VaultsAcceptanceTest {
      * <p>Dice: FixedDice(1) — SKILL 7, STAMINA 14, LUCK 7.
      * LUCK test at §11: 2d6=2, 2 &lt; LUCK 7 → pass → §12.
      *
-     * <p>Input breakdown (19 inputs):
+     * <p>Input breakdown (18 inputs):
      * <pre>
      *   §1(1→§2), §2(1→§3), §3(1→§4), §4(1→§8), §8(2→§11 stealth)
-     *   §11: LUCK_TEST auto-navigates to §12; section still reads choice → 1 (eat provision)
+     *   §11: LUCK_TEST auto-navigates to §12; event guard returns immediately (no phantom re-render)
      *   §12(1→§13), §13(2→§15 bypass guardhouse), §15(1→grid entrance)
      *   grid: (0,0)south=2→(0,1), south=3→(0,2), east=2→(1,2), east=2→(2,2), east=3→(3,2), south=3→§20
      *   §20(1→§17), §17(1→§21 south), §21(1→§22), §22(2→§23 no Vault Key)
@@ -60,7 +60,7 @@ class VaultsAcceptanceTest {
     @Test
     void dorian_survives_to_ch2_and_companionSurvived_is_true() {
         ScenarioResult result = ScenarioRunner
-                .scripted(VAULTS, new FixedDice(1), 1, 1, 1, 1, 2, 1, 1, 2, 1, 2, 3, 2, 2, 3, 3, 1, 1, 1, 2)
+                .scripted(VAULTS, new FixedDice(1), 1, 1, 1, 1, 2, 1, 2, 1, 2, 3, 2, 2, 3, 3, 1, 1, 1, 2)
                 .withScriptEngine(new LuaScriptEngine())
                 .run();
 

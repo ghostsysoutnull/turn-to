@@ -4,9 +4,16 @@ import com.tas.neo.combat.CombatSystemRegistry;
 import com.tas.neo.domain.adventure.ScriptBlock;
 import com.tas.neo.domain.adventure.Section;
 import com.tas.neo.domain.adventure.SectionType;
+import com.tas.neo.domain.adventure.event.LuckTestEvent;
+import com.tas.neo.domain.adventure.event.SkillTestEvent;
+import com.tas.neo.domain.item.Inventory;
+import com.tas.neo.domain.player.Attribute;
+import com.tas.neo.domain.player.AttributeType;
+import com.tas.neo.domain.player.Player;
 import com.tas.neo.engine.HookDispatcher;
 import com.tas.neo.engine.GameState;
 import com.tas.neo.engine.SectionHook;
+import com.tas.neo.io.OutputEvent;
 import com.tas.neo.io.RecordingOutput;
 import com.tas.neo.io.ScriptedInput;
 import com.tas.neo.domain.Dice;
@@ -15,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -185,5 +193,95 @@ class HookDispatcherTest {
         assertThat(scriptEngine.executeCount)
             .as("ScriptEngine.execute must be called once per fireSectionHook call")
             .isEqualTo(2);
+    }
+
+    // -----------------------------------------------------------------------
+    // LuckTestEvent output
+    // -----------------------------------------------------------------------
+
+    @Test
+    void processEvent_luckTest_emits_LuckTestShown_and_decrements_luck_when_roll_passes() {
+        gameState.setPlayer(playerWith(10, 8, 20));
+        HookDispatcher d = dispatcherWith(new FixedDice(3)); // roll2d6 = 6, luck = 8 → passed
+
+        d.processEvent(new LuckTestEvent(10, 20));
+
+        assertThat(output.events())
+            .as("LuckTestShown(roll=6, luck=8, passed=true) must be recorded when roll ≤ luck")
+            .contains(new OutputEvent.LuckTestShown(6, 8, true));
+        assertThat(gameState.player().getLuck())
+            .as("LUCK must be decremented by 1 after a luck test regardless of outcome")
+            .isEqualTo(7);
+    }
+
+    @Test
+    void processEvent_luckTest_emits_LuckTestShown_when_roll_fails() {
+        gameState.setPlayer(playerWith(10, 8, 20));
+        HookDispatcher d = dispatcherWith(new FixedDice(6)); // roll2d6 = 12, luck = 8 → failed
+
+        d.processEvent(new LuckTestEvent(10, 20));
+
+        assertThat(output.events())
+            .as("LuckTestShown(roll=12, luck=8, passed=false) must be recorded when roll > luck")
+            .contains(new OutputEvent.LuckTestShown(12, 8, false));
+    }
+
+    // -----------------------------------------------------------------------
+    // SkillTestEvent output
+    // -----------------------------------------------------------------------
+
+    @Test
+    void processEvent_skillTest_emits_SkillTestShown_and_leaves_skill_unchanged_when_roll_passes() {
+        gameState.setPlayer(playerWith(10, 8, 20));
+        HookDispatcher d = dispatcherWith(new FixedDice(3)); // roll2d6 = 6, skill = 10 → passed
+
+        d.processEvent(new SkillTestEvent(10, 20));
+
+        assertThat(output.events())
+            .as("SkillTestShown(roll=6, skill=10, passed=true) must be recorded when roll ≤ skill")
+            .contains(new OutputEvent.SkillTestShown(6, 10, true));
+        assertThat(gameState.player().getSkill())
+            .as("SKILL must not be modified after a skill test")
+            .isEqualTo(10);
+    }
+
+    @Test
+    void processEvent_skillTest_emits_SkillTestShown_when_roll_fails() {
+        gameState.setPlayer(playerWith(10, 8, 20));
+        HookDispatcher d = dispatcherWith(new FixedDice(6)); // roll2d6 = 12, skill = 10 → failed
+
+        d.processEvent(new SkillTestEvent(10, 20));
+
+        assertThat(output.events())
+            .as("SkillTestShown(roll=12, skill=10, passed=false) must be recorded when roll > skill")
+            .contains(new OutputEvent.SkillTestShown(12, 10, false));
+    }
+
+    // -----------------------------------------------------------------------
+    // Private helpers
+    // -----------------------------------------------------------------------
+
+    private HookDispatcher dispatcherWith(Dice testDice) {
+        CombatSystemRegistry combatRegistry = new CombatSystemRegistry() {
+            @Override
+            public com.tas.neo.combat.CombatSystem get(String id) {
+                throw new IllegalArgumentException("No combat systems in test");
+            }
+
+            @Override
+            public boolean has(String id) {
+                return false;
+            }
+        };
+        return new HookDispatcher(scriptEngine, input, output, gameState, scriptState,
+                                  combatRegistry, testDice);
+    }
+
+    private Player playerWith(int skill, int luck, int stamina) {
+        Map<AttributeType, Attribute> attrs = new EnumMap<>(AttributeType.class);
+        attrs.put(AttributeType.SKILL,   new Attribute(AttributeType.SKILL,   skill,   skill));
+        attrs.put(AttributeType.LUCK,    new Attribute(AttributeType.LUCK,    luck,    luck));
+        attrs.put(AttributeType.STAMINA, new Attribute(AttributeType.STAMINA, stamina, stamina));
+        return new Player(attrs, new Inventory(), 0, 0);
     }
 }

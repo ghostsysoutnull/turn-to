@@ -144,6 +144,24 @@ with a sensible default for unused fields, eliminating the opaque positional arg
 - **Note:** Discuss broad-refactor workflow with specialized agents before starting —
   this touches domain, loader, and ~20 test files simultaneously.
 
+### B4-9: Show section number in section header during play
+
+Players need the section number visible to report issues. Currently `TerminalOutput`
+displays the section narrative without identifying the section.
+
+- **Where:** `src/main/java/com/tas/neo/io/TerminalOutput.java` — `showSection()`
+  or equivalent display method
+- **What's needed:** prefix the section header with the section number, e.g.
+  `§8 ————————————————` so the player always knows which section they are in
+
+### ~~B4-8: Iron road §8 has no "Test your LUCK" prompt~~ ✓ done 2026-04-16
+
+Fixed at the engine level: `LUCK_TEST` and `SKILL_TEST` events now emit
+`output.showLuckTest()` / `output.showSkillTest()` before navigating. A
+navigation guard was also added to `Game.runSectionStep()` and `runCellStep()`
+so the originating section no longer phantom re-renders after an event navigates
+away.
+
 ---
 
 ## Closed

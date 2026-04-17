@@ -23,7 +23,9 @@ public sealed interface OutputEvent
             OutputEvent.ItemGained,
             OutputEvent.ItemLost,
             OutputEvent.StatChanged,
-            OutputEvent.CombatResolved {
+            OutputEvent.CombatResolved,
+            OutputEvent.LuckTestShown,
+            OutputEvent.SkillTestShown {
 
     record NarrativeShown(String text)                              implements OutputEvent {}
     record MessageShown(String text)                                implements OutputEvent {}
@@ -39,4 +41,6 @@ public sealed interface OutputEvent
     record StatChanged(String attribute, int delta, int newValue)   implements OutputEvent {}
     record CombatResolved(String opponentName, int opponentSkill, int opponentStamina,
                           boolean playerWon, int rounds, int staminaLost) implements OutputEvent {}
+    record LuckTestShown(int roll, int luck, boolean passed)              implements OutputEvent {}
+    record SkillTestShown(int roll, int skill, boolean passed)            implements OutputEvent {}
 }
