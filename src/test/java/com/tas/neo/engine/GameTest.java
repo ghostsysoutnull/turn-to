@@ -179,19 +179,19 @@ class GameTest {
     }
 
     @Test
-    void narrative_shown_event_includes_section_number() {
+    void status_shown_event_includes_section_number() {
         Adventure adventure = singleSectionAdventure(normalSection(42, "You stand in a dark cave."));
 
         ScenarioResult result = ScenarioRunner.scripted(adventure, new FixedDice(3), 2).run();
 
-        OutputEvent.NarrativeShown event = result.output().events().stream()
-            .filter(e -> e instanceof OutputEvent.NarrativeShown)
-            .map(e -> (OutputEvent.NarrativeShown) e)
+        OutputEvent.StatusShown event = result.output().events().stream()
+            .filter(e -> e instanceof OutputEvent.StatusShown)
+            .map(e -> (OutputEvent.StatusShown) e)
             .findFirst()
-            .orElseThrow(() -> new AssertionError("No NarrativeShown event was recorded"));
+            .orElseThrow(() -> new AssertionError("No StatusShown event was recorded"));
 
         assertThat(event.sectionNumber())
-            .as("NarrativeShown must carry the section number of the section being displayed")
+            .as("StatusShown must carry the section number of the section being displayed")
             .isEqualTo(42);
     }
 

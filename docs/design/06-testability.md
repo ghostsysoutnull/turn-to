@@ -59,13 +59,13 @@ public sealed interface OutputEvent
             ChoicesShown, VictoryShown, GameOverShown,
             StatusShown, InventoryShown, ScreenCleared {}
 
-public record NarrativeShown(String text)       implements OutputEvent {}
-public record MessageShown(String text)         implements OutputEvent {}
+public record NarrativeShown(String text)         implements OutputEvent {}
+public record MessageShown(String text)           implements OutputEvent {}
 public record CombatRoundShown(CombatRound round) implements OutputEvent {}
 public record ChoicesShown(List<Choice> choices)  implements OutputEvent {}
-public record VictoryShown(String message)      implements OutputEvent {}
-public record GameOverShown(String message)     implements OutputEvent {}
-public record StatusShown(Player player, List<PartyMember> activeMembers) implements OutputEvent {}
+public record VictoryShown(String message)        implements OutputEvent {}
+public record GameOverShown(String message)       implements OutputEvent {}
+public record StatusShown(int sectionNumber, Player player, List<PartyMember> activeMembers) implements OutputEvent {}
 public record InventoryShown(List<ItemStack> stacks, int gold, int provisions) implements OutputEvent {}
 public record ScreenCleared()                   implements OutputEvent {}
 ```

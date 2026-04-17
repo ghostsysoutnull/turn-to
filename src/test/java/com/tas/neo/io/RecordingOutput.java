@@ -45,13 +45,13 @@ public class RecordingOutput implements GameOutput {
     }
 
     @Override
-    public void showStatus(Player player, List<PartyMember> activeMembers) {
-        events.add(new OutputEvent.StatusShown(player, List.copyOf(activeMembers)));
+    public void showStatus(int sectionNumber, Player player, List<PartyMember> activeMembers) {
+        events.add(new OutputEvent.StatusShown(sectionNumber, player, List.copyOf(activeMembers)));
     }
 
     @Override
-    public void showNarrative(int sectionNumber, String text) {
-        events.add(new OutputEvent.NarrativeShown(sectionNumber, text));
+    public void showNarrative(String text) {
+        events.add(new OutputEvent.NarrativeShown(text));
     }
 
     @Override

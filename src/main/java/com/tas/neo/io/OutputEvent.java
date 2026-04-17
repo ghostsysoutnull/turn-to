@@ -25,13 +25,13 @@ public sealed interface OutputEvent
             OutputEvent.StatChanged,
             OutputEvent.CombatResolved {
 
-    record NarrativeShown(int sectionNumber, String text)           implements OutputEvent {}
+    record NarrativeShown(String text)                              implements OutputEvent {}
     record MessageShown(String text)                                implements OutputEvent {}
     record CombatRoundShown(CombatRound round)                      implements OutputEvent {}
     record ChoicesShown(List<Choice> choices)                       implements OutputEvent {}
     record VictoryShown(String message)                             implements OutputEvent {}
     record GameOverShown(String message)                            implements OutputEvent {}
-    record StatusShown(Player player, List<PartyMember> activeMembers) implements OutputEvent {}
+    record StatusShown(int sectionNumber, Player player, List<PartyMember> activeMembers) implements OutputEvent {}
     record InventoryShown(List<ItemStack> stacks, int gold, int provisions) implements OutputEvent {}
     record ScreenCleared()                                          implements OutputEvent {}
     record ItemGained(String itemName)                              implements OutputEvent {}

@@ -194,7 +194,7 @@ public interface GameInput {
 ### `GameOutput`
 ```java
 public interface GameOutput {
-    void showStatus(Player player, List<PartyMember> activeMembers);
+    void showStatus(int sectionNumber, Player player, List<PartyMember> activeMembers);
     void showNarrative(String text);
     void showChoices(List<Choice> choices);
     void showMessage(String message);

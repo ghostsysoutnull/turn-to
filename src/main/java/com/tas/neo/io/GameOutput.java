@@ -8,8 +8,8 @@ import com.tas.neo.domain.player.Player;
 import java.util.List;
 
 public interface GameOutput {
-    void showStatus(Player player, List<PartyMember> activeMembers);
-    void showNarrative(int sectionNumber, String text);
+    void showStatus(int sectionNumber, Player player, List<PartyMember> activeMembers);
+    void showNarrative(String text);
     void showChoices(List<Choice> choices);
     void showMessage(String message);
     void showCombatRound(CombatRound round);

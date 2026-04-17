@@ -18,20 +18,17 @@ public class TerminalOutput implements GameOutput {
     }
 
     @Override
-    public void showStatus(Player player, List<PartyMember> activeMembers) {
-        out.println("─────────────────────────────────────────────────────");
-        out.println("  SKILL: " + player.getSkill()
+    public void showStatus(int sectionNumber, Player player, List<PartyMember> activeMembers) {
+        out.println("────────────────────────────────────────────────────────────────────────");
+        out.println("  §" + sectionNumber + "  │  SKILL: " + player.getSkill()
             + "   STAMINA: " + player.getStamina() + "/" + player.getMaxStamina()
             + "   LUCK: " + player.getLuck()
             + "   Gold: " + player.getGold());
-        out.println("─────────────────────────────────────────────────────");
+        out.println("────────────────────────────────────────────────────────────────────────");
     }
 
     @Override
-    public void showNarrative(int sectionNumber, String text) {
-        if (sectionNumber > 0) {
-            out.println("--- §" + sectionNumber + " ---");
-        }
+    public void showNarrative(String text) {
         out.println(text);
     }
 
