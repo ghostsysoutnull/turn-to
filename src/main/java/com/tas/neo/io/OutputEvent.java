@@ -25,7 +25,7 @@ public sealed interface OutputEvent
             OutputEvent.StatChanged,
             OutputEvent.CombatResolved {
 
-    record NarrativeShown(String text)                              implements OutputEvent {}
+    record NarrativeShown(int sectionNumber, String text)           implements OutputEvent {}
     record MessageShown(String text)                                implements OutputEvent {}
     record CombatRoundShown(CombatRound round)                      implements OutputEvent {}
     record ChoicesShown(List<Choice> choices)                       implements OutputEvent {}

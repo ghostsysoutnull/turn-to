@@ -43,7 +43,7 @@ class NoOpGameLoggerTest {
 
     @Test
     void logEvent_succeeds_silently() {
-        OutputEvent event = new OutputEvent.NarrativeShown("You stand in a dark cave.");
+        OutputEvent event = new OutputEvent.NarrativeShown(1, "You stand in a dark cave.");
 
         assertThatCode(() -> logger.logEvent(event))
             .as("logEvent must not throw for any OutputEvent")

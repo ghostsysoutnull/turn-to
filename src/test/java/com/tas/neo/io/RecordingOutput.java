@@ -50,8 +50,8 @@ public class RecordingOutput implements GameOutput {
     }
 
     @Override
-    public void showNarrative(String text) {
-        events.add(new OutputEvent.NarrativeShown(text));
+    public void showNarrative(int sectionNumber, String text) {
+        events.add(new OutputEvent.NarrativeShown(sectionNumber, text));
     }
 
     @Override

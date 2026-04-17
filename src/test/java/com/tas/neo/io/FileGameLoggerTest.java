@@ -284,7 +284,7 @@ class FileGameLoggerTest {
     void txt_log_section_header_includes_narrative(@TempDir Path sessionsDir) throws IOException {
         FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
         logger.logNavigation(new NavigationEntry("START", "section:1", "START"));
-        logger.logEvent(new OutputEvent.NarrativeShown("You stand before the entrance."));
+        logger.logEvent(new OutputEvent.NarrativeShown(1, "You stand before the entrance."));
         logger.logNavigation(new NavigationEntry("section:1", "section:2", "Enter the mountain"));
         logger.close();
 
@@ -298,7 +298,7 @@ class FileGameLoggerTest {
     void txt_log_includes_departure_choice_line(@TempDir Path sessionsDir) throws IOException {
         FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
         logger.logNavigation(new NavigationEntry("START", "section:1", "START"));
-        logger.logEvent(new OutputEvent.NarrativeShown("You stand before the entrance."));
+        logger.logEvent(new OutputEvent.NarrativeShown(1, "You stand before the entrance."));
         logger.logNavigation(new NavigationEntry("section:1", "section:2", "Enter the mountain"));
         logger.close();
 
@@ -312,7 +312,7 @@ class FileGameLoggerTest {
     void txt_log_grid_location_header_includes_narrative(@TempDir Path sessionsDir) throws IOException {
         FileGameLogger logger = new FileGameLogger("test-adv", sessionsDir);
         logger.logNavigation(new NavigationEntry("section:1", "grid:vault-dungeon:1,0,0", "Enter the vault"));
-        logger.logEvent(new OutputEvent.NarrativeShown("Cold stone walls surround you."));
+        logger.logEvent(new OutputEvent.NarrativeShown(0, "Cold stone walls surround you."));
         logger.close();
 
         String txt = readTxtLog(sessionsDir);

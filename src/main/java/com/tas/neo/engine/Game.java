@@ -149,8 +149,8 @@ public class Game {
         // NORMAL section
         output.clear();
         output.showStatus(state.getPlayer(), state.activePartyMembers());
-        output.showNarrative(section.narrative());
-        logger.logEvent(new OutputEvent.NarrativeShown(section.narrative()));
+        output.showNarrative(section.number(), section.narrative());
+        logger.logEvent(new OutputEvent.NarrativeShown(section.number(), section.narrative()));
 
         List<Choice> choices = new ArrayList<>(section.choices());
         hooks.fireSectionHook(SectionHook.ON_CHOICES, section, choices);
@@ -234,8 +234,8 @@ public class Game {
 
         output.clear();
         output.showStatus(state.getPlayer(), state.activePartyMembers());
-        output.showNarrative(cell.narrative());
-        logger.logEvent(new OutputEvent.NarrativeShown(cell.narrative()));
+        output.showNarrative(0, cell.narrative());
+        logger.logEvent(new OutputEvent.NarrativeShown(0, cell.narrative()));
         output.showChoices(choices);
 
         int chosen = input.readChoice(choices);

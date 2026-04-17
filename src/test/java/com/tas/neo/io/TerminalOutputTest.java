@@ -45,7 +45,7 @@ class TerminalOutputTest {
 
     @Test
     void showNarrative_writes_text_to_stream() {
-        output.showNarrative("You stand before the cave entrance.");
+        output.showNarrative(1, "You stand before the cave entrance.");
 
         assertThat(capturedText())
             .as("showNarrative must write the narrative text to the print stream")
@@ -54,7 +54,7 @@ class TerminalOutputTest {
 
     @Test
     void showNarrative_empty_string_produces_output() {
-        output.showNarrative("");
+        output.showNarrative(0, "");
 
         // A call with an empty narrative must not throw; output may be a blank line
         // but the stream must have been written to.

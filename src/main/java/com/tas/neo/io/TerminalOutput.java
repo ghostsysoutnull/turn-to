@@ -28,7 +28,10 @@ public class TerminalOutput implements GameOutput {
     }
 
     @Override
-    public void showNarrative(String text) {
+    public void showNarrative(int sectionNumber, String text) {
+        if (sectionNumber > 0) {
+            out.println("--- §" + sectionNumber + " ---");
+        }
         out.println(text);
     }
 

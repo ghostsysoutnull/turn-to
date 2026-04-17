@@ -178,6 +178,23 @@ class GameTest {
             .isTrue();
     }
 
+    @Test
+    void narrative_shown_event_includes_section_number() {
+        Adventure adventure = singleSectionAdventure(normalSection(42, "You stand in a dark cave."));
+
+        ScenarioResult result = ScenarioRunner.scripted(adventure, new FixedDice(3), 2).run();
+
+        OutputEvent.NarrativeShown event = result.output().events().stream()
+            .filter(e -> e instanceof OutputEvent.NarrativeShown)
+            .map(e -> (OutputEvent.NarrativeShown) e)
+            .findFirst()
+            .orElseThrow(() -> new AssertionError("No NarrativeShown event was recorded"));
+
+        assertThat(event.sectionNumber())
+            .as("NarrativeShown must carry the section number of the section being displayed")
+            .isEqualTo(42);
+    }
+
     // -----------------------------------------------------------------------
     // Player death mid-event
     // -----------------------------------------------------------------------
